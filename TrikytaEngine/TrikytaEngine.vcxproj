@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{26D2CD4D-6C4A-4A8D-89A9-A53D3B6359D4}</ProjectGuid>
+    <RootNamespace>TrikytaEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\core\Common\EngineInstance.cpp" />
+    <ClCompile Include="src\core\Common\TrikytaEngine.cpp" />
+    <ClCompile Include="src\core\Common\Utility.cpp" />
+    <ClCompile Include="src\core\Drawable\Animation.cpp" />
+    <ClCompile Include="src\core\Drawable\Sprite.cpp" />
+    <ClCompile Include="src\core\Events\EventManager.cpp" />
+    <ClCompile Include="src\core\Objects\Object.cpp" />
+    <ClCompile Include="src\core\Objects\ObjectHandler.cpp" />
+    <ClCompile Include="src\core\Physics\PhysicsContactListener.cpp" />
+    <ClCompile Include="src\core\Physics\PhysicsEngine.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\base64\base64.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\miniz.c" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxColor.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxEllipse.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxGroupLayer.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxImage.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxImageLayer.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxLayer.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxMap.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxObject.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxObjectGroup.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxPolygon.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxPolyline.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxProperty.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxPropertySet.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTerrain.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTerrainArray.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxText.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTile.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTileLayer.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTileOffset.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxTileset.cpp" />
+    <ClCompile Include="src\core\TiledMap\Parser\TmxUtil.cpp" />
+    <ClCompile Include="src\core\TiledMap\TiledMap.cpp" />
+    <ClCompile Include="src\core\TiledMap\Tilesets.cpp" />
+    <ClCompile Include="src\utils\SDL2_framerate.c" />
+    <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
+    <ClCompile Include="src\utils\SDL2_imageFilter.c" />
+    <ClCompile Include="src\utils\SDL2_rotozoom.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="libs\includes\SDL\begin_code.h" />
+    <ClInclude Include="libs\includes\SDL\close_code.h" />
+    <ClInclude Include="libs\includes\SDL\SDL.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_assert.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_atomic.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_audio.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_bits.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_blendmode.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_clipboard.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_android.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_iphoneos.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_macosx.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_minimal.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_pandora.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_psp.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_windows.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_winrt.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_config_wiz.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_copying.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_cpuinfo.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_egl.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_endian.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_error.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_events.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_filesystem.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_gamecontroller.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_gesture.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_haptic.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_hints.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_image.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_joystick.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_keyboard.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_keycode.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_loadso.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_log.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_main.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_messagebox.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_mouse.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_mutex.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_name.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengl.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles2.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles2_gl2.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles2_gl2ext.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles2_gl2platform.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengles2_khrplatform.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_opengl_glext.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_pixels.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_platform.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_power.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_quit.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_rect.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_render.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_revision.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_rwops.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_scancode.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_shape.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_stdinc.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_surface.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_system.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_syswm.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_assert.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_common.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_compare.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_crc32.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_font.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_fuzzer.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_harness.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_images.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_log.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_md5.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_memory.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_test_random.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_thread.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_timer.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_touch.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_types.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_version.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_video.h" />
+    <ClInclude Include="libs\includes\SDL\SDL_vulkan.h" />
+    <ClInclude Include="src\core\Common\defines.h" />
+    <ClInclude Include="src\core\Common\EngineInstance.h" />
+    <ClInclude Include="src\core\Common\Logger.h" />
+    <ClInclude Include="src\core\Common\TrikytaEngine.h" />
+    <ClInclude Include="src\core\Common\Utility.h" />
+    <ClInclude Include="src\core\Common\Vec2.h" />
+    <ClInclude Include="src\core\Drawable\Animation.h" />
+    <ClInclude Include="src\core\Drawable\Sprite.h" />
+    <ClInclude Include="src\core\Events\EventManager.h" />
+    <ClInclude Include="src\core\Objects\IObject.h" />
+    <ClInclude Include="src\core\Objects\Object.h" />
+    <ClInclude Include="src\core\Objects\ObjectHandler.h" />
+    <ClInclude Include="src\core\Physics\PhysicsContactListener.h" />
+    <ClInclude Include="src\core\Physics\PhysicsEngine.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\base64\base64.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\Tmx.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxColor.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxEllipse.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxGroupLayer.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxImage.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxImageLayer.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxLayer.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxMap.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxMapTile.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxObject.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxObjectGroup.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxPoint.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxPolygon.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxPolyline.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxProperty.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxPropertySet.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTerrain.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTerrainArray.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxText.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTile.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTileLayer.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTileOffset.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxTileset.h" />
+    <ClInclude Include="src\core\TiledMap\Parser\TmxUtil.h" />
+    <ClInclude Include="src\core\TiledMap\TiledMap.h" />
+    <ClInclude Include="src\core\TiledMap\Tilesets.h" />
+    <ClInclude Include="src\utils\SDL2_framerate.h" />
+    <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />
+    <ClInclude Include="src\utils\SDL2_gfxPrimitives_font.h" />
+    <ClInclude Include="src\utils\SDL2_imageFilter.h" />
+    <ClInclude Include="src\utils\SDL2_rotozoom.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="libs\includes\SDL\SDL_config.h.cmake" />
+    <None Include="libs\includes\SDL\SDL_config.h.in" />
+    <None Include="libs\includes\SDL\SDL_config_macosx.h.orig" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
+      <Project>{d512840f-244e-40c4-87c6-e3876f66446e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TinyXML\TinyXML.vcxproj">
+      <Project>{89658b20-665b-4a95-8246-ae8d38527517}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\zlib\zlib.vcxproj">
+      <Project>{52a3be35-dfc3-4e95-84a6-428206788ee7}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

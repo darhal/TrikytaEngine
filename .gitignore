@@ -1,0 +1,58 @@
+.vs/
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.log
+*.tlog
+*.idp
+*.pdb
+
+Build/
+Release/
+Debug/
+LICENCE.*
+*.filters
+*.user
+Game/bin/x86/SDL/LICENSE.zlib.txt
+Game/bin/x86/SDL/LICENSE.webp.txt
+Game/bin/x86/SDL/LICENSE.tiff.txt
+Game/bin/x86/SDL/LICENSE.png.txt
+Game/bin/x86/SDL/LICENSE.jpeg.txt
+Game/bin/x64/SDL/LICENSE.zlib.txt
+Game/bin/x64/SDL/LICENSE.webp.txt
+Game/bin/x64/SDL/LICENSE.tiff.txt
+Game/bin/x64/SDL/LICENSE.png.txt
+Game/bin/x64/SDL/LICENSE.jpeg.txt
+TrikytaEngine/x64/
+zlib/Debug/
+
