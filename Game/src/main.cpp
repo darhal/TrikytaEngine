@@ -20,7 +20,7 @@ int WINAPI WinMain(
 
 int main()
 {
-	auto config = loadLuaConfigs();
+	auto config = LuaBinds::LoadLua();
 	//auto GameInstance = TrikytaEngine::Create(1024, 768);
 	auto GameInstance = TrikytaEngine::Create(config.name, config.w, config.h);
 	return 0;

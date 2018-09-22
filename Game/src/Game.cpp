@@ -8,6 +8,7 @@
 #include <core/Objects/ObjectHandler.h>
 #include "Game.h"
 #include <iostream>
+#include <test.h>
 
 bool f = false;
 
@@ -22,7 +23,7 @@ void Game::On_Engine_Init()
 	map = TiledMap::Create("assets/example/maps/map.tmx");
 
 	//sprite test
-	obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
+	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
 	//Log("Sprite obj : %s", obj->getFileName().c_str());
 
 	//Animation test
@@ -62,7 +63,7 @@ void Game::On_Engine_Init()
 	// attaching testing
 	//obj->attachTo(body, Vec2f(-0.5f,-0.5f));
 	anim->attachTo(body2, Vec2f(-0.5f, -0.5f));
-
+	LuaBinds::Lua_CallOnEngineLoad();
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
