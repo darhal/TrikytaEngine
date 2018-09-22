@@ -40,6 +40,9 @@
 Build/
 Release/
 Debug/
+TrikytaEngine/x64/
+zlib/Debug/
+.vs/
 LICENCE.*
 *.filters
 *.user
@@ -53,6 +56,4 @@ Game/bin/x64/SDL/LICENSE.webp.txt
 Game/bin/x64/SDL/LICENSE.tiff.txt
 Game/bin/x64/SDL/LICENSE.png.txt
 Game/bin/x64/SDL/LICENSE.jpeg.txt
-TrikytaEngine/x64/
-zlib/Debug/
 
