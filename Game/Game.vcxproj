@@ -70,22 +70,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(SolutionDir)TrikytaEngine\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Game\bin\x86\SDL;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(SolutionDir)TrikytaEngine\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Game\bin\x86\SDL;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(SolutionDir)TrikytaEngine\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)TinyXML\src;$(SolutionDir)zlib\src;$(SolutionDir)TrikytaEngine\src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -149,17 +149,8 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
-      <Project>{d512840f-244e-40c4-87c6-e3876f66446e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\TinyXML\TinyXML.vcxproj">
-      <Project>{89658b20-665b-4a95-8246-ae8d38527517}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\TrikytaEngine\TrikytaEngine.vcxproj">
       <Project>{26d2cd4d-6c4a-4a8d-89a9-a53d3b6359d4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\zlib\zlib.vcxproj">
-      <Project>{52a3be35-dfc3-4e95-84a6-428206788ee7}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
