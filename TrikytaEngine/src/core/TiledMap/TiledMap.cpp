@@ -84,7 +84,7 @@ void TiledMap::LoadLayers()
 			{
 				if (tileLayer->GetTileTilesetIndex(x, y) != -1)
 				{
-					//m_LayerData->reserve(m_LayerData->size() + 1);
+					m_LayerData->reserve(m_LayerData->size() + 1);
 					ind++;
 					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
 					Uint32 Gid = tileLayer->GetTileGid(x, y);

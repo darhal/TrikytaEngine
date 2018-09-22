@@ -1,6 +1,7 @@
 #include <core/Common/TrikytaEngine.h>
 #include <cstdio>
 #include <windows.h>
+#include <test.h>
 
 #ifndef __DEBUG__
 
@@ -19,7 +20,9 @@ int WINAPI WinMain(
 
 int main()
 {
-	auto GameInstance = TrikytaEngine::Create(1024, 768);
+	auto config = loadLuaConfigs();
+	//auto GameInstance = TrikytaEngine::Create(1024, 768);
+	auto GameInstance = TrikytaEngine::Create(config.name, config.w, config.h);
 	return 0;
 };
 

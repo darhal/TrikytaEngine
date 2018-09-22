@@ -22,7 +22,7 @@ void Game::On_Engine_Init()
 	map = TiledMap::Create("assets/example/maps/map.tmx");
 
 	//sprite test
-	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
+	obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
 	//Log("Sprite obj : %s", obj->getFileName().c_str());
 
 	//Animation test

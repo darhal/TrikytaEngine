@@ -20,32 +20,32 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{97514957-8549-41A2-B1BB-2065863EBB21}</ProjectGuid>
-    <RootNamespace>Game</RootNamespace>
+    <ProjectGuid>{6E09EEE4-5079-4B39-A1E0-A3689706AF19}</ProjectGuid>
+    <RootNamespace>LuaBinds</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -70,24 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Game\bin\x86\SDL;$(LibraryPath);$(SolutionDir)LuaBinds\lua\lib</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Game\bin\x86\SDL;$(LibraryPath);$(SolutionDir)LuaBinds\lua\lib</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath);$(SolutionDir)LuaBinds\lua\lib</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath);$(SolutionDir)LuaBinds\lua\lib</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,7 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lua53.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -108,7 +104,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lua53.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,7 +119,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lua53.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,23 +134,14 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>lua53.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Game.h" />
+    <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LuaBinds\LuaBinds.vcxproj">
-      <Project>{6e09eee4-5079-4b39-a1e0-a3689706af19}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\TrikytaEngine\TrikytaEngine.vcxproj">
-      <Project>{26d2cd4d-6c4a-4a8d-89a9-a53d3b6359d4}</Project>
-    </ProjectReference>
+    <ClInclude Include="src\test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
