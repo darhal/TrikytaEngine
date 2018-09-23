@@ -7,6 +7,7 @@ Object::Object(Vec2i m_Pos, Vec2i p_Size) :
 	m_Childrens(new std::vector<Object*>), m_Size(p_Size), m_Position(m_Pos)
 {
 	ObjectHandler::PushObject(this);
+	m_IsVisible = true;
 };
 
 Object::~Object()
@@ -17,6 +18,17 @@ Object::~Object()
 bool Object::init()
 {
 	return true;
+}
+
+void Object::setVisible(bool isVisible)
+{
+	if (isVisible && !m_IsVisible) {
+		ObjectHandler::SetObjectSleeping(this, isVisible);
+		m_IsVisible = isVisible;
+	}else if(!isVisible && m_IsVisible) {
+		ObjectHandler::SetObjectSleeping(this, isVisible);
+		m_IsVisible = isVisible;
+	}
 }
 
 void Object::render(float dt)

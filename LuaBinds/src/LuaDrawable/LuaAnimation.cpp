@@ -50,8 +50,17 @@ void LuaAnimation::LoadAnimationFunctions()
 	lua_pushcfunction(L, LuaAnimation::GetAnimationSize);
 	lua_setglobal(L, "getAnimationSize");
 
+	lua_pushcfunction(L, LuaAnimation::GetAnimationRotation);
+	lua_setglobal(L, "getAnimationRotation");
+
 	lua_pushcfunction(L, LuaAnimation::AttachAnimationTo);
-	lua_setglobal(L, "attachTo");
+	lua_setglobal(L, "attachAnimationTo");
+
+	lua_pushcfunction(L, LuaAnimation::SetAnimationVisisble);
+	lua_setglobal(L, "setAnimationVisible");
+
+	lua_pushcfunction(L, LuaAnimation::IsAnimationVisisble);
+	lua_setglobal(L, "isAnimationVisible");
 }
 
 int LuaAnimation::CreateAnimation(lua_State* L)
@@ -175,6 +184,41 @@ int LuaAnimation::AttachAnimationTo(lua_State* L)
 	float offsetY = (float)lua_tonumber(L, 4);
 	if (toBeAttached != NULL && AttachedTo != NULL) {
 		toBeAttached->attachTo(AttachedTo, Vec2f(offsetX, offsetY));
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+int LuaAnimation::GetAnimationRotation(lua_State* L)
+{
+	Animation* anim = (Animation*)lua_touserdata(L, 1);
+	if (anim != NULL) {
+		lua_pushnumber(L, anim->GetRotation());
+		return 1;
+	}
+	lua_pushboolean(L, false);
+	return 1;
+}
+
+int LuaAnimation::IsAnimationVisisble(lua_State* L)
+{
+	Animation* anim = (Animation*)lua_touserdata(L, 1);
+	if (anim != NULL) {
+		lua_pushboolean(L, anim->isVisisble());
+		return 1;
+	}
+	lua_pushnil(L);
+	return 1;
+}
+
+int LuaAnimation::SetAnimationVisisble(lua_State* L)
+{
+	Animation* anim = (Animation*)lua_touserdata(L, 1);
+	bool isVis = lua_toboolean(L, 2);
+	if (anim != NULL) {
+		anim->setVisible(isVis);
 		lua_pushboolean(L, true);
 		return 1;
 	}

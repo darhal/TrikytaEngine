@@ -173,6 +173,7 @@
     <ClCompile Include="src\core\TiledMap\Parser\TmxUtil.cpp" />
     <ClCompile Include="src\core\TiledMap\TiledMap.cpp" />
     <ClCompile Include="src\core\TiledMap\Tilesets.cpp" />
+    <ClCompile Include="src\core\Utility\Timer.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
     <ClCompile Include="src\utils\SDL2_imageFilter.c" />
@@ -303,6 +304,7 @@
     <ClInclude Include="src\core\TiledMap\Parser\TmxUtil.h" />
     <ClInclude Include="src\core\TiledMap\TiledMap.h" />
     <ClInclude Include="src\core\TiledMap\Tilesets.h" />
+    <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives_font.h" />

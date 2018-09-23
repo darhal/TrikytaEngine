@@ -51,7 +51,13 @@ void LuaSprite::LoadSpriteFunction()
 	lua_setglobal(L, "getSpriteSize");
 
 	lua_pushcfunction(L, LuaSprite::AttachSpriteTo);
-	lua_setglobal(L, "attachTo");
+	lua_setglobal(L, "attachSpriteTo");
+
+	lua_pushcfunction(L, LuaSprite::SetSpriteVisisble);
+	lua_setglobal(L, "setSpriteVisible");
+
+	lua_pushcfunction(L, LuaSprite::IsSpriteVisisble);
+	lua_setglobal(L, "isSpriteVisible");
 }
 
 LuaSprite* LuaSprite::GetSpriteManager()
@@ -158,6 +164,19 @@ int LuaSprite::GetSpriteSize(lua_State* L)
 	return 1;
 }
 
+int LuaEngine::LuaSprite::SetSpriteVisisble(lua_State * L)
+{
+	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
+	bool isVis = lua_toboolean(L, 2);
+	if (sprt != NULL) {
+		sprt->setVisible(isVis);
+		lua_pushboolean(L, true);
+		return 1;
+	}
+	lua_pushboolean(L, false);
+	return 1;
+}
+
 int LuaSprite::GetSpriteFilename(lua_State* L)
 {
 	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
@@ -192,6 +211,17 @@ int LuaSprite::AttachSpriteTo(lua_State* L)
 		return 1;
 	}
 	lua_pushboolean(L, false);
+	return 1;
+}
+
+int LuaSprite::IsSpriteVisisble(lua_State* L)
+{
+	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
+	if (sprt != NULL) {
+		lua_pushboolean(L, sprt->isVisisble());
+		return 1;
+	}
+	lua_pushnil(L);
 	return 1;
 }
 

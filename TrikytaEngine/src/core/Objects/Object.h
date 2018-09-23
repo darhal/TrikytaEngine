@@ -26,9 +26,10 @@ public:
 
 	void addChildren(Object*);
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
+	void setVisible(bool isVisible);
 
 	inline std::vector<Object*>* getChildrens() const { return m_Childrens; }
-
+	inline bool isVisisble() {return m_IsVisible;}
 
 	int m_Manager_Index;
 protected:
@@ -36,6 +37,7 @@ protected:
 	Vec2<int> m_Position;
 	Vec2f m_Offset;
 	Object* m_Parent;
+	bool m_IsVisible;
 	std::vector<Object*>* m_Childrens;
 private:
 

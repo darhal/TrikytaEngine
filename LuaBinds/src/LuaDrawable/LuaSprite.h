@@ -23,6 +23,8 @@ namespace LuaEngine {
 		static int FlipSpriteHorizental(lua_State* L);
 		static int FlipSpriteVertical(lua_State* L);
 		static int GetSpriteSize(lua_State* L);
+		static int SetSpriteVisisble(lua_State* L);
+		static int IsSpriteVisisble(lua_State* L);
 		
 		static int AttachSpriteTo(lua_State* L);
 	private:

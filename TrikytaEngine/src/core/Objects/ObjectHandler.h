@@ -13,11 +13,14 @@ public:
 	
 	static ObjectHandler* GetObjectManager();
 	static ObjectsVec* GetObjectHandler();
+	static ObjectsVec* GetSleepingObjects();
 	static void PushObject(class Object*);
 	static void RemoveObject(Object* p_Obj);
+	static void SetObjectSleeping(Object* p_Obj, bool);
 private :
 	static ObjectHandler* _ObjectHandler;
-	ObjectHandler() : m_ObjectHandler(std::make_shared<ObjectsVec>())
+	ObjectHandler() : m_ObjectHandler(std::make_shared<ObjectsVec>()), m_SleepObjects(std::make_shared<ObjectsVec>())
 	{}
 	std::shared_ptr<ObjectsVec> m_ObjectHandler;
+	std::shared_ptr<ObjectsVec> m_SleepObjects;
 };

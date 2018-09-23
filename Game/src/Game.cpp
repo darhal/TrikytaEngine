@@ -8,9 +8,7 @@
 #include <core/Objects/ObjectHandler.h>
 #include "Game.h"
 #include <iostream>
-
-
-//bool f = false;
+#include <core/Utility/Timer.h>
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -19,7 +17,6 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
-	
 	//TILED MAP TEST
 	/*map = TiledMap::Create("assets/example/maps/map.tmx");
 
