@@ -18,9 +18,9 @@ protected:
 	{
 		init();
 	}
-	virtual ~Animation();
 
 public:
+	virtual ~Animation();
 	virtual bool init() override;
 	virtual void render(float) override;
 	void loadSpirteFrames(); //TODO LOAD SPRITE BY SPRITE!

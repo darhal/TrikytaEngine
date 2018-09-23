@@ -58,6 +58,7 @@ public:
 	/*GETTERS!*/
 	inline std::string getFileName() const { return m_Filename; }
 	inline Vec2i getDrawSize() { return Vec2i(m_DestinationDrawCoord.h, m_DestinationDrawCoord.w); }
+	inline double GetRotation() { return m_Angle; }
 
 	/*SETTERS*/
 	inline void setSize(Vec2<int> p_Size) { m_Size = p_Size; }

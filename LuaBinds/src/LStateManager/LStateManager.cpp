@@ -1,6 +1,8 @@
 #include "Shared/ldefines.h"
 #include "LStateManager.h"
 #include "LuaEvents/LuaEvents.h"
+#include "LuaDrawable/LuaSprite.h"
+#include "LuaDrawable/LuaAnimation.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -52,6 +54,7 @@ WND_CONFIG LStateManager::LLoadConfig(lua_State* L)
 std::shared_ptr<std::vector<std::string>> LStateManager::LoadScriptList()
 {
 	LStateManager::LoadingTrikytaEnv(); // LOAD GLOBAL FUNCTIONS
+
 	using namespace std;
 	ifstream ScriptFile;
 	ScriptFile.open(SCRIPT_META_PATH);
@@ -101,99 +104,9 @@ void LStateManager::LoadingTrikytaEnv()
 	LogL("INFO", "Loading Trikyta Enviroument");
 
 	LuaEvents::GetLuaEventMnager()->RegisterLuaEventManager();
-
-	lua_pushcfunction(_LUA_STATE_, LuaBinds::CreateSprite);
-	lua_setglobal(_LUA_STATE_, "CreateSprite");
-
-	lua_pushcfunction(_LUA_STATE_, LuaBinds::MoveSprite);
-	lua_setglobal(_LUA_STATE_, "SetPos");
-
-	lua_pushcfunction(_LUA_STATE_, LuaBinds::GetSpritePos);
-	lua_setglobal(_LUA_STATE_, "GetPos");
-
-	lua_pushcfunction(_LUA_STATE_, LuaBinds::DeletSprite);
-	lua_setglobal(_LUA_STATE_, "DelSprite");
-
+	LuaSprite::LoadSpriteSystem();
+	LuaAnimation::LoadAnimationFunctions();
 }
 
-/***********************************************************************/
-#include <core/Drawable/Sprite.h>
-
-static int LuaBinds::CreateSprite(lua_State *L)
-{
-	const char* path = lua_tostring(L, -5);  /* get argument */
-	int w = (int)lua_tonumber(L, -4);
-	int h = (int)lua_tonumber(L, -3);
-	int x = (int)lua_tonumber(L, -2);
-	int y = (int)lua_tonumber(L, -1);
-	auto obj = Sprite::Create(path, Vec2i(w, h), Vec2i(x, y));
-	lua_pushlightuserdata(L, (void*)obj);
-	return 1;
-}
-
-void LuaBinds::OnInput(int key, unsigned int state)
-{
-	auto L = LStateManager::GetLuaState();
-	lua_getglobal(L, "OnInput");  /* function to be called */
-	lua_pushnumber(L, key);
-	lua_pushnumber(L, state);
-	if (lua_pcall(L, 2, 0, 0)) {
-		fprintf(stderr, "ERROR: %s\n", lua_tostring(L, -1));
-	}
-	//lua_settop(L, 0);
-}
-
-static int LuaBinds::MoveSprite(lua_State* L)
-{
-	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
-	int x = (int)lua_tonumber(L, 2);
-	int y = (int)lua_tonumber(L, 3);
-	//printf("\n\n x=%d, y=%d, sprt=%p \n\n", x, y,(sprt));
-	sprt->setPosition(Vec2i(x, y));
-	//lua_settop(L, 0);
-	return 0;
-}
-
-static int LuaBinds::GetSpritePos(lua_State* L)
-{
-	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
-	Vec2i p = sprt->getPosition();
-	lua_pushinteger(L, p.x);
-	lua_pushinteger(L, p.y);
-	return 2;
-}
-
-void LuaBinds::OnRender(float dt)
-{
-	auto L = LStateManager::GetLuaState();
-	lua_getglobal(L, "OnRender");
-	lua_pushnumber(L, dt);
-	if (lua_pcall(L, 1, 0, 0)) {
-		fprintf(stderr, "ERROR: %s\n", lua_tostring(L, -1));
-	}
-}
-
-static int LuaBinds::DeletSprite(lua_State* L)
-{
-	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
-	printf("\n\n sprt : %p\n\n", sprt);
-	if (sprt != NULL) {
-		FREE(sprt);
-		sprt = NULL;
-	}
-	return 0;
-}
-
-
-void LuaBinds::Lua_CallOnEngineLoad()
-{
-	auto L = LStateManager::GetLuaState();
-	lua_getglobal(L, "OnEngineLoad");  /* function to be called */
-	if (lua_pcall(L, 0, 0, 0)) {
-		fprintf(stderr, "ERROR: %s\n", lua_tostring(L, -1));
-	}
-	lua_settop(L, 0);
-	//printf("\n\nLUA STACK SIZE : %d \n\n", lua_gettop(L));
-}
 
 

@@ -38,7 +38,6 @@ void Animation::loadAnimationCoordinates()
 	ifstream AnimFile;
 	AnimFile.open(AnimFilename);
 	string line;
-
 	if (AnimFile.is_open())
 	{
 		Log("[INFO] Reading file %s ...", AnimFilename.c_str());
@@ -61,8 +60,7 @@ void Animation::loadAnimationCoordinates()
 			SpriteFramesCoords->push_back({ FrameCoord[0], FrameCoord[1], FrameCoord[2], FrameCoord[3] });
 		}
 		AnimFile.close();
-	}
-	else {
+	}else {
 		Log("[ERROR] Attempt reading file %s Failed", AnimFilename.c_str());
 	}
 	m_MaxFrames = SpriteFramesCoords->size() - 1;

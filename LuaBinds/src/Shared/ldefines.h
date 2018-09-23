@@ -16,7 +16,7 @@ namespace LuaEngine
 {
 	class LStateManager;
 	class LuaEvents;
-	class LuaEvents;
+	class LuaSprite;
 	struct WND_CONFIG;
 }
 

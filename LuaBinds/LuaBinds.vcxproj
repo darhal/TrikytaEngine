@@ -143,10 +143,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\LStateManager\LStateManager.cpp" />
+    <ClCompile Include="src\LuaDrawable\LuaAnimation.cpp" />
+    <ClCompile Include="src\LuaDrawable\LuaSprite.cpp" />
     <ClCompile Include="src\LuaEvents\LuaEvents.cpp" />
     <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
+    <ClInclude Include="src\LuaDrawable\LuaSprite.h" />
     <ClInclude Include="src\Shared\ldefines.h" />
     <ClInclude Include="src\LStateManager\LStateManager.h" />
     <ClInclude Include="src\LuaEvents\LuaEvents.h" />

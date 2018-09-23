@@ -9,9 +9,8 @@ namespace LuaFunctions
 	int addEventHandler(struct lua_State*);
 }
 
-namespace LuaEngine {
-	
-
+namespace LuaEngine 
+{
 	class LuaEvents
 	{
 	public:
@@ -24,5 +23,4 @@ namespace LuaEngine {
 		static LuaEvents* LuaEventManager;
 		std::map<Events, std::vector<int>> m_LuaCallBackFunction;
 	};
-
 }

@@ -39,7 +39,7 @@ end
 --Called when engine is already loaded!
 function OnEngineLoad()
 	print("____________________________________________________________________")
-	local a = CreateSprite("assets/test.png", 464, 464, 50, 100)
+	--local a = createSprite("assets/test.png", 464, 464, 50, 100)
 	AddEventHandler("OnKeyboardInput", OnKeyboardInput)
 	AddEventHandler("OnMouseClick", OnMouseClick)
 	AddEventHandler("OnMouseMove", OnMouseMove)
