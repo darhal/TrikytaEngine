@@ -8,9 +8,9 @@
 #include <core/Objects/ObjectHandler.h>
 #include "Game.h"
 #include <iostream>
-#include <test.h>
 
-bool f = false;
+
+//bool f = false;
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -19,8 +19,9 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
+	
 	//TILED MAP TEST
-	map = TiledMap::Create("assets/example/maps/map.tmx");
+	/*map = TiledMap::Create("assets/example/maps/map.tmx");
 
 	//sprite test
 	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
@@ -40,13 +41,13 @@ void Game::On_Engine_Init()
 		std::vector<Vec2f>{Vec2f((float)this->GetScreenWeight(), 464/ PTM)}
 	);
 	
-	/*body = PhysicsBody::CreateBody
+	body = PhysicsBody::CreateBody
 	(
 		PhysicsEngine::GetPhysicsWorld(), BodyType::DYNAMIC,
 		BodyShape::BOX, BodyParams{3.0f,0.1f},
 		Vec2f{ 50 + obj->getSize().x/PTM, 100+obj->getSize().y/PTM },
 		std::vector<Vec2f>{Vec2f(obj->getSize().x/PTM, obj->getSize().y/PTM)}
-	);*/
+	);
 
 	body2 = PhysicsBody::CreateBody
 	(
@@ -69,12 +70,18 @@ void Game::On_Engine_Init()
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));
+	//LuaBinds::Lua_CallOnEngineLoad();
 };
 
 void Game::On_Engine_Render(float dt)
 {
+	//LuaBinds::OnRender(dt);
 	/*if (obj->getPosition().x > obj->getSize().x + this->GetScreenWeight()) {
 		obj->setPositionX(-(obj->getSize().x));
 	}
@@ -82,33 +89,34 @@ void Game::On_Engine_Render(float dt)
 		obj->setPositionY(-obj->getSize().y);
 	}*/
 		
-	if (anim->getPosition().x > anim->getSize().x + this->GetScreenWeight()) {
+	/*if (anim->getPosition().x > anim->getSize().x + this->GetScreenWeight()) {
 		anim->setPositionX(-(anim->getSize().x));
 	}
 	if (anim->getPosition().y > this->GetScreenHeight() + anim->getSize().y) {
 		anim->setPositionY(-anim->getSize().y);
-	}
+	}*/
 	//anim->setPosition(Vec2i(anim->getPosition().x+1, anim->getPosition().y+0));
 	//obj->setPosition(obj->getPosition() + Vec2i(1, 0));
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
+	if (p_KeyState == SDL_KEYUP) { return; }
 	if (p_Key == SDLK_RIGHT) {
-		anim->setPosition(Vec2i(anim->getPosition().x + 10, anim->getPosition().y + 0));
-		anim->Flip(FLIPTYPE::NONE);
+		/*anim->setPosition(Vec2i(anim->getPosition().x + 10, anim->getPosition().y + 0));
+		anim->Flip(FLIPTYPE::NONE);*/
 	}
 	else if (p_Key == SDLK_LEFT) {
-		anim->setPosition(Vec2i(anim->getPosition().x - 10, anim->getPosition().y + 0));
-		anim->Flip(FLIPTYPE::HORIZONTAL);
+		/*anim->setPosition(Vec2i(anim->getPosition().x - 10, anim->getPosition().y + 0));
+		anim->Flip(FLIPTYPE::HORIZONTAL);*/
 	}
 	else if (p_Key == SDLK_c) {
-		if (!f) {
+		/*if (!f) {
 			FREE(map);
 			f = true;
-		}
+		}*/
 	}
-	LuaBinds::OnInput(p_Key, p_KeyState);
+	//LuaBinds::OnInput(p_Key, p_KeyState);
 };
 
 void Game::On_Engine_Quit() 

@@ -1,7 +1,8 @@
 #include <memory>
 #include <core/Drawable/Sprite.h>
 #include "test.h"
-
+#include <thread>
+//https://pastebin.com/YRA4UaCy ALL KEYS THANKS TO THOMAS
 using namespace LuaBinds;
 lua_State* L;
 
@@ -51,6 +52,33 @@ static int LuaBinds::GetSpritePos(lua_State* L)
 	return 2;
 }
 
+void LuaBinds::OnRender(float dt)
+{
+	lua_getglobal(L, "OnRender");
+	lua_pushnumber(L, dt);
+	if (lua_pcall(L, 1, 0, 0)) {
+		fprintf(stderr, "ERROR: %s\n", lua_tostring(L, -1));
+	}
+}
+
+static int LuaBinds::DeletSprite(lua_State* L)
+{
+	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
+	printf("\n\n sprt : %p\n\n", sprt);
+	if (sprt != NULL) {
+		FREE(sprt);
+		sprt = NULL;
+	}
+	return 0;
+}
+
+static int LuaBinds::Sleep(lua_State* L)
+{
+	int t = (int)lua_tonumber(L, 1);
+	std::this_thread::sleep_for(std::chrono::milliseconds(t));
+	return 0;
+}
+
 void LuaBinds::Lua_CallOnEngineLoad()
 {
 	lua_getglobal(L, "OnEngineLoad");  /* function to be called */
@@ -63,12 +91,13 @@ void LuaBinds::Lua_CallOnEngineLoad()
 
 WndConfig LuaBinds::loadLuaConfigs(lua_State* L)
 {
-	
 	int status = luaL_loadfile(L, "scripts/config.lua");
+
 	if (status || lua_pcall(L, 0, 0, 0)) {
 		fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
 		return WndConfig{0,0,"FAIL"};
 	}
+
 	lua_getglobal(L, "WINDOW_WIDTH");
 	lua_getglobal(L, "WINDOW_HEIGHT");
 	lua_getglobal(L, "WINDOW_NAME");
@@ -85,6 +114,12 @@ WndConfig LuaBinds::loadLuaConfigs(lua_State* L)
 
 	lua_pushcfunction(L, LuaBinds::GetSpritePos);
 	lua_setglobal(L, "GetPos");
+
+	lua_pushcfunction(L, LuaBinds::DeletSprite);
+	lua_setglobal(L, "DelSprite");
+
+	lua_pushcfunction(L, LuaBinds::Sleep);
+	lua_setglobal(L, "Sleep");
 
 	lua_settop(L, 0);
 	printf("\n\nLUA STACK SIZE : %d \n\n", lua_gettop(L));

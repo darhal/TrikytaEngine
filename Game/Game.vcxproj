@@ -152,6 +152,9 @@
     <ProjectReference Include="..\LuaBinds\LuaBinds.vcxproj">
       <Project>{6e09eee4-5079-4b39-a1e0-a3689706af19}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
+      <Project>{d512840f-244e-40c4-87c6-e3876f66446e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\TrikytaEngine\TrikytaEngine.vcxproj">
       <Project>{26d2cd4d-6c4a-4a8d-89a9-a53d3b6359d4}</Project>
     </ProjectReference>

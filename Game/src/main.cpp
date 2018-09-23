@@ -1,7 +1,7 @@
 #include <core/Common/TrikytaEngine.h>
 #include <cstdio>
 #include <windows.h>
-#include <test.h>
+#include <LStateManager/LStateManager.h>
 
 #ifndef __DEBUG__
 
@@ -20,9 +20,12 @@ int WINAPI WinMain(
 
 int main()
 {
-	auto config = LuaBinds::LoadLua();
 	//auto GameInstance = TrikytaEngine::Create(1024, 768);
+	using namespace LuaEngine;
+	WND_CONFIG config = LStateManager::GetLStateManager()->LLoadConfig(LStateManager::GetLuaState());
+
 	auto GameInstance = TrikytaEngine::Create(config.name, config.w, config.h);
+
 	return 0;
 };
 

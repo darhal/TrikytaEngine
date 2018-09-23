@@ -1,11 +1,11 @@
 #pragma once
 #include <core/Common/defines.h>
+#include <SDL/SDL.h>
 #include <memory>
 #include <string>
 #include <vector>
 #include <functional>
-#include <SDL/SDL.h>
-#include <PhysicsEngine/Core/Box2D.h>
+
 
 enum Events
 {
@@ -18,6 +18,8 @@ enum Events
 	ON_COLLISION_END = 5,
 	ON_COLLISION_PRE_SOLVE = 6,
 	ON_COLLISION_POST_SOLVE = 7,
+
+	ON_ENGINE_LOAD = 8,
 };
 
 class EventManager
@@ -26,8 +28,9 @@ public:
 	typedef std::function<void(SDL_Keycode, unsigned int)> InputFuncType;
 	typedef std::function<void(unsigned int, Uint8, Vec2i)> MouseClickFuncType;
 	typedef std::function<void(Vec2i)> MouseMoveFuncType;
-	typedef std::function<void(b2Contact*)> CollisionFuncType;
-	typedef std::function<void(b2Contact*, const b2Manifold*)> PreSolveCollisionFuncType;
+	typedef std::function<void(class b2Contact*)> CollisionFuncType;
+	typedef std::function<void(class b2Contact*, const struct b2Manifold*)> PreSolveCollisionFuncType;
+	typedef std::function<void()> VoidFunc;
 
 	static EventManager* GetEventManager();
 
@@ -81,7 +84,16 @@ public:
 		m_OnCollisionPreSolveCallbacks->push_back(PreSolveCollisionFuncType(std::forward<Func>(func)));
 	}
 
+	template <Events EventType, typename Func,
+		typename std::enable_if<EventType == ON_ENGINE_LOAD, bool>::type = true>
+		void addEventHandler(Func&& func)
+	{
+		m_OnEngineLoadCallbacks->push_back(VoidFunc(std::forward<Func>(func)));
+	}
+
 	void HandleSDLEvents(SDL_Event&, class EngineInstance*);
+
+	void HandleOnEngineLoadEvents();
 
 	friend class PhysicsContactListener;
 private:
@@ -94,7 +106,9 @@ private:
 		m_OnCollisionStartCallbacks(new std::vector<CollisionFuncType>),
 		m_OnCollisionEndCallbacks(new std::vector<CollisionFuncType>),
 		m_OnCollisionPostSolveCallbacks(new std::vector<CollisionFuncType>),
-		m_OnCollisionPreSolveCallbacks(new std::vector<PreSolveCollisionFuncType>)
+		m_OnCollisionPreSolveCallbacks(new std::vector<PreSolveCollisionFuncType>),
+
+		m_OnEngineLoadCallbacks(new std::vector<VoidFunc>)
 	{}
 
 	//Input callbacks
@@ -107,6 +121,9 @@ private:
 	std::vector<CollisionFuncType>* m_OnCollisionEndCallbacks;
 	std::vector<CollisionFuncType>* m_OnCollisionPostSolveCallbacks;
 	std::vector<PreSolveCollisionFuncType>* m_OnCollisionPreSolveCallbacks;
+
+	//ON ENGINE EVENTS!
+	std::vector<VoidFunc>* m_OnEngineLoadCallbacks;
 
 	static EventManager* _EventManager;
 };

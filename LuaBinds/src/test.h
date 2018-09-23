@@ -2,9 +2,8 @@
 
 #include <lua.hpp>
 
-namespace LuaBinds {
-
-
+namespace LuaBinds 
+{
 	struct WndConfig
 	{
 		int w;
@@ -19,6 +18,9 @@ namespace LuaBinds {
 	void OnInput(int key, unsigned int state);
 	static int MoveSprite(lua_State* L);
 	static int GetSpritePos(lua_State* L);
+	static int DeletSprite(lua_State* L);
+	static int Sleep(lua_State* L);
+	void OnRender(float dt);
 }
 
 /*class LuaBindsManager

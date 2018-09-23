@@ -9,7 +9,8 @@ namespace Tmx {
 	class Tileset;
 }
 
-struct TiledLayerData {
+struct TiledLayerData 
+{
 	TiledLayerData(int i, struct SDL_Rect* p_SourceDraw, struct SDL_Rect* p_DestDraw, struct SDL_Texture* p_Tex):
 		SourceDraw(p_SourceDraw), 
 		DestDraw(p_DestDraw), 

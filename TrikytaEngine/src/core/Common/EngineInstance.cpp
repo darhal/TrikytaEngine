@@ -6,6 +6,7 @@
 #include <core/Physics/PhysicsEngine.h>
 #include <core/Events/EventManager.h>
 #include <core/Objects/ObjectHandler.h>
+#include <LStateManager/LStateManager.h>
 
 bool EngineInstance::Init()
 {
@@ -48,9 +49,13 @@ bool EngineInstance::Init()
 	m_EngineState = true;
 	const Physics2D::PhysicsEngineParams a = {{ 0, 10.f }, 1 / 60.f, 8, 3 };
 	this->InitPhysics(a);
-	On_Engine_Init(); // CALL INIT
 
-	Log("Engine is ready!");
+	Log("Engine is ready...");
+	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
+	On_Engine_Init(); // CALL INIT
+	LuaBinds::Lua_CallOnEngineLoad();
+	Log("Engine is active and rendering!");
+
 	return true;
 }
 
@@ -84,6 +89,7 @@ void EngineInstance::Render()
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dt.count());
 	SDL_RenderPresent(m_Renderer);
 	LastTick = std::chrono::system_clock::now();
+	LuaBinds::OnRender(dt.count());
 	//Log("DeltaTime : %f | FPS: %f", dt.count(), 1/dt.count());
 }
 

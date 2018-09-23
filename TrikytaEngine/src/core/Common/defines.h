@@ -8,7 +8,7 @@
 #define ENGINE					TrikytaEngine::getEngine()
 #define DEGTORAD				0.0174532925199432957f
 #define RADTODEG				57.295779513082320876f
-#define FREE(x)					if (x != nullptr || x != NULL) { delete x; };
+#define FREE(x)					if (x != nullptr) { delete x; };
 /** We need this to easily convert between pixel and real-world coordinates*/
 static const float PTM =		2.f;
 
