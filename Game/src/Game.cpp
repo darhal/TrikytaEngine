@@ -47,6 +47,7 @@ void Game::On_Engine_Init()
 		Vec2f{ 50 + obj->getSize().x/PTM, 100+obj->getSize().y/PTM },
 		std::vector<Vec2f>{Vec2f(obj->getSize().x/PTM, obj->getSize().y/PTM)}
 	);*/
+
 	body2 = PhysicsBody::CreateBody
 	(
 		PhysicsEngine::GetPhysicsWorld(), BodyType::DYNAMIC,
@@ -70,8 +71,6 @@ void Game::On_Engine_Init()
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
-
-
 };
 
 void Game::On_Engine_Render(float dt)
@@ -109,6 +108,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			f = true;
 		}
 	}
+	LuaBinds::OnInput(p_Key, p_KeyState);
 };
 
 void Game::On_Engine_Quit() 
