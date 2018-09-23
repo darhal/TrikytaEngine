@@ -20,6 +20,8 @@ enum Events
 	ON_COLLISION_POST_SOLVE = 7,
 
 	ON_ENGINE_LOAD = 8,
+	ON_ENGINE_PRE_INIT = 9,
+	ON_ENGINE_RENDER = 10
 };
 
 class EventManager
@@ -30,7 +32,8 @@ public:
 	typedef std::function<void(Vec2i)> MouseMoveFuncType;
 	typedef std::function<void(class b2Contact*)> CollisionFuncType;
 	typedef std::function<void(class b2Contact*, const struct b2Manifold*)> PreSolveCollisionFuncType;
-	typedef std::function<void()> VoidFunc;
+	typedef std::function<void()> VoidFuncType;
+	typedef std::function<void(float)> RenderFuncType;
 
 	static EventManager* GetEventManager();
 
@@ -88,10 +91,26 @@ public:
 		typename std::enable_if<EventType == ON_ENGINE_LOAD, bool>::type = true>
 		void addEventHandler(Func&& func)
 	{
-		m_OnEngineLoadCallbacks->push_back(VoidFunc(std::forward<Func>(func)));
+		m_OnEngineLoadCallbacks->push_back(VoidFuncType(std::forward<Func>(func)));
+	}
+
+	template <Events EventType, typename Func,
+		typename std::enable_if<EventType == ON_ENGINE_PRE_INIT, bool>::type = true>
+	void addEventHandler(Func&& func)
+	{
+		m_OnEnginePreInitCallbacks->push_back(VoidFuncType(std::forward<Func>(func)));
+	}
+
+	template <Events EventType, typename Func,
+		typename std::enable_if<EventType == ON_ENGINE_RENDER, bool>::type = true>
+		void addEventHandler(Func&& func)
+	{
+		m_OnEnginePreInitCallbacks->push_back(RenderFuncType(std::forward<Func>(func)));
 	}
 
 	void HandleSDLEvents(SDL_Event&, class EngineInstance*);
+	void HandleOnEnginePreInitEvents();
+	void HandleOnEngineRenderEvents(float);
 
 	void HandleOnEngineLoadEvents();
 
@@ -108,14 +127,18 @@ private:
 		m_OnCollisionPostSolveCallbacks(new std::vector<CollisionFuncType>),
 		m_OnCollisionPreSolveCallbacks(new std::vector<PreSolveCollisionFuncType>),
 
-		m_OnEngineLoadCallbacks(new std::vector<VoidFunc>)
+		m_OnEngineLoadCallbacks(new std::vector<VoidFuncType>),
+		m_OnEnginePreInitCallbacks(new std::vector<VoidFuncType>),
+		m_OnEngineRenderCallbacks(new std::vector<RenderFuncType>)
 	{}
 
 	//Input callbacks
 	std::vector<InputFuncType>* m_InputCallbacks;
+
 	// Mouse call backs
 	std::vector<MouseClickFuncType>* m_MouseClickCallbacks;
 	std::vector<MouseMoveFuncType>* m_MouseMoveCallbacks;
+
 	//Physics callback
 	std::vector<CollisionFuncType>* m_OnCollisionStartCallbacks;
 	std::vector<CollisionFuncType>* m_OnCollisionEndCallbacks;
@@ -123,7 +146,9 @@ private:
 	std::vector<PreSolveCollisionFuncType>* m_OnCollisionPreSolveCallbacks;
 
 	//ON ENGINE EVENTS!
-	std::vector<VoidFunc>* m_OnEngineLoadCallbacks;
+	std::vector<VoidFuncType>* m_OnEngineLoadCallbacks;
+	std::vector<VoidFuncType>* m_OnEnginePreInitCallbacks;
+	std::vector<RenderFuncType>* m_OnEngineRenderCallbacks;
 
 	static EventManager* _EventManager;
 };

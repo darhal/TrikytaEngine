@@ -11,6 +11,7 @@
 bool EngineInstance::Init()
 {
 	On_Engine_Pre_Init();// CALL PREINIT
+	EventManager::GetEventManager()->HandleOnEnginePreInitEvents();
 
 	Log("Trikyta Engine initializing. Please wait...");
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -51,11 +52,12 @@ bool EngineInstance::Init()
 	this->InitPhysics(a);
 
 	Log("Engine is ready...");
+
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
 	On_Engine_Init(); // CALL INIT
-	LuaBinds::Lua_CallOnEngineLoad();
-	Log("Engine is active and rendering!");
+	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
 
+	Log("Engine is active and rendering!");
 	return true;
 }
 
@@ -80,17 +82,23 @@ void EngineInstance::Render()
 {
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
 	std::chrono::duration<float> dt = (TimeNow - LastTick);
+	float dtf = dt.count(); //delta time float
+
 	SDL_RenderClear(m_Renderer);
+
 	for (auto itr : *(ObjectHandler::GetObjectHandler()))
 	{
-		itr->render(dt.count());
+		itr->render(dtf);
 	}
-	On_Engine_Render(dt.count());
-	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dt.count());
+
+	On_Engine_Render(dtf);
+	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
+
 	SDL_RenderPresent(m_Renderer);
+
 	LastTick = std::chrono::system_clock::now();
-	LuaBinds::OnRender(dt.count());
-	//Log("DeltaTime : %f | FPS: %f", dt.count(), 1/dt.count());
+
+	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 }
 
 

@@ -62,6 +62,32 @@ void EventManager::HandleOnEngineLoadEvents()
 	}
 	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
 	(
-		Events::ON_ENGINE_LOAD, ""
+		Events::ON_ENGINE_LOAD, 
+		""
+	);
+}
+
+void EventManager::HandleOnEnginePreInitEvents()
+{
+	for (auto onEnginePreInitCallback : *(m_OnEnginePreInitCallbacks)) {
+		onEnginePreInitCallback();
+	}
+	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
+	(
+		Events::ON_ENGINE_PRE_INIT,
+		""
+	);
+}
+
+void EventManager::HandleOnEngineRenderEvents(float dt)
+{
+	for (auto onEngineRenderCallback : *(m_OnEngineRenderCallbacks)) {
+		onEngineRenderCallback(dt);
+	}
+	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
+	(
+		Events::ON_ENGINE_RENDER,
+		"d",
+		dt
 	);
 }

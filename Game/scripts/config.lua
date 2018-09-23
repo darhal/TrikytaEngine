@@ -6,10 +6,16 @@
 *) Sleep(int t) pause program for t milisecond
 *) DelSprite(Sprite a) delete a sprite (DONT DELETE TWICE IT GONNA CRASH TRUST ME)
 
---EVENTS
--OnEngineLoad is called when engine loads
--OnInput(key, state) is called when input is detected!
--OnRender(dt) is called every frame!
+--EVENTS:
+	AddEventHandler("OnKeyboardInput", OnKeyboardInput)
+	AddEventHandler("OnMouseClick", OnMouseClick)
+	AddEventHandler("OnMouseMove", OnMouseMove)
+	AddEventHandler("OnEngineRender", OnRender)
+	AddEventHandler("OnEngineLoad", OnEngineLoad)
+	AddEventHandler("OnEnginePreInit", OnPreInit)
+	
+--Function syntax:
+	AddEventHandler(String event, Function ToBeCalledOnEvent)
 
 --Special thanks to:
 -Thomas Decroix (Tricky Patrick aka.ThoThoBoss)
@@ -17,4 +23,4 @@
 
 WINDOW_WIDTH = 1024 
 WINDOW_HEIGHT = 768
-WINDOW_NAME = "LUA GAME CHANGE"
+WINDOW_NAME = "Trikyta Engine"

@@ -25,6 +25,10 @@ int LuaFunctions::addEventHandler(lua_State* L)
 		LuaEvents::GetLuaEventMnager()->RegisterCallBack(Events::ON_MOUSE_MOVE, CallBackRefFunc);
 	}else if (strcmp(_EventType , "OnEngineLoad") == 0) {
 		LuaEvents::GetLuaEventMnager()->RegisterCallBack(Events::ON_ENGINE_LOAD, CallBackRefFunc);
+	}else if (strcmp(_EventType, "OnEnginePreInit") == 0) {
+		LuaEvents::GetLuaEventMnager()->RegisterCallBack(Events::ON_ENGINE_PRE_INIT, CallBackRefFunc);
+	}else if (strcmp(_EventType, "OnEngineRender") == 0) {
+		LuaEvents::GetLuaEventMnager()->RegisterCallBack(Events::ON_ENGINE_RENDER, CallBackRefFunc);
 	}
 	return 0;
 }
