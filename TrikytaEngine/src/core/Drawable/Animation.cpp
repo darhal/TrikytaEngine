@@ -56,7 +56,7 @@ void Animation::loadAnimationCoordinates()
 				}
 				if (isFirstLine) { isFirstLine = false; };
 			}
-			Log("Values pushed : {%d, %d, %d, %d}", FrameCoord[0], FrameCoord[1], FrameCoord[2], FrameCoord[3]);
+			//Log("Values pushed : {%d, %d, %d, %d}", FrameCoord[0], FrameCoord[1], FrameCoord[2], FrameCoord[3]);
 			SpriteFramesCoords->push_back({ FrameCoord[0], FrameCoord[1], FrameCoord[2], FrameCoord[3] });
 		}
 		AnimFile.close();
