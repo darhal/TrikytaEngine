@@ -42,6 +42,8 @@ Release/
 Debug/
 TrikytaEngine/x64/
 zlib/Debug/
+Intermediate/
+Binary/
 .vs/
 LICENCE.*
 *.filters

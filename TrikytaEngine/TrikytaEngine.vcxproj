@@ -73,21 +73,29 @@
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

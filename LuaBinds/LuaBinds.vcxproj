@@ -72,18 +72,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
