@@ -90,4 +90,5 @@ void EventManager::HandleOnEngineRenderEvents(float dt)
 		"d",
 		dt
 	);
+	//printf("dt : %f\n", dt);
 }

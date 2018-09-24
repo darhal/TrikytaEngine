@@ -7,7 +7,7 @@ Called On Keyboard Input
 	- is equal to 769 On Button Release
 --]]
 function OnKeyboardInput(key, state)
-	--print("KEY BOARD INPUT DETECTED!!!")
+	print("KEY BOARD INPUT DETECTED!!!"..key)
 end
 
 --[[
@@ -23,7 +23,7 @@ Called on mouse click:
 *)PoX and PosY coordinates of the click
 --]]
 function OnMouseClick(EventType, MouseButton, PosX, PosY)
-	--print("MOUSE INPUT DETECTED")
+	print("MOUSE INPUT DETECTED"..PosX)
 end
 
 -- Called on mouse move arguments: ([int] x, [int] y) {POSITION OF THE MOUSE MOVE}
@@ -32,18 +32,19 @@ function OnMouseMove(x, y)
 end
 
 -- Called every frame arguments: ([double] dt)
-function OnRender(dt) 
-	--print("RENDER")
+function OnRender1(dt) 
+	--print("    "..dt)
 end
+AddEventHandler("OnEngineRender", OnRender1)
 
 --Called when engine is already loaded!
 function OnEngineLoad()
 	print("____________________________________________________________________")
 	--local a = createSprite("assets/test.png", 464, 464, 50, 100)
-	AddEventHandler("OnKeyboardInput", OnKeyboardInput)
-	AddEventHandler("OnMouseClick", OnMouseClick)
-	AddEventHandler("OnMouseMove", OnMouseMove)
-	AddEventHandler("OnEngineRender", OnRender)
+	--AddEventHandler("OnKeyboardInput", OnKeyboardInput)
+	--AddEventHandler("OnMouseClick", OnMouseClick)
+	--AddEventHandler("OnMouseMove", OnMouseMove)
+	--AddEventHandler("OnEngineRender", OnRender1)
 end
 AddEventHandler("OnEngineLoad", OnEngineLoad)
 
@@ -51,4 +52,4 @@ AddEventHandler("OnEngineLoad", OnEngineLoad)
 function OnPreInit()
 	--DO SMTHG
 end
-AddEventHandler("OnEnginePreInit", OnPreInit) -- NOT WORKING FOR THIS VERSION!
+--AddEventHandler("OnEnginePreInit", OnPreInit) -- NOT WORKING FOR THIS VERSION!
