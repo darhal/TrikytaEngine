@@ -15,17 +15,11 @@ void Game::On_Engine_Pre_Init()
 	Log("Trikyta Engine Pre-initializing. "); 
 };
 
-void f()
-{
-	std::cout << "Hello!" << std::endl;
-}
-
 void Game::On_Engine_Init()
 {
 
 	//for (int i = 0; i < 100; i++) {
-	//auto t = TimerManager::CreateTimer(f, 1000, 3);
-	//t->start();
+	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
 	//}
 	//TILED MAP TEST
 	/*map = TiledMap::Create("assets/example/maps/map.tmx");

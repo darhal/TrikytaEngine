@@ -3,6 +3,7 @@
 #include "LuaEvents/LuaEvents.h"
 #include "LuaDrawable/LuaSprite.h"
 #include "LuaDrawable/LuaAnimation.h"
+#include "LuaMisc/LuaTimer.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -64,7 +65,6 @@ std::shared_ptr<std::vector<std::string>> LStateManager::LoadScriptList()
 	LogL("INFO", "Parsing scripts in meta...");
 	if (ScriptFile.is_open())
 	{
-		//Log("[INFO] Reading file %s ...", ScriptFile.c_str());
 		while (getline(ScriptFile, line))
 		{
 			string ScriptPath;
@@ -106,6 +106,7 @@ void LStateManager::LoadingTrikytaEnv()
 	LuaEvents::GetLuaEventMnager()->RegisterLuaEventManager();
 	LuaSprite::LoadSpriteSystem();
 	LuaAnimation::LoadAnimationFunctions();
+	LuaTimer::LoadTimerSystem();
 }
 
 

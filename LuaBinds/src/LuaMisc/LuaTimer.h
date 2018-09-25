@@ -10,8 +10,9 @@ namespace LuaEngine {
 		static LuaTimer* GetTimerManager();
 		static void LoadTimerFunction();
 		static int CreateTimer(lua_State *L);
-
+		void CallTimerFunc(int);
 	private:
 		static LuaTimer* _LUA_TIMER_;
+		
 	};
 }

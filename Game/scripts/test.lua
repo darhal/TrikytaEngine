@@ -37,6 +37,10 @@ function OnRender1(dt)
 end
 AddEventHandler("OnEngineRender", OnRender1)
 
+function Hello()
+	print("HELLO FROM LUA EVERY 3k MS")
+end
+
 --Called when engine is already loaded!
 function OnEngineLoad()
 	print("____________________________________________________________________")
@@ -44,6 +48,7 @@ function OnEngineLoad()
 	deleteSprite(a)
 	deleteSprite(a)
 	deleteSprite(a)
+	--setTimer(Hello, 3000, 5)
 	--AddEventHandler("OnKeyboardInput", OnKeyboardInput)
 	--AddEventHandler("OnMouseClick", OnMouseClick)
 	--AddEventHandler("OnMouseMove", OnMouseMove)
