@@ -79,8 +79,8 @@ public:
 		return Vec2(x + v.x, y + v.y);
 	}
 
-	friend Vec2 operator+(Vec2& rhs, Vec2& lhs) {
-		return Vec2(rhs.x + lhs.x, rhs.y + lhs.y);
+	friend Vec2<T> operator+(Vec2<T>& rhs, Vec2<T>& lhs) {
+		return Vec2<T>(rhs.x + lhs.x, rhs.y + lhs.y);
 	}
 
 	friend Vec2 operator-(Vec2& rhs, Vec2& lhs) {

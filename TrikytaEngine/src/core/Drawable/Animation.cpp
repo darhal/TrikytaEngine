@@ -20,8 +20,8 @@ bool Animation::init()
 	Super::init();
 	SpriteFramesCoords = new std::vector<SDL_Rect>;
 	loadAnimationCoordinates();
-	m_DestinationDrawCoord.w = SpriteFramesCoords->at(m_CurrentAnimFrameID).w;
-	m_DestinationDrawCoord.h = SpriteFramesCoords->at(m_CurrentAnimFrameID).h;
+	if (m_Size->x == 0 && m_Size->y == 0)
+		setSize(Vec2i(SpriteFramesCoords->at(m_CurrentAnimFrameID).w, SpriteFramesCoords->at(m_CurrentAnimFrameID).h));
 	return true;
 }
 
@@ -67,20 +67,16 @@ void Animation::loadAnimationCoordinates()
 
 void Animation::render(float dt)
 {
-	Object::render(dt);
+	Drawable::render(dt);
 	LastDeltaTime = LastDeltaTime + dt;
 	if (LastDeltaTime > RequiredTimeToUpdate) {
-		m_CurrentAnimFrameID++;
+		if (m_CurrentAnimFrameID > m_MaxFrames) {
+			m_CurrentAnimFrameID = 0;
+		}
+		m_SourceDrawCoord = SpriteFramesCoords->at(m_CurrentAnimFrameID); // override the Sprite set functions!
 		LastDeltaTime = 0;
+		m_CurrentAnimFrameID++;
 	}
-
-	if (m_CurrentAnimFrameID > m_MaxFrames) {
-		m_CurrentAnimFrameID = 0;
-	}
-	m_SourceDrawCoord = SpriteFramesCoords->at(m_CurrentAnimFrameID); // override the Sprite set functions!
-	/*m_DestinationDrawCoord.w = SpriteFramesCoords->at(m_CurrentAnimFrameID).w;
-	m_DestinationDrawCoord.h = SpriteFramesCoords->at(m_CurrentAnimFrameID).h;*/
-	m_DestinationDrawCoord = SDL_Rect{ m_Position.x, m_Position.y,  SpriteFramesCoords->at(m_CurrentAnimFrameID).w, SpriteFramesCoords->at(m_CurrentAnimFrameID).h };
 	SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 }
 

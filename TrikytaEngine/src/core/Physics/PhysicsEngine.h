@@ -54,9 +54,7 @@ namespace Physics2D {
 	protected:
 		PhysicsBody(b2Body* p_Body, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams) :
 			m_Body(p_Body), m_BodyType(p_BodyType), m_Shape(p_Shape), m_BodyParams(p_BodyParams)
-		{
-			Log("Creating body %p", p_Body);
-		}
+		{}
 	public:
 		static PhysicsBody* CreateBody
 		(
@@ -68,7 +66,7 @@ namespace Physics2D {
 		b2Body* GetBody() const { return m_Body; }
 
 		virtual Vec2i getPosition() override { return Vec2i((int)m_Body->GetPosition().x, (int)m_Body->GetPosition().y); }
-		virtual Vec2i getSize() override { return m_Childrens->at(0)->getSize(); }
+//		virtual Vec2i getSize() override { return m_Childrens->at(0)->getSize(); }
 
 	private:
 		b2Body* m_Body;

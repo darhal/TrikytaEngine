@@ -5,7 +5,7 @@ end
 
 function OnEngineLoad()
 	print("____________________________________________________________________")
-	setTimer(Call, 5000, 5)
+	--setTimer(Call, 50, 5)
 	--attachTo(b,a, 0.5,0.5)
 	--setSpriteVisible(a, false)
 	--print("Onload1")

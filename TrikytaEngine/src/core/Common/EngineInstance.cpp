@@ -84,7 +84,7 @@ void EngineInstance::Render()
 {
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
 	std::chrono::duration<float> dt = (TimeNow - LastTick);
-	float dtf = dt.count(); //delta time float
+	float dtf = dt.count();
 
 	SDL_RenderClear(m_Renderer);
 

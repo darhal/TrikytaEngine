@@ -1,13 +1,14 @@
 #include <core/Common/TrikytaEngine.h>
 #include "Object.h"
 #include "ObjectHandler.h"
+#include "core/Drawable/Drawable.h"
 
 
-Object::Object(Vec2i m_Pos, Vec2i p_Size) :
-	m_Childrens(new std::vector<Object*>), m_Size(p_Size), m_Position(m_Pos)
+Object::Object() :
+	m_Childrens(new std::vector<Object*>)
 {
 	ObjectHandler::PushObject(this);
-	m_IsVisible = true;
+	m_IsRender = true;
 };
 
 Object::~Object()
@@ -20,24 +21,25 @@ bool Object::init()
 	return true;
 }
 
-void Object::setVisible(bool isVisible)
+void Object::setRender(bool isVisible)
 {
-	if (isVisible && !m_IsVisible) {
+	if (isVisible && !m_IsRender) {
 		ObjectHandler::SetObjectSleeping(this, isVisible);
-		m_IsVisible = isVisible;
-	}else if(!isVisible && m_IsVisible) {
+		m_IsRender = isVisible;
+	}else if(!isVisible && m_IsRender) {
 		ObjectHandler::SetObjectSleeping(this, isVisible);
-		m_IsVisible = isVisible;
+		m_IsRender = isVisible;
 	}
 }
 
 void Object::render(float dt)
 {
-	if (m_Parent != nullptr)
+	/*if (m_Parent != nullptr)
 	{
-		m_Position.x = m_Parent->getPosition().x + (int)(m_Offset.x*m_Parent->getSize().x);
-		m_Position.y = m_Parent->getPosition().y + (int)(m_Offset.y*m_Parent->getSize().y);
-	}
+		//m_Position.x = m_Parent->getPosition().x + (int)(m_Offset.x*m_Parent->getSize().x);
+		//m_Position.y = m_Parent->getPosition().y + (int)(m_Offset.y*m_Parent->getSize().y);
+	}*/
+
 }
 
 void Object::addChildren(Object* obj)
@@ -46,15 +48,13 @@ void Object::addChildren(Object* obj)
 	m_Childrens->push_back(obj);
 }
 
+
 void Object::attachTo(Object* obj, Vec2f p_Offset)
 {
 	if (obj == nullptr) {
 		Log("Error attempt to attach to null object!")
-			return;
+		return;
 	}
-	m_Parent = obj;
-	m_Position.x = obj->getPosition().x;
-	m_Position.y = obj->getPosition().y;
 	obj->addChildren(this);
-	m_Offset = p_Offset;
+	m_Parent = obj;
 }

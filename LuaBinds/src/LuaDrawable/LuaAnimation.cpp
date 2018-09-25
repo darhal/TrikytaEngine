@@ -153,10 +153,10 @@ int LuaAnimation::SetAnimationRotationCenter(lua_State* L)
 
 int LuaAnimation::GetAnimationSize(lua_State* L)
 {
-	Animation* anim = (Animation*)lua_touserdata(L, 1);
+	Drawable* anim = (Drawable*)lua_touserdata(L, 1);
 	Vec2i sz;
 	if (anim != NULL) {
-		sz = anim->getDrawSize();
+		sz = anim->getSize();
 		lua_pushnumber(L, sz.x);
 		lua_pushnumber(L, sz.y);
 		return 2;
@@ -206,7 +206,7 @@ int LuaAnimation::IsAnimationVisisble(lua_State* L)
 {
 	Animation* anim = (Animation*)lua_touserdata(L, 1);
 	if (anim != NULL) {
-		lua_pushboolean(L, anim->isVisisble());
+		lua_pushboolean(L, anim->isRender());
 		return 1;
 	}
 	lua_pushnil(L);
@@ -218,7 +218,7 @@ int LuaAnimation::SetAnimationVisisble(lua_State* L)
 	Animation* anim = (Animation*)lua_touserdata(L, 1);
 	bool isVis = lua_toboolean(L, 2);
 	if (anim != NULL) {
-		anim->setVisible(isVis);
+		anim->setRender(isVis);
 		lua_pushboolean(L, true);
 		return 1;
 	}

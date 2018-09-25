@@ -153,10 +153,10 @@ int LuaSprite::SetSpriteRotationCenter(lua_State* L)
 
 int LuaSprite::GetSpriteSize(lua_State* L)
 {
-	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
+	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	Vec2i sz;
 	if (sprt != NULL) {
-		sz = sprt->getDrawSize();
+		sz = sprt->getSize();
 		lua_pushnumber(L, sz.x);
 		lua_pushnumber(L, sz.y);
 		return 2;
@@ -170,7 +170,7 @@ int LuaEngine::LuaSprite::SetSpriteVisisble(lua_State * L)
 	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
 	bool isVis = lua_toboolean(L, 2);
 	if (sprt != NULL) {
-		sprt->setVisible(isVis);
+		sprt->setRender(isVis);
 		lua_pushboolean(L, true);
 		return 1;
 	}
@@ -219,7 +219,7 @@ int LuaSprite::IsSpriteVisisble(lua_State* L)
 {
 	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
 	if (sprt != NULL) {
-		lua_pushboolean(L, sprt->isVisisble());
+		lua_pushboolean(L, sprt->isRender());
 		return 1;
 	}
 	lua_pushnil(L);

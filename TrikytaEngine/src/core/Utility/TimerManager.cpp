@@ -40,7 +40,6 @@ void TimerManager::Activate(Timer* T)
 void TimerManager::Update()
 {
 	if (TimerManager::m_TimerNum != 0) {
-
 		for (auto T : TimerManager::GetTimerManager()) {
 			T->update();
 		}

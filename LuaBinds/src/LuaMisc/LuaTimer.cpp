@@ -42,7 +42,6 @@ int LuaTimer::CreateTimer(lua_State *L)
 void LuaTimer::CallTimerFunc(int p_FuncIndex)
 {
 	auto L = LStateManager::GetLuaState();
-	LogL("INFO", "Index : %d ", p_FuncIndex);
 	lua_rawgeti(L, LUA_REGISTRYINDEX, p_FuncIndex);
 	if (lua_pcall(L, 0, 0, 0))
 	{
