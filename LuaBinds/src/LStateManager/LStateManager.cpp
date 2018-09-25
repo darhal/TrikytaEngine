@@ -4,6 +4,7 @@
 #include "LuaDrawable/LuaSprite.h"
 #include "LuaDrawable/LuaAnimation.h"
 #include "LuaMisc/LuaTimer.h"
+#include "LuaPhysics/LuaBody.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -107,6 +108,7 @@ void LStateManager::LoadingTrikytaEnv()
 	LuaSprite::LoadSpriteSystem();
 	LuaAnimation::LoadAnimationFunctions();
 	LuaTimer::LoadTimerSystem();
+	LuaBody::LoadPhysicsBodySystem();
 }
 
 

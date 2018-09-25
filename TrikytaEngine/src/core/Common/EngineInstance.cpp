@@ -1,6 +1,7 @@
 #include <map>
 #include <chrono>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_ttf.h>
 #include "EngineInstance.h"
 #include <core/Objects/Object.h>
 #include <core/Physics/PhysicsEngine.h>
@@ -8,6 +9,7 @@
 #include <core/Objects/ObjectHandler.h>
 #include <LStateManager/LStateManager.h>
 #include "core/Utility/TimerManager.h"
+
 
 bool EngineInstance::Init()
 {
@@ -46,6 +48,7 @@ bool EngineInstance::Init()
 		Log("Unable to init SDL_image: %s", IMG_GetError());
 		return false;
 	}
+	TTF_Init();
 
 	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
 	m_EngineState = true;

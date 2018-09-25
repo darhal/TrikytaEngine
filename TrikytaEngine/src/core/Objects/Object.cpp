@@ -34,12 +34,6 @@ void Object::setRender(bool isVisible)
 
 void Object::render(float dt)
 {
-	/*if (m_Parent != nullptr)
-	{
-		//m_Position.x = m_Parent->getPosition().x + (int)(m_Offset.x*m_Parent->getSize().x);
-		//m_Position.y = m_Parent->getPosition().y + (int)(m_Offset.y*m_Parent->getSize().y);
-	}*/
-
 }
 
 void Object::addChildren(Object* obj)

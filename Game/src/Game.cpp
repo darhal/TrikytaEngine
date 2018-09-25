@@ -9,11 +9,14 @@
 #include "Game.h"
 #include <iostream>
 #include <core/Utility/TimerManager.h>
+#include <UI/UIText.h>
 
 void Game::On_Engine_Pre_Init()  
 { 
 	Log("Trikyta Engine Pre-initializing. "); 
 };
+
+//UI::Text* a;
 
 void Game::On_Engine_Init()
 {
@@ -28,6 +31,10 @@ void Game::On_Engine_Init()
 	//}
 	//TILED MAP TEST
 	//map = TiledMap::Create("assets/example/maps/map.tmx");
+
+	/*a = UI::Text::createText("HELLO THERE!", "assets/fonts/font.ttf", 20, Vec2i(40, 40), Color{ 255,255,255, 0 });
+	//std::string lol = "FPS: " + std::to_string(1));
+	//a->UpdateText(lol);
 
 	//sprite test
 	obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
@@ -67,15 +74,15 @@ void Game::On_Engine_Init()
 	anim->attachTo(body2, Vec2f(-0.5f, -0.5f));
 
 	//Phy simulation test
-	body2->SetLinearVelocity(b2Vec2(-25.f, 0.f));
-	body->SetLinearVelocity(b2Vec2(25.f, 0.f));
+	body2->SetLinearVelocity(b2Vec2(-35.f, 0.f));
+	body->SetLinearVelocity(b2Vec2(35.f, 0.f));
 	body2->SetAngularDamping(6.f);
 
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
 
@@ -96,6 +103,7 @@ void Game::On_Engine_Render(float dt)
 	}*/
 	//anim->setPosition(Vec2i(anim->getPosition().x+1, anim->getPosition().y+0));
 	//obj->setPosition(Vec2i(obj->getPosition().x+1, obj->getPosition().y+0));
+
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)

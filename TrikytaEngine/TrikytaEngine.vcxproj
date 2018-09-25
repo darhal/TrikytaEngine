@@ -71,28 +71,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Game\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(SolutionDir)Game\libs\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Game\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(SolutionDir)Game\libs\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Game\bin\x64\SDL\;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
@@ -184,6 +184,7 @@
     <ClCompile Include="src\core\TiledMap\Tilesets.cpp" />
     <ClCompile Include="src\core\Utility\Timer.cpp" />
     <ClCompile Include="src\core\Utility\TimerManager.cpp" />
+    <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
     <ClCompile Include="src\utils\SDL2_imageFilter.c" />
@@ -317,6 +318,7 @@
     <ClInclude Include="src\core\TiledMap\Tilesets.h" />
     <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\core\Utility\TimerManager.h" />
+    <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives_font.h" />

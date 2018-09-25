@@ -70,13 +70,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)PhysicsEngine\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)PhysicsEngine\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
@@ -151,15 +151,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\LStateManager\LStateManager.cpp" />
+    <ClCompile Include="src\LuaCompiler.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaAnimation.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaSprite.cpp" />
     <ClCompile Include="src\LuaEvents\LuaEvents.cpp" />
     <ClCompile Include="src\LuaMisc\LuaTimer.cpp" />
+    <ClCompile Include="src\LuaPhysics\LuaBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
     <ClInclude Include="src\LuaDrawable\LuaSprite.h" />
     <ClInclude Include="src\LuaMisc\LuaTimer.h" />
+    <ClInclude Include="src\LuaPhysics\LuaBody.h" />
     <ClInclude Include="src\Shared\ldefines.h" />
     <ClInclude Include="src\LStateManager\LStateManager.h" />
     <ClInclude Include="src\LuaEvents\LuaEvents.h" />
