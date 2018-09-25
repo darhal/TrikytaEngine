@@ -1,101 +1,66 @@
 #include "Timer.h"
+#include "TimerManager.h"
 
-Timer::Timer(const Timeout &timeout)
-	: _timeout(timeout)
+Timer::Timer(std::function<void()> p_Func, int p_Time, int p_CallTime):
+	m_FuncToCall(p_Func), 
+	m_CallPeriod(p_Time), 
+	m_CallTime(p_CallTime)
 {
+	m_TimeLeft = (float)m_CallPeriod;
 }
 
-Timer::Timer(const Timer::Timeout &timeout,
-	const Timer::Interval &interval,
-	bool singleShot)
-	: _isSingleShot(singleShot),
-	_interval(interval),
-	_timeout(timeout)
+Timer::~Timer()
 {
+	/*if (m_TimerThread.joinable())
+		m_TimerThread.join();*/
 }
 
-void Timer::start(bool multiThread)
+void Timer::update()
 {
-	if (this->running() == true)
-		return;
+	Timer::callFunc();
+}
 
-	_running = true;
-
-	if (multiThread == true) {
-		_thread = std::thread(
-			&Timer::_temporize, this);
-	}
-	else {
-		this->_temporize();
-	}
+void Timer::start()
+{
+	m_IsActive = true;
+	TimerManager::Activate(this);
+	mStart_Time = std::chrono::high_resolution_clock::now();
+	//m_TimerThread = std::thread(&Timer::callFunc, this);
+	//auto fut = std::async(std::launch::async, &Timer::callFunc, this);
 }
 
 void Timer::stop()
 {
-	_running = false;
-	_thread.join();
+	//printf("STOP!!\n");
+	m_IsActive = false;
+	TimerManager::Deactivate(this);
+	delete this;
 }
 
-bool Timer::running() const
+void Timer::callFunc()
 {
-	return _running;
-}
-
-void Timer::setSingleShot(bool singleShot)
-{
-	if (this->running() == true)
-		return;
-
-	_isSingleShot = singleShot;
-}
-
-bool Timer::isSingleShot() const
-{
-	return _isSingleShot;
-}
-
-void Timer::setInterval(const Timer::Interval &interval)
-{
-	if (this->running() == true)
-		return;
-
-	_interval = interval;
-}
-
-const Timer::Interval &Timer::interval() const
-{
-	return _interval;
-}
-
-void Timer::setTimeout(const Timeout &timeout)
-{
-	if (this->running() == true)
-		return;
-
-	_timeout = timeout;
-}
-
-const Timer::Timeout &Timer::timeout() const
-{
-	return _timeout;
-}
-
-void Timer::_temporize()
-{
-	if (_isSingleShot == true) {
-		this->_sleepThenTimeout();
-	}
-	else {
-		while (this->running() == true) {
-			this->_sleepThenTimeout();
+	/*while (m_IsActive && m_CallTime >= 0) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(m_CallPeriod));
+		m_CallTime--;
+		m_TimeLeft = 0;
+		m_FuncToCall();
+		if (m_CallTime <= 0) {
+			
+			Timer::stop();
+		}
+	}*/
+	auto end_time = std::chrono::high_resolution_clock::now();
+	auto time = end_time - mStart_Time;
+	m_TimeLeft = (float)std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
+	if (m_IsActive && m_TimeLeft >= m_CallPeriod) {
+		if (m_CallTime >= 0) {
+			m_CallTime--;
+			m_FuncToCall();
+			mStart_Time = std::chrono::high_resolution_clock::now();
+			if (m_CallTime <= 0) {
+				Timer::stop();
+			}
 		}
 	}
 }
 
-void Timer::_sleepThenTimeout()
-{
-	std::this_thread::sleep_for(_interval);
-
-	if (this->running() == true)
-		this->timeout()();
-}

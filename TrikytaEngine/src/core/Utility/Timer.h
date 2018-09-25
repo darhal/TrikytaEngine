@@ -1,43 +1,27 @@
 #pragma once
-#include <thread>
+#include <functional>
 #include <chrono>
-
-//TAKEN FROM https://codereview.stackexchange.com/questions/40915/simple-multithread-timer
+//#include <thread>
 
 class Timer
 {
 public:
-	typedef std::chrono::milliseconds Interval;
-	typedef std::function<void(void)> Timeout;
+	Timer(std::function<void()>, int, int);
+	~Timer();
 
-	Timer(const Timeout &timeout);
-	Timer(const Timeout &timeout,
-		const Interval &interval,
-		bool singleShot = true);
-
-	void start(bool multiThread = false);
+	void update();
+	void start();
 	void stop();
-
-	bool running() const;
-
-	void setSingleShot(bool singleShot);
-	bool isSingleShot() const;
-
-	void setInterval(const Interval &interval);
-	const Interval &interval() const;
-
-	void setTimeout(const Timeout &timeout);
-	const Timeout &timeout() const;
+	void callFunc();
+	bool IsActive() const {return m_IsActive;}
 
 private:
-	std::thread _thread;
-
-	bool _running = false;
-	bool _isSingleShot = true;
-
-	Interval _interval = Interval(0);
-	Timeout _timeout = nullptr;
-
-	void _temporize();
-	void _sleepThenTimeout();
+	int m_CallPeriod;
+	bool m_IsLoop;
+	bool m_IsActive;
+	int m_CallTime;
+	float m_TimeLeft;
+	std::chrono::steady_clock::time_point  mStart_Time;
+	std::function<void()> m_FuncToCall;
+	//std::thread m_TimerThread;
 };

@@ -3,6 +3,7 @@
 #include <core/Drawable/Animation.h>
 #include "LStateManager/LStateManager.h"
 #include "Shared/ldefines.h"
+#include <core/Objects/ObjectHandler.h>
 
 using namespace LuaEngine;
 
@@ -103,9 +104,8 @@ int LuaAnimation::GetAnimationPosition(lua_State* L)
 int LuaAnimation::DeleteAnimation(lua_State* L)
 {
 	Animation* anim = (Animation*)lua_touserdata(L, 1);
-	if (anim != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), anim) != ObjectHandler::GetObjectHandler()->end()) {
 		FREE(anim);
-		anim = NULL;
 	}
 	return 0;
 }

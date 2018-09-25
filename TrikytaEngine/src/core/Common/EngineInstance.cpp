@@ -7,6 +7,7 @@
 #include <core/Events/EventManager.h>
 #include <core/Objects/ObjectHandler.h>
 #include <LStateManager/LStateManager.h>
+#include "core/Utility/TimerManager.h"
 
 bool EngineInstance::Init()
 {
@@ -54,8 +55,9 @@ bool EngineInstance::Init()
 	Log("Engine is ready...");
 
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
-	On_Engine_Init(); // CALL INIT
+	TimerManager::InitTimerManager(); // Init timer system!
 	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
+	On_Engine_Init(); // CALL INIT
 
 	Log("Engine is active and rendering!");
 	return true;
@@ -95,9 +97,8 @@ void EngineInstance::Render()
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
 
 	SDL_RenderPresent(m_Renderer);
-
+	TimerManager::Update();
 	LastTick = std::chrono::system_clock::now();
-
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 }
 

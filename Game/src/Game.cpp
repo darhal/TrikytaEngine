@@ -8,21 +8,31 @@
 #include <core/Objects/ObjectHandler.h>
 #include "Game.h"
 #include <iostream>
-#include <core/Utility/Timer.h>
+#include <core/Utility/TimerManager.h>
 
 void Game::On_Engine_Pre_Init()  
 { 
 	Log("Trikyta Engine Pre-initializing. "); 
 };
 
+void f()
+{
+	std::cout << "Hello!" << std::endl;
+}
+
 void Game::On_Engine_Init()
 {
+
+	//for (int i = 0; i < 100; i++) {
+	//auto t = TimerManager::CreateTimer(f, 1000, 3);
+	//t->start();
+	//}
 	//TILED MAP TEST
 	/*map = TiledMap::Create("assets/example/maps/map.tmx");
 
 	//sprite test
-	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
-	//Log("Sprite obj : %s", obj->getFileName().c_str());
+	obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
+	Log("Sprite obj : %s", obj->getFileName().c_str());
 
 	//Animation test
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(0, 0), Vec2i(650, 75), 0.03f);
@@ -62,17 +72,12 @@ void Game::On_Engine_Init()
 	// attaching testing
 	//obj->attachTo(body, Vec2f(-0.5f,-0.5f));
 	anim->attachTo(body2, Vec2f(-0.5f, -0.5f));
-	LuaBinds::Lua_CallOnEngineLoad();
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
-	/*EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 };
 
 void Game::On_Engine_Render(float dt)

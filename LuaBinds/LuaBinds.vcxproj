@@ -72,25 +72,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)LuaBinds\lua\include;$(SolutionDir)TrikytaEngine\src;$(SolutionDir)TrikytaEngine\libs\includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)LuaBinds\lua\lib;$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,15 +154,15 @@
     <ClCompile Include="src\LuaDrawable\LuaAnimation.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaSprite.cpp" />
     <ClCompile Include="src\LuaEvents\LuaEvents.cpp" />
-    <ClCompile Include="src\test.cpp" />
+    <ClCompile Include="src\LuaMisc\LuaTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
     <ClInclude Include="src\LuaDrawable\LuaSprite.h" />
+    <ClInclude Include="src\LuaMisc\LuaTimer.h" />
     <ClInclude Include="src\Shared\ldefines.h" />
     <ClInclude Include="src\LStateManager\LStateManager.h" />
     <ClInclude Include="src\LuaEvents\LuaEvents.h" />
-    <ClInclude Include="src\test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

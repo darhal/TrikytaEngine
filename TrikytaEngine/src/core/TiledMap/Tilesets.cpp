@@ -18,7 +18,7 @@ Tilesets::Tilesets(TiledMap* p_Map, int i):
 
 Tilesets::~Tilesets() 
 {
-	for (auto const& data : m_TilesPos) {
+	for (auto& data : m_TilesPos) {
 		FREE(data.second);
 	}
 	SDL_DestroyTexture(m_ImageTexture);

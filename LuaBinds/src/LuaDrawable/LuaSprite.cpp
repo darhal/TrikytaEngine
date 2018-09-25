@@ -3,6 +3,7 @@
 #include <core/Drawable/Sprite.h>
 #include "LStateManager/LStateManager.h"
 #include <core/Common/Vec2.h>
+#include <core/Objects/ObjectHandler.h>
 
 #include "Shared/ldefines.h"
 
@@ -73,6 +74,7 @@ int LuaSprite::CreateSprite(lua_State *L)
 	int x = (int)lua_tonumber(L, -2);
 	int y = (int)lua_tonumber(L, -1);
 	auto obj = Sprite::Create(path, Vec2i(w, h), Vec2i(x, y));
+
 	lua_pushlightuserdata(L, (void*)obj);
 	return 1;
 }
@@ -102,9 +104,8 @@ int LuaSprite::GetSpritePosition(lua_State* L)
 int LuaSprite::DeleteSprite(lua_State* L)
 {
 	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
-	if (sprt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
 		FREE(sprt);
-		sprt = NULL;
 	}
 	return 0;
 }
