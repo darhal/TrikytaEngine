@@ -7,7 +7,7 @@
 class Object : public IObject
 {
 public:
-	Object();
+	Object(bool=true);
 	virtual ~Object();
 
 	virtual bool init();

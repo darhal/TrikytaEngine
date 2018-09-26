@@ -1,16 +1,17 @@
-#include "Shared/ldefines.h"
-#include "LStateManager.h"
-#include "LuaEvents/LuaEvents.h"
-#include "LuaDrawable/LuaSprite.h"
-#include "LuaDrawable/LuaAnimation.h"
-#include "LuaMisc/LuaTimer.h"
-#include "LuaPhysics/LuaBody.h"
+#include <iostream>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <sstream>
-#include <iostream>
 #include <lua.hpp>
+#include "LStateManager.h"
+#include "Shared/ldefines.h"
+#include "LuaMisc/LuaTimer.h"
+#include "LuaPhysics/LuaBody.h"
+#include "LuaEvents/LuaEvents.h"
+#include "LuaDrawable/LuaSprite.h"
+#include "LuaDrawable/LuaAnimation.h"
+#include "LuaMisc/LuaConsole.h"
 
 using namespace LuaEngine;
 
@@ -109,6 +110,7 @@ void LStateManager::LoadingTrikytaEnv()
 	LuaAnimation::LoadAnimationFunctions();
 	LuaTimer::LoadTimerSystem();
 	LuaBody::LoadPhysicsBodySystem();
+	LuaConsole::LoadConsoleSystem();
 }
 
 

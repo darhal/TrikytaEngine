@@ -60,8 +60,9 @@ public:
 	//ATTCH FUNCTION:
 	virtual void attachTo(Drawable*, Vec2f);
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
+	void render(float);
 protected:
-	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0));
+	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0), bool p_RegisterInHandler=true);
 	~Drawable();
 
 	inline void updatePosition() {
@@ -74,7 +75,6 @@ protected:
 		m_DestinationDrawCoord.h = m_Size->y;
 	}
 
-	void render(float);
 
 	double m_Angle;
 	SDL_Point m_RotationCenter;

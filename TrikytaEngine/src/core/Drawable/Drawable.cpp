@@ -2,14 +2,15 @@
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Common/TrikytaEngine.h"
 
-Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size) :
+Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
 	m_Position(new Vec2i(m_Pos)), m_Size(new Vec2i(p_Size)),
 	m_NormalSize(Vec2i(0, 0)), m_DrawCoord(Vec2i(0, 0)),
 	m_DestinationDrawCoord(SDL_Rect{ m_Position->x, m_Position->y, m_Size->x, m_Size->y }),
 	m_SourceDrawCoord(SDL_Rect{ m_NormalSize.x, m_NormalSize.y, m_Size->x, m_Size->y }),
 	m_Angle(0.f),
 	m_RotationCenter(SDL_Point{ m_DestinationDrawCoord.w / 2, m_DestinationDrawCoord.h / 2 }),
-	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE)
+	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE),
+	Object(p_RegisterInHandler)
 {}
 
 Drawable::~Drawable()

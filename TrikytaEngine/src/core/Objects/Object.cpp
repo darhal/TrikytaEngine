@@ -4,11 +4,15 @@
 #include "core/Drawable/Drawable.h"
 
 
-Object::Object() :
+Object::Object(bool pRegisterInHandler) :
 	m_Childrens(new std::vector<Object*>)
 {
-	ObjectHandler::PushObject(this);
-	m_IsRender = true;
+	if (pRegisterInHandler) {
+		ObjectHandler::PushObject(this);
+	}else{
+		ObjectHandler::PushObjectAsSleep(this);
+	}
+	m_IsRender = pRegisterInHandler;
 };
 
 Object::~Object()

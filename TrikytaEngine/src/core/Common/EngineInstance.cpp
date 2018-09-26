@@ -100,11 +100,12 @@ void EngineInstance::Render()
 
 	On_Engine_Render(dtf);
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
-
+	Console::getConsole()->Draw(dtf);
 	SDL_RenderPresent(m_Renderer);
 	TimerManager::Update();
 	LastTick = std::chrono::system_clock::now();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
+	
 }
 
 

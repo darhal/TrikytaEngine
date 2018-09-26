@@ -155,14 +155,18 @@
     <ClCompile Include="src\LuaDrawable\LuaAnimation.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaSprite.cpp" />
     <ClCompile Include="src\LuaEvents\LuaEvents.cpp" />
+    <ClCompile Include="src\LuaMisc\LuaConsole.cpp" />
     <ClCompile Include="src\LuaMisc\LuaTimer.cpp" />
     <ClCompile Include="src\LuaPhysics\LuaBody.cpp" />
+    <ClCompile Include="src\LuaUI\LuaText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
     <ClInclude Include="src\LuaDrawable\LuaSprite.h" />
+    <ClInclude Include="src\LuaMisc\LuaConsole.h" />
     <ClInclude Include="src\LuaMisc\LuaTimer.h" />
     <ClInclude Include="src\LuaPhysics\LuaBody.h" />
+    <ClInclude Include="src\LuaUI\LuaText.h" />
     <ClInclude Include="src\Shared\ldefines.h" />
     <ClInclude Include="src\LStateManager\LStateManager.h" />
     <ClInclude Include="src\LuaEvents\LuaEvents.h" />

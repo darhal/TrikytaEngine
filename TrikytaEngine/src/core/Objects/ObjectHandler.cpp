@@ -18,11 +18,6 @@ ObjectsVec* ObjectHandler::GetObjectHandler()
 	return GetObjectManager()->m_ObjectHandler.get();
 }
 
-ObjectsVec * ObjectHandler::GetSleepingObjects()
-{
-	return GetObjectManager()->m_SleepObjects.get();
-}
-
 void ObjectHandler::PushObject(Object* p_Obj)
 {
 	GetObjectHandler()->emplace_back(p_Obj);
@@ -45,4 +40,14 @@ void ObjectHandler::SetObjectSleeping(Object* p_Obj, bool isSleep)
 		GetObjectHandler()->push_back(p_Obj);
 		GetSleepingObjects()->remove(p_Obj);
 	}
+}
+
+ObjectsVec * ObjectHandler::GetSleepingObjects()
+{
+	return GetObjectManager()->m_SleepObjects.get();
+}
+
+void ObjectHandler::PushObjectAsSleep(Object* p_Obj)
+{
+	GetSleepingObjects()->emplace_back(p_Obj);
 }
