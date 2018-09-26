@@ -9,6 +9,7 @@
 #include <core/Objects/ObjectHandler.h>
 #include <LStateManager/LStateManager.h>
 #include "core/Utility/TimerManager.h"
+#include "misc/Console.h"
 
 
 bool EngineInstance::Init()
@@ -54,6 +55,7 @@ bool EngineInstance::Init()
 	m_EngineState = true;
 	const Physics2D::PhysicsEngineParams a = {{ 0, 10.f }, 1 / 60.f, 8, 3 };
 	this->InitPhysics(a);
+	Console::InitConsole();
 
 	Log("Engine is ready...");
 

@@ -184,6 +184,7 @@
     <ClCompile Include="src\core\TiledMap\Tilesets.cpp" />
     <ClCompile Include="src\core\Utility\Timer.cpp" />
     <ClCompile Include="src\core\Utility\TimerManager.cpp" />
+    <ClCompile Include="src\misc\Console.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
@@ -318,6 +319,7 @@
     <ClInclude Include="src\core\TiledMap\Tilesets.h" />
     <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\core\Utility\TimerManager.h" />
+    <ClInclude Include="src\misc\Console.h" />
     <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />

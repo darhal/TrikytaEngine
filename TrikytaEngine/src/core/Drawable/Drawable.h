@@ -62,6 +62,7 @@ public:
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
 protected:
 	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0));
+	~Drawable();
 
 	inline void updatePosition() {
 		m_DestinationDrawCoord.x = m_Position->x;
@@ -80,6 +81,7 @@ protected:
 	SDL_RendererFlip m_Flip;
 	Vec2i* m_Size;
 	Vec2i* m_Position;
+	SDL_Texture* m_Texture;
 	Vec2i m_NormalSize; // The size of the sprite to draw!
 	Vec2i m_DrawCoord;
 	SDL_Rect m_DestinationDrawCoord;

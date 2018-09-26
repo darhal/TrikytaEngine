@@ -67,7 +67,6 @@ void Animation::loadAnimationCoordinates()
 
 void Animation::render(float dt)
 {
-	Drawable::render(dt);
 	LastDeltaTime = LastDeltaTime + dt;
 	if (LastDeltaTime > RequiredTimeToUpdate) {
 		if (m_CurrentAnimFrameID > m_MaxFrames) {
@@ -77,7 +76,8 @@ void Animation::render(float dt)
 		LastDeltaTime = 0;
 		m_CurrentAnimFrameID++;
 	}
-	SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+	Drawable::render(dt);
+	//SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 }
 
 void Animation::loadSpirteFrames()

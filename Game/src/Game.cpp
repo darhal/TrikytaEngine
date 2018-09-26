@@ -1,3 +1,5 @@
+#include <core/Objects/ObjectHandler.h>
+#include <core/Utility/TimerManager.h>
 #include <core/Common/defines.h>
 #include <core/Drawable/Sprite.h>
 #include <core/Common/Vec2.h>
@@ -5,11 +7,10 @@
 #include <core/Physics/PhysicsEngine.h>
 #include <core/Events/EventManager.h>
 #include <core/TiledMap/TiledMap.h>
-#include <core/Objects/ObjectHandler.h>
 #include "Game.h"
 #include <iostream>
-#include <core/Utility/TimerManager.h>
 #include <UI/UIText.h>
+#include <misc/Console.h>
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -32,19 +33,24 @@ void Game::On_Engine_Init()
 	//TILED MAP TEST
 	//map = TiledMap::Create("assets/example/maps/map.tmx");
 
-	/*a = UI::Text::createText("HELLO THERE!", "assets/fonts/font.ttf", 20, Vec2i(40, 40), Color{ 255,255,255, 0 });
+	/*text = UI::Text::createText("This is a simple output example", "assets/fonts/DroidSans.ttf", 12, Vec2i(0, 50), Color{ 255,255,255, 255});
+	text->setScale(1);
+	text->setColor(Color(0, 255, 0, 255));*/
+
+	Console::getConsole()->outputConsole("First test of console");
+
 	//std::string lol = "FPS: " + std::to_string(1));
-	//a->UpdateText(lol);
+	//a->updateText(lol);
 
 	//sprite test
-	obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
+	/*obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
 	Log("Sprite obj : %s", obj->getFileName().c_str());
 
-	//Animation test
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(0, 0), Vec2i(650, 75), 0.03f);
-	Log("Animation obj : %s", anim->getFileName().c_str());
+	Log("Animation obj : %s", anim->getFileName().c_str());*/
+	//text->attachTo(anim, Vec2f(0.2f,0.f));
 
-	using namespace Physics2D;
+	/*using namespace Physics2D;
 	// Body creation test
 	auto Ground = PhysicsBody::CreateBody
 	(
@@ -77,12 +83,12 @@ void Game::On_Engine_Init()
 	body2->SetLinearVelocity(b2Vec2(-35.f, 0.f));
 	body->SetLinearVelocity(b2Vec2(35.f, 0.f));
 	body2->SetAngularDamping(6.f);
-
+	*/
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
+	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
 
@@ -100,8 +106,8 @@ void Game::On_Engine_Render(float dt)
 	}
 	if (anim->getPosition().y > this->GetScreenHeight() + anim->getSize().y) {
 		anim->setPositionY(-anim->getSize().y);
-	}*/
-	//anim->setPosition(Vec2i(anim->getPosition().x+1, anim->getPosition().y+0));
+	}
+	anim->setPosition(Vec2i(anim->getPosition().x+1, anim->getPosition().y+0));*/
 	//obj->setPosition(Vec2i(obj->getPosition().x+1, obj->getPosition().y+0));
 
 };
@@ -112,16 +118,26 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 	if (p_Key == SDLK_RIGHT) {
 		/*anim->setPosition(Vec2i(anim->getPosition().x + 10, anim->getPosition().y + 0));
 		anim->Flip(FLIPTYPE::NONE);*/
+		//text->updateText("HELLO THERE YOU WANT A COFFEE ?");
+		//text->setColor(Color(255, 0, 0, 255));
+		//text->Rotate(45);
+		Console::getConsole()->outputConsole("This is another output !");
 	}
 	else if (p_Key == SDLK_LEFT) {
 		/*anim->setPosition(Vec2i(anim->getPosition().x - 10, anim->getPosition().y + 0));
 		anim->Flip(FLIPTYPE::HORIZONTAL);*/
+		//text->updateText("Yes please!");
+		//text->setColor(Color(0, 0, 255, 255));
+		Console::getConsole()->outputConsole("This is another output :D");
 	}
 	else if (p_Key == SDLK_c) {
 		/*if (!f) {
 			FREE(map);
 			f = true;
 		}*/
+		//text->updateText("Sure here you go mate!");
+		//text->setColor(Color(0, 255, 0, 255));
+		Console::getConsole()->outputConsole("Maybe the last output :P");
 	}
 };
 

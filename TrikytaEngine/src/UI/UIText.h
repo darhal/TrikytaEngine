@@ -1,8 +1,7 @@
 #pragma once
+#include "core/Common/defines.h"
 #include "core/Drawable/Drawable.h"
 #include <SDL/SDL_ttf.h>
-
-typedef unsigned char uint8;
 
 struct Color {
 	uint8 r, g, b, a;
@@ -21,19 +20,19 @@ namespace UI {
 			return new Text(p_Text, p_Font, p_TextSize, p_Pos, p_Color);
 		}
 
-		void UpdateText(std::string);
+		void updateText(std::string);
+		void setScale(uint8);
+		void setColor(Color);
 	protected:
 		Text(std::string, std::string, uint8, Vec2i, Color);
 
 		virtual bool init() override;
-		void render(float) override;
 	private:
-		SDL_Texture* m_TextTexture;
 		std::string& m_FontPath;
 		std::string m_Text;
 		TTF_Font* m_Font;
 		uint8 m_TextSize;
 		Color m_Color;
-
+		uint8 m_Scale;
 	};
 }

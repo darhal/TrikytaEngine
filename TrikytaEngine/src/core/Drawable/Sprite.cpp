@@ -28,15 +28,15 @@ bool Sprite::init()
 	return true;
 }
 
-void Sprite::render(float dt)
+/*void Sprite::render(float dt)
 {
-	Drawable::render(dt); 
-	updatePosition();
-	SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
-}
+	//updatePosition();
+	Drawable::render(dt);
+	//SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+}*/
 
 Sprite::~Sprite()
 {
-	SDL_DestroyTexture(m_Texture);
+	
 }
 

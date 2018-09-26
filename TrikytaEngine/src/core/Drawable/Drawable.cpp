@@ -1,5 +1,6 @@
 #include "Drawable.h"
 #include "core/Physics/PhysicsEngine.h"
+#include "core/Common/TrikytaEngine.h"
 
 Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size) :
 	m_Position(new Vec2i(m_Pos)), m_Size(new Vec2i(p_Size)),
@@ -11,6 +12,13 @@ Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size) :
 	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE)
 {}
 
+Drawable::~Drawable()
+{
+	FREE(m_Size);
+	FREE(m_Position);
+	SDL_DestroyTexture(m_Texture);
+}
+
 void Drawable::render(float dt)
 {
 	if (m_Parent != nullptr) {
@@ -18,6 +26,8 @@ void Drawable::render(float dt)
 		int py = (int)m_Parent->getPosition().y;
 		setPosition(Vec2i(px+m_Offset.x, py+m_Offset.y));
 	}
+
+	SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 }
 
 
@@ -28,7 +38,7 @@ void Drawable::attachTo(Drawable* obj, Vec2f p_Offset)
 		Log("Error attempt to attach to null object!")
 			return;
 	}
-	followPosition(obj->getVecPosPtr());
+	//followPosition(obj->getVecPosPtr());
 	m_Offset = Vec2i((int)(p_Offset.x*m_Size->x), (int)(p_Offset.y*m_Size->y));
 }
 
@@ -40,6 +50,4 @@ void Drawable::attachTo(Physics2D::PhysicsBody* p_Phyobj, Vec2f p_Offset)
 			return;
 	}
 	m_Offset = Vec2i((int)(p_Offset.x*m_Size->x), (int)(p_Offset.y*m_Size->y));
-	//followPosition(obj->getVecPosPtr());
-	//FREE();
 }

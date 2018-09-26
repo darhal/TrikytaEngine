@@ -21,6 +21,7 @@ public:
 
 	class Sprite* obj;
 	class Animation* anim;
+	class UI::Text* text;
 	class Physics2D::PhysicsBody* body;
 	class Physics2D::PhysicsBody* body2;
 	class TiledMap* map;
