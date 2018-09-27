@@ -22,6 +22,7 @@ bool Animation::init()
 	loadAnimationCoordinates();
 	if (m_Size->x == 0 && m_Size->y == 0)
 		setSize(Vec2i(SpriteFramesCoords->at(m_CurrentAnimFrameID).w, SpriteFramesCoords->at(m_CurrentAnimFrameID).h));
+	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
 	return true;
 }
 

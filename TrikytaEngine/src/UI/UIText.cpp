@@ -1,5 +1,6 @@
 #include "UIText.h"
 #include "core/Common/TrikytaEngine.h"
+#include "core/Common/Color.h"
 
 using namespace UI;
 
@@ -23,18 +24,20 @@ bool Text::init()
 {
 	m_Font = Font::createOrGetFont(m_FontPath, m_TextSize);
 	if (m_Font == NULL) {
-		Log("ERROR: loading font path %s", m_FontPath.c_str());
+		LogInfoConsole("ERROR: loading font path %s", m_FontPath.c_str());
 	}
 	SDL_Surface* textSurface = TTF_RenderText_Solid(m_Font->getFont(), m_Text.c_str(), { m_Color.r,m_Color.g, m_Color.b });
 	if (textSurface == NULL) {
-		Log("ERROR: loading text with font %s", m_FontPath.c_str());
+		LogInfoConsole("ERROR: loading text with font %s", m_FontPath.c_str());
 		return false;
 	}
 	m_Texture = SDL_CreateTextureFromSurface(ENGINE->getRenderer(), textSurface);
+
 	int temp_w, temp_h;
 	TTF_SizeText(m_Font->getFont(), m_Text.c_str(), &temp_w, &temp_h);
 	setSize(Vec2i(temp_w, temp_h));
 	m_SourceDrawCoord = {0,0,temp_w,temp_h};
+	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
 
 	SDL_FreeSurface(textSurface);
 	//TTF_CloseFont(font);
@@ -45,7 +48,7 @@ void Text::updateText(std::string p_Text)
 {
 	m_Text = p_Text;
 	if (m_Font == NULL) {
-		Log("ERROR: No font found while updating text! (Font Path: %s)", m_FontPath.c_str());
+		LogInfoConsole("ERROR: No font found while updating text! (Font Path: %s)", m_FontPath.c_str());
 		return;
 	}
 
@@ -58,6 +61,7 @@ void Text::updateText(std::string p_Text)
 	TTF_SizeText(m_Font->getFont(), m_Text.c_str(), &temp_w, &temp_h);
 	setSize(Vec2i(temp_w*m_Scale, temp_h*m_Scale));
 	m_SourceDrawCoord = { 0,0,temp_w*m_Scale,temp_h*m_Scale };
+	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
 }
 
 void Text::setScale(uint8 p_Scale)
@@ -71,7 +75,7 @@ void Text::setColor(Color p_Color)
 {
 	m_Color = p_Color;
 	if (m_Font == NULL) {
-		Log("ERROR: No font found while updating text! (Font Path: %s)", m_FontPath.c_str());
+		LogInfoConsole("ERROR: No font found while updating text! (Font Path: %s)", m_FontPath.c_str());
 		return;
 	}
 	SDL_Surface* textSurface = TTF_RenderText_Solid(m_Font->getFont(), m_Text.c_str(), { m_Color.r,m_Color.g, m_Color.b });

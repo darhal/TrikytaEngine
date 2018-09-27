@@ -16,7 +16,7 @@ namespace LuaEngine {
 		static int SetTextPosition(lua_State* L);
 		static int SetTextRotationCenter(lua_State* L);
 		static int GetTextPosition(lua_State* L);
-		static int GetTextFilename(lua_State* L);
+		static int setText(lua_State* L);
 		static int GetTextRotation(lua_State* L);
 
 		static int DeleteText(lua_State* L);

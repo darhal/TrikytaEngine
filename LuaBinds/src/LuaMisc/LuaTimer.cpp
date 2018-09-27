@@ -48,3 +48,9 @@ void LuaTimer::CallTimerFunc(int p_FuncIndex)
 		LogL("ERROR", "Attempt running function : %s", lua_tostring(L, -1));
 	}
 }
+
+void LuaTimer::RemoveFuncFromRegistery(int key)
+{
+	auto L = LStateManager::GetLuaState();
+	luaL_unref(L, LUA_REGISTRYINDEX, key);
+}

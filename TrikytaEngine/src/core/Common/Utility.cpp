@@ -16,46 +16,53 @@ char* Utility::getDateNow()
 	return date;
 }
 
-template<typename T>
-T Utility::ToMeters(T x) 
+void Utility::LogVaradicConsole(MESSAGE_TYPE msg_type, const char* format, ...)
 {
-
+	char buffer[256] = { 0 };
+	va_list argptr;
+	va_start(argptr, format);
+	vsnprintf(buffer, 255, format, argptr);
+	va_end(argptr);
+	Console::getConsole()->outputConsole(buffer, msg_type);
 }
 
-template<typename T>
-T Utility::ToPixels(T x) 
+int Utility::ToMeters(int x)
 {
-
+	return (int)(x / PTM);
 }
 
-template<typename T>
-T Utility::ToRadian(T x) 
+int Utility::ToPixels(int x)
 {
-	return DEGTORAD * x;
+	return (int)(x * PTM);
 }
 
-template<typename T>
-T Utility::ToDegree(T x) 
+int Utility::ToRadian(int x)
 {
-	return RADTODEG * x;
+	return (int)(DEGTORAD * x);
 }
 
-Vec2f Utility::ConvertWorldToScreen(Vec2f pw)
+int Utility::ToDegree(int x)
 {
-	// CODE TAKEN FROM HERE: http://www.box2d.org/forum/viewtopic.php?t=8198
-	float offsetX = ENGINE->GetScreenWeight()/PTM; //x offset in meters (400/50 = 8). This will put the 0 x-coordinate in the middle of the screen horizontally.
-	float offsetY = ENGINE->GetScreenHeight()/PTM; //y offset in meters (300/50 = 6). This will put the 0 y-coordinate in the middle of the screen vertically.
-	float drawPositionX = (pw.x*PTM + offsetX); //((0m) +  8.0m)*50 = 400 pixels
-	float drawPositionY = (pw.y*PTM + offsetY); //(-(4m) + 6.0m)*50 = 100 pixels
-	return Vec2f(drawPositionX, drawPositionY);
+	return (int)(RADTODEG * x);
 }
 
-Vec2f Utility::ConvertScreenToWorld(Vec2f ps)
+
+float Utility::ToMeters(float x)
 {
-	float offsetX = ENGINE->GetScreenWeight()/(2*PTM);
-	float offsetY = ENGINE->GetScreenHeight()/(2*PTM);
-	float WorldX = (ps.x / PTM) - offsetX;
-	float WorldY = (ps.y / PTM) - offsetY;
-	//return b2Vec2(WorldX, WorldY);
-	return Vec2f(WorldX, WorldY);
+	return (float)(x / PTM);
+}
+
+float Utility::ToPixels(float x)
+{
+	return (float)(x * PTM);
+}
+
+float Utility::ToRadian(float x)
+{
+	return (float)(DEGTORAD * x);
+}
+
+float Utility::ToDegree(float x)
+{
+	return (float)(RADTODEG * x);
 }

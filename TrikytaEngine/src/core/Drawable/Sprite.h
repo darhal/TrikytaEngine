@@ -29,7 +29,6 @@ protected:
 public:
 	virtual ~Sprite();
 	virtual bool init() override;
-	//virtual void render(float) override;
 
 	static Sprite* Create(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position)
 	{
@@ -38,8 +37,6 @@ public:
 
 	/*GETTERS!*/
 	inline std::string getFileName() const { return m_Filename; }
-
 protected:
 	std::string m_Filename;
-	//SDL_Texture* m_Texture;
 };

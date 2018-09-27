@@ -1,5 +1,4 @@
 #pragma once
-#include "core/Common/defines.h"
 #include <string>
 #include <vector>
 
@@ -18,6 +17,9 @@ class Console
 public:
 	static void InitConsole();
 	static Console* getConsole();
+	static class Font* getConsoleFont() {
+		return m_Font;
+	};
 
 	void outputConsole(std::string, struct Color, bool = true);
 	void outputConsole(std::string, MESSAGE_TYPE=MESSAGE_TYPE::INFO);
@@ -30,7 +32,8 @@ protected:
 	Console();
 private:
 	static Console* _Console;
-	std::vector<class UI::Text*> m_Output;
+	static class Font* m_Font;
+	std::vector<class ConsoleText*> m_Output;
 	int m_StartPos;
 	bool m_isActive;
 };

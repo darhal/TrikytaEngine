@@ -29,6 +29,9 @@ void LuaBody::LoadBodyFunction()
 
 	lua_pushcfunction(L, LuaBody::SetLinearVelocity);
 	lua_setglobal(L, "setLinearVelocity");
+
+	lua_pushcfunction(L, LuaBody::SetAngularDamping);
+	lua_setglobal(L, "setAngularDamping");
 }
 
 int LuaBody::CreateBody(lua_State *L)
@@ -44,17 +47,19 @@ int LuaBody::CreateBody(lua_State *L)
 
 	Physics2D::BodyShape rBodyShape;
 	Physics2D::BodyType rBodyType;
-	if (bodyType == "Dynamic") {
+	if (strcmp(bodyType,"Dynamic") ==0) {
 		rBodyType = Physics2D::BodyType::DYNAMIC;
-	}else if (bodyType == "Static") {
+	}else if (strcmp(bodyType, "Static") == 0) {
 		rBodyType = Physics2D::BodyType::STATIC;
-	}else if (bodyType == "Kinematic") {
+	}else if (strcmp(bodyType, "Kinematic") == 0) {
 		rBodyType = Physics2D::BodyType::KINEMATIC;
 	}
-	if (bodyShape == "Box") {
+	if (strcmp(bodyShape, "Box") == 0) {
 		rBodyShape = Physics2D::BodyShape::BOX;
-	}else if (bodyShape == "Circle") {
+	}else if (strcmp(bodyShape, "Circle") == 0) {
 		rBodyShape = Physics2D::BodyShape::CIRCLE;
+	}else if (strcmp(bodyShape, "Polygon") == 0) {
+		rBodyShape = Physics2D::BodyShape::POLYGON;
 	}
 
 	auto body = Physics2D::PhysicsBody::CreateBody
@@ -89,3 +94,4 @@ int LuaBody::SetAngularDamping(lua_State* L)
 	lua_pushboolean(L, true);
 	return 1;
 }
+

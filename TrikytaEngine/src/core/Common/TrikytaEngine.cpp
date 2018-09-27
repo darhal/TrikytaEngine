@@ -20,13 +20,13 @@ std::shared_ptr<Game> TrikytaEngine::Create(const int p_WindowWidth, const int p
 
 void TrikytaEngine::init(Game* _Engine)
 {
-	Log("Setting G_Engine");
+	LogTerminal("Setting G_Engine");
 	TrikytaEngine::G_Engine = _Engine;
 	if (_Engine->Init()) {
 		_Engine->EngineLogic();
 	}
 	else {
-		Log("Error Initing the engine...");
+		LogTerminal("Error Initing the engine...");
 		exit(1);
 	}
 

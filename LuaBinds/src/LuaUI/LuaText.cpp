@@ -2,6 +2,7 @@
 #include <UI/UIText.h>
 #include <lua.hpp>
 #include "LuaText.h"
+#include <core/Objects/ObjectHandler.h>
 
 
 using namespace UI;
@@ -67,6 +68,9 @@ void LuaText::LoadTextFunction()
 
 	lua_pushcfunction(L, LuaText::IsTextVisisble);
 	lua_setglobal(L, "isTextVisible");
+
+	lua_pushcfunction(L, LuaText::setText);
+	lua_setglobal(L, "setText");
 }
 
 int LuaText::createText(lua_State* L)
@@ -84,9 +88,19 @@ int LuaText::createText(lua_State* L)
 
 int LuaText::setTextColor(lua_State* L)
 {
-	UI::Text* t = (UI::Text*)lua_touserdata(L, 1);
-	if (t != NULL) {
-		t->setColor(Color{ (uint8)lua_tonumber(L, 2), (uint8)lua_tonumber(L, 3), (uint8)lua_tonumber(L, 4), 255 });
+	UI::Text* txt = (UI::Text*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
+		txt->setColor(Color{ (uint8)lua_tonumber(L, 2), (uint8)lua_tonumber(L, 3), (uint8)lua_tonumber(L, 4), 255 });
+	}
+	return 0;
+}
+
+int LuaText::setText(lua_State* L)
+{
+	UI::Text* txt = (UI::Text*)lua_touserdata(L, 1);
+	auto text = lua_tostring(L, 2);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
+		txt->updateText(text);
 	}
 	return 0;
 }
@@ -105,7 +119,7 @@ int LuaText::GetTextPosition(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	Vec2i p = txt->getPosition();
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushinteger(L, p.x);
 		lua_pushinteger(L, p.y);
 		return 2;
@@ -117,7 +131,7 @@ int LuaText::GetTextPosition(lua_State* L)
 int LuaText::DeleteText(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		FREE(txt);
 	}
 	return 0;
@@ -127,7 +141,7 @@ int LuaText::RotateText(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int rot = (int)lua_tonumber(L, 2);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->Rotate(rot);
 	}
 	return 0;
@@ -137,7 +151,7 @@ int LuaText::FlipTextHorizental(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->Flip(bFlip ? FLIPTYPE::HORIZONTAL : FLIPTYPE::NONE);
 	}
 	return 0;
@@ -147,7 +161,7 @@ int LuaText::FlipTextVertical(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->Flip(bFlip ? FLIPTYPE::VERTICAL : FLIPTYPE::NONE);
 	}
 	return 0;
@@ -158,7 +172,7 @@ int LuaText::SetTextRotationCenter(lua_State* L)
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->SetRotationCenter(Vec2i(x, y));
 	}
 	return 0;
@@ -168,7 +182,7 @@ int LuaText::GetTextSize(lua_State* L)
 {
 	Drawable* txt = (Drawable*)lua_touserdata(L, 1);
 	Vec2i sz;
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		sz = txt->getSize();
 		lua_pushnumber(L, sz.x);
 		lua_pushnumber(L, sz.y);
@@ -182,7 +196,7 @@ int LuaEngine::LuaText::SetTextVisisble(lua_State * L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	bool isVis = lua_toboolean(L, 2);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->setRender(isVis);
 		lua_pushboolean(L, true);
 		return 1;
@@ -194,7 +208,7 @@ int LuaEngine::LuaText::SetTextVisisble(lua_State * L)
 /*int LuaText::GetTextFilename(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushstring(L, txt->().c_str());
 		return 1;
 	}
@@ -205,7 +219,7 @@ int LuaEngine::LuaText::SetTextVisisble(lua_State * L)
 int LuaText::GetTextRotation(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushnumber(L, txt->GetRotation());
 		return 1;
 	}
@@ -231,7 +245,7 @@ int LuaText::AttachTextTo(lua_State* L)
 int LuaText::IsTextVisisble(lua_State* L)
 {
 	Text* txt = (Text*)lua_touserdata(L, 1);
-	if (txt != NULL) {
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushboolean(L, txt->isRender());
 		return 1;
 	}

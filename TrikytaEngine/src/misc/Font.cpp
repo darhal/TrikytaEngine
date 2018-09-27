@@ -4,7 +4,7 @@ std::map<std::string, Font*> Font::m_Font_Map;
 
 Font* Font::createOrGetFont(std::string p_FontPath, uint8 p_Size)
 {
-	if (m_Font_Map[p_FontPath] != nullptr && m_Font_Map[p_FontPath]->getSize() == p_Size) {
+	if (!m_Font_Map.empty() && m_Font_Map[p_FontPath] != nullptr && m_Font_Map[p_FontPath]->getSize() == p_Size) {
 		m_Font_Map[p_FontPath]->m_NumberOfUse++;
 		//Log("Requested of font %s with size %d WAS FOUND!", p_FontPath.c_str(), p_Size);
 		return m_Font_Map[p_FontPath];

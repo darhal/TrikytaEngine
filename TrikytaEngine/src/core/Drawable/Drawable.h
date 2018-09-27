@@ -13,10 +13,8 @@ enum class FLIPTYPE {
 class Drawable : public Object
 {
 public:
-
-
 	// SET GET ROT FUNCTIONS
-	inline double GetRotation() { return m_Angle; }
+	virtual double GetRotation() override { return m_Angle; }
 
 	inline void Flip(const FLIPTYPE& p_Type)
 	{
@@ -60,10 +58,14 @@ public:
 	//ATTCH FUNCTION:
 	virtual void attachTo(Drawable*, Vec2f);
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
+
+
 	void render(float);
+
+	class Physics2D::PhysicsBody* Physicalize(float, float, enum class Physics2D::BodyType, Vec2f = Vec2f(0.0f, 0.0f));
+	~Drawable();
 protected:
 	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0), bool p_RegisterInHandler=true);
-	~Drawable();
 
 	inline void updatePosition() {
 		m_DestinationDrawCoord.x = m_Position->x;
@@ -88,6 +90,8 @@ protected:
 	SDL_Rect m_SourceDrawCoord;
 	Vec2i m_ToFollowPos;
 	Vec2i m_Offset;
+
+	class Physics2D::PhysicsBody* m_Body = nullptr;
 private:
 
 };

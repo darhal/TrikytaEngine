@@ -1,14 +1,17 @@
 #include "Console.h"
-#include "UI/UIText.h"
 #include "core/Common/TrikytaEngine.h"
 #include "core/Common/Utility.h"
+#include "ConsoleText.h"
+#include "Font.h"
 
 Console* Console::_Console = nullptr;
+class Font* Console::m_Font = nullptr;
 
 void Console::InitConsole()
 {
 	if (_Console == nullptr) {
 		_Console = new Console();
+		m_Font = Font::createOrGetFont(FONT_PATH, CONSOLE_TEXT_SIZE); // destroy this at then end
 	}
 }
 
@@ -39,8 +42,8 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 	for (auto msg : m_Output) {
 		msg->setPosition(Vec2i(msg->getPosition().x, msg->getPosition().y - m_Output.back()->getSize().y));
 	}
-	UI::Text* output;
-	output = UI::Text::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, FONT_PATH, CONSOLE_TEXT_SIZE, Vec2i(START_POS_X, m_StartPos), p_Color, false);
+	ConsoleText* output;
+	output = ConsoleText::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, Vec2i(START_POS_X, m_StartPos), p_Color);
 	Log(("[CONSOLE]"+p_Text).c_str());
 	m_Output.emplace_back(output);
 	removeConsoleMessage();
@@ -58,7 +61,7 @@ void Console::Draw(float dt)
 {
 	if (!m_isActive) return;
 	for (auto msg : m_Output) {
-		msg->render(dt);
+		msg->renderConsoleText();
 	}
 }
 

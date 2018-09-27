@@ -4,9 +4,9 @@
 #include "core/Drawable/Drawable.h"
 
 
-Object::Object(bool pRegisterInHandler) :
-	m_Childrens(new std::vector<Object*>)
+Object::Object(bool pRegisterInHandler)
 {
+	m_Childrens = new std::vector<Object*>;
 	if (pRegisterInHandler) {
 		ObjectHandler::PushObject(this);
 	}else{
@@ -42,7 +42,7 @@ void Object::render(float dt)
 
 void Object::addChildren(Object* obj)
 {
-	if (obj == nullptr) { Log("Error attempt to add null as a child!") return; }
+	if (obj == nullptr) { LogConsole(MESSAGE_TYPE::ERROR,  "Attempt to add null as a child!") return; }
 	m_Childrens->push_back(obj);
 }
 
@@ -50,7 +50,7 @@ void Object::addChildren(Object* obj)
 void Object::attachTo(Object* obj, Vec2f p_Offset)
 {
 	if (obj == nullptr) {
-		Log("Error attempt to attach to null object!")
+		LogConsole(MESSAGE_TYPE::ERROR,"Attempt to attach to null object!")
 		return;
 	}
 	obj->addChildren(this);

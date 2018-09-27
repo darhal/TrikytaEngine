@@ -20,14 +20,14 @@ ObjectsVec* ObjectHandler::GetObjectHandler()
 
 void ObjectHandler::PushObject(Object* p_Obj)
 {
-	GetObjectHandler()->emplace_back(p_Obj);
+	GetObjectHandler()->push_back(p_Obj);
 	p_Obj->m_Manager_Index = GetObjectHandler()->size() - 1;
-	Log("Creating object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
+	LogInfoConsole("Creating object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
 }
  
 void ObjectHandler::RemoveObject(Object* p_Obj)
 {
-	Log("Deleted object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
+	LogInfoConsole("Deleted object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
 	GetObjectHandler()->remove(p_Obj);
 }
 
@@ -49,5 +49,5 @@ ObjectsVec * ObjectHandler::GetSleepingObjects()
 
 void ObjectHandler::PushObjectAsSleep(Object* p_Obj)
 {
-	GetSleepingObjects()->emplace_back(p_Obj);
+	GetSleepingObjects()->push_back(p_Obj);
 }

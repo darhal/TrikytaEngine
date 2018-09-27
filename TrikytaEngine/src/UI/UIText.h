@@ -2,14 +2,7 @@
 #include "core/Common/defines.h"
 #include "core/Drawable/Drawable.h"
 #include "misc/Font.h"
-
-struct Color {
-	uint8 r, g, b, a;
-	Color(uint8 r, uint8 g, uint8 b, uint8 a) :
-		r(r), g(g), b(b), a(a)
-	{}
-	
-};
+#include "core/Common/Color.h"
 
 namespace UI {
 	class Text : public Drawable

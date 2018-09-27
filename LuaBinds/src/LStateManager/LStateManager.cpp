@@ -12,6 +12,7 @@
 #include "LuaDrawable/LuaSprite.h"
 #include "LuaDrawable/LuaAnimation.h"
 #include "LuaMisc/LuaConsole.h"
+#include "LuaUI/LuaText.h"
 
 using namespace LuaEngine;
 
@@ -64,7 +65,7 @@ std::shared_ptr<std::vector<std::string>> LStateManager::LoadScriptList()
 	string line;
 	std::shared_ptr<std::vector<std::string>> ScriptsToLoad = std::make_shared<std::vector<std::string>>();
 	ScriptsToLoad.get()->reserve(1);
-	LogL("INFO", "Parsing scripts in meta...");
+	LogConsole(MESSAGE_TYPE::INFO, "Parsing scripts in meta...");
 	if (ScriptFile.is_open())
 	{
 		while (getline(ScriptFile, line))
@@ -81,8 +82,8 @@ std::shared_ptr<std::vector<std::string>> LStateManager::LoadScriptList()
 			}
 		}
 	}else {
-		LogL("ERROR", "Couldn't load the meta file !");
-		LogL("ERROR", "Expected meta file at %s", SCRIPT_META_PATH);
+		LogConsole(MESSAGE_TYPE::ERROR, "Couldn't load the meta file !");
+		LogConsole(MESSAGE_TYPE::ERROR, "Expected meta file at %s", SCRIPT_META_PATH);
 	}
 	return ScriptsToLoad;
 }
@@ -93,9 +94,9 @@ void LStateManager::LoadScripts()
 	for (auto _ScrtipToLoad : *ScriptsToLoad.get()) {
 
 		int status = luaL_loadfile(_LUA_STATE_, (SCRIPTS_PATH +_ScrtipToLoad).c_str());
-		LogL("INFO", "Compiling script : %s", _ScrtipToLoad.c_str())
+		LogConsole(MESSAGE_TYPE::INFO, "Compiling script : %s", _ScrtipToLoad.c_str())
 		if (status || lua_pcall(_LUA_STATE_, 0, 0, 0)) {
-			LogL("ERROR","Couldn't load file: %s\n", lua_tostring(_LUA_STATE_, -1));
+			LogConsole(MESSAGE_TYPE::ERROR,"Couldn't load file: %s\n", lua_tostring(_LUA_STATE_, -1));
 			return;
 		}
 	}
@@ -103,7 +104,7 @@ void LStateManager::LoadScripts()
 
 void LStateManager::LoadingTrikytaEnv()
 {
-	LogL("INFO", "Loading Trikyta Enviroument");
+	LogConsole(MESSAGE_TYPE::INFO, "Loading Trikyta Enviroument");
 
 	LuaEvents::GetLuaEventMnager()->RegisterLuaEventManager();
 	LuaSprite::LoadSpriteSystem();
@@ -111,6 +112,7 @@ void LStateManager::LoadingTrikytaEnv()
 	LuaTimer::LoadTimerSystem();
 	LuaBody::LoadPhysicsBodySystem();
 	LuaConsole::LoadConsoleSystem();
+	LuaText::LoadTextSystem();
 }
 
 

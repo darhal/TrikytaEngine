@@ -2,7 +2,7 @@
 #include "Sprite.h"
 #include <core/Objects/ObjectHandler.h>
 #include "core/Common/defines.h"
-
+#include "core/Physics/PhysicsEngine.h"
 
 bool Sprite::init()
 {
@@ -24,7 +24,7 @@ bool Sprite::init()
 		*m_Size = m_NormalSize;
 
 	setNormalSize(m_NormalSize);
-
+	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
 	return true;
 }
 
@@ -37,6 +37,6 @@ bool Sprite::init()
 
 Sprite::~Sprite()
 {
-	
+
 }
 

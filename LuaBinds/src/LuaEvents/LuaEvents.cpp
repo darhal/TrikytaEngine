@@ -12,6 +12,7 @@ int LuaFunctions::addEventHandler(lua_State* L)
 	luaL_checktype(L, -1, LUA_TFUNCTION);
 	int CallBackRefFunc = luaL_ref(L, LUA_REGISTRYINDEX);
 	const char* _EventType = lua_tostring(L, 1);
+
 	if (strcmp(_EventType, "OnKeyboardInput") == 0) {
 		LuaEvents::GetLuaEventMnager()->RegisterCallBack(Events::ON_KEYBOARD_INPUT, CallBackRefFunc);
 	}else if (strcmp(_EventType, "OnCollisionStart") == 0) {
@@ -68,7 +69,7 @@ void LuaEvents::CallLuaEventFunctions(Events p_Event, const char *sig, ...)
 				goto endwhile;
 
 			default:
-				LogL("ERROR", "invalid option (%c)", *(sig - 1));
+				LogConsole(MESSAGE_TYPE::ERROR, "invalid option (%c)", *(sig - 1));
 			}
 			narg++;
 			luaL_checkstack(L, 1, "too many arguments");
@@ -76,7 +77,7 @@ void LuaEvents::CallLuaEventFunctions(Events p_Event, const char *sig, ...)
 		nres = strlen(sig); //Num of res coming back
 		if (lua_pcall(L, narg, nres, 0)) 
 		{
-			LogL("ERROR", "Attempt running function : %s", lua_tostring(L, -1));
+			LogConsole(MESSAGE_TYPE::ERROR, "Attempt running function : %s", lua_tostring(L, -1));
 		}
 		va_copy(vl, vl_copy);
 		sig = LastSig.c_str();
@@ -95,7 +96,7 @@ LuaEvents* LuaEvents::GetLuaEventMnager()
 
 void LuaEvents::RegisterLuaEventManager()
 {
-	LogL("INFO", "Registering Lua Event System..")
+	LogConsole(MESSAGE_TYPE::INFO, "Registering Lua Event System..")
 	auto L = LStateManager::GetLuaState();
 
 	lua_pushcfunction(L, LuaFunctions::addEventHandler);

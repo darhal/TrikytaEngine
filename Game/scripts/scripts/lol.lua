@@ -4,11 +4,11 @@ function Call()
 end
 
 function OnEngineLoad()
-	print("____________________________________________________________________")
+	--[[print("____________________________________________________________________")
 	outputConsole("ERROR FROM LUA!", "eRror")
 	outputConsole("warning FROM LUA!", "warning")
 	outputConsole("info FROM LUA!", "info")
-	outputCConsole("Custom color message from lua", 125, 125, 125)
+	outputCConsole("Custom color message from lua", 125, 125, 125)--]]
 	--setTimer(Call, 50, 5)
 	--attachTo(b,a, 0.5,0.5)
 	--setSpriteVisible(a, false)

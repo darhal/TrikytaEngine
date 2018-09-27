@@ -14,32 +14,20 @@
 
 void Game::On_Engine_Pre_Init()  
 { 
-	Log("Trikyta Engine Pre-initializing. "); 
+	LogTerminal("Trikyta Engine Pre-initializing. ");
 };
 
 //UI::Text* a;
 
 void Game::On_Engine_Init()
 {
-	/*obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
-	Log("Sprite obj : %s", obj->getFileName().c_str());
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(200,200), Vec2i(650, 75), 0.03f);
-	Log("Animation obj : %s", anim->getFileName().c_str());
-	anim->attachTo(obj);*/
-
 	//for (int i = 0; i < 100; i++) {
 	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
 	//}
 	//TILED MAP TEST
 	//map = TiledMap::Create("assets/example/maps/map.tmx");
 
-	/*text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(0, 50), Color{ 255,255,255, 255});
-	text->setScale(1);
-	text->setColor(Color(0, 255, 0, 255));
-
-	Console::getConsole()->outputConsole("Hello there this is an error", MESSAGE_TYPE::ERROR);
-	Console::getConsole()->outputConsole("Hello this is an info message", MESSAGE_TYPE::INFO);
-	Console::getConsole()->outputConsole("This is an example of warning", MESSAGE_TYPE::WARNING);
+	//LogInfoConsole("This is formating from console priting some shit %d HAHAH %s", 1, "HELLO")
 
 	//std::string lol = "FPS: " + std::to_string(1));
 	//a->updateText(lol);
@@ -47,21 +35,30 @@ void Game::On_Engine_Init()
 	//sprite test
 	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
 	//Log("Sprite obj : %s", obj->getFileName().c_str());
+	//obj->Physicalize(1.f, 1.f, Physics2D::BodyType::STATIC);
+
+
+	/*text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(0, 50), Color{ 255,255,255, 255 });
+	text->setScale(1);
+	text->setColor(Color(0, 255, 0, 255));
 
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(0, 0), Vec2i(650, 75), 0.03f);
 	Log("Animation obj : %s", anim->getFileName().c_str());
-	text->attachTo(anim, Vec2f(0.2f,0.f));*/
+	text->attachTo(anim, Vec2f(0.2f,0.f));
+	anim->Physicalize(1.f, 1.f, Physics2D::BodyType::DYNAMIC, Vec2f(0.4f, 0.046f));
 
-	/*using namespace Physics2D;
-	// Body creation test
+	auto text2 = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(450, 50), Color{ 255,255,255, 255 });
+	text2->Physicalize(1.f, 1.f, Physics2D::BodyType::DYNAMIC);
+
+	using namespace Physics2D;
 	auto Ground = PhysicsBody::CreateBody
 	(
 		PhysicsEngine::GetPhysicsWorld(), BodyType::STATIC,
 		BodyShape::BOX, BodyParams{ 1,1 },
 		Vec2f{0.f, (float)(this->GetScreenHeight()+ 464 / PTM)-150.f },
 		std::vector<Vec2f>{Vec2f((float)this->GetScreenWeight(), 464/ PTM)}
-	);
-	
+	);*/
+	/*
 	body = PhysicsBody::CreateBody
 	(
 		PhysicsEngine::GetPhysicsWorld(), BodyType::DYNAMIC,

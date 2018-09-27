@@ -185,6 +185,7 @@
     <ClCompile Include="src\core\Utility\Timer.cpp" />
     <ClCompile Include="src\core\Utility\TimerManager.cpp" />
     <ClCompile Include="src\misc\Console.cpp" />
+    <ClCompile Include="src\misc\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
@@ -276,6 +277,7 @@
     <ClInclude Include="libs\includes\SDL\SDL_version.h" />
     <ClInclude Include="libs\includes\SDL\SDL_video.h" />
     <ClInclude Include="libs\includes\SDL\SDL_vulkan.h" />
+    <ClInclude Include="src\core\Common\Color.h" />
     <ClInclude Include="src\core\Common\defines.h" />
     <ClInclude Include="src\core\Common\EngineInstance.h" />
     <ClInclude Include="src\core\Common\Logger.h" />
@@ -321,6 +323,7 @@
     <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\core\Utility\TimerManager.h" />
     <ClInclude Include="src\misc\Console.h" />
+    <ClInclude Include="src\misc\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
     <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />

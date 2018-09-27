@@ -3,14 +3,12 @@
 #include <vector>
 #include <list>
 
-
 //typedef std::vector<class Object*> ObjectsVec;
 typedef std::list<class Object*> ObjectsVec;
 
 class ObjectHandler 
 {
 public:
-	
 	static ObjectHandler* GetObjectManager();
 	static ObjectsVec* GetObjectHandler();
 	static ObjectsVec* GetSleepingObjects();

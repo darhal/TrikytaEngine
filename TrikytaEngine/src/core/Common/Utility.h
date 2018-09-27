@@ -5,14 +5,16 @@ class Utility
 {
 public:
 	static char* getDateNow();
-	template<typename T>
-	static T ToMeters(T x);
-	template<typename T>
-	static T ToPixels(T x);
-	template<typename T>
-	static T ToRadian(T x);
-	template<typename T>
-	static T ToDegree(T x);
-	static Vec2f ConvertWorldToScreen(Vec2f);
-	static Vec2f ConvertScreenToWorld(Vec2f);
+
+	static float ToMeters(float x);
+	static float ToPixels(float x);
+	static float ToRadian(float x);
+	static float ToDegree(float x);
+
+	static int ToMeters(int x);
+	static int ToPixels(int x);
+	static int ToRadian(int x);
+	static int ToDegree(int x);
+
+	static void LogVaradicConsole(enum class MESSAGE_TYPE, const char* format, ...);
 };

@@ -64,6 +64,8 @@ void Timer::stop()
 {
 	m_IsActive = false;
 	TimerManager::Deactivate(this);
+	if (m_LuaFunc != -1)
+		LuaEngine::LuaTimer::RemoveFuncFromRegistery(m_LuaFunc);
 	delete this;
 }
 

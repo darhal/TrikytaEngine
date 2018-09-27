@@ -13,6 +13,8 @@ public:
 	virtual bool init();
 	virtual void render(float);
 
+	virtual double GetRotation() { return 0.f; };
+
 	void addChildren(Object*);
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
 
