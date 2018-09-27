@@ -16,6 +16,7 @@ public:
 	static void RemoveObject(Object* p_Obj);
 	static void SetObjectSleeping(Object* p_Obj, bool);
 	static void PushObjectAsSleep(Object* p_Obj);
+	static void SortZOrder();
 private :
 	static ObjectHandler* _ObjectHandler;
 	ObjectHandler() : m_ObjectHandler(std::make_shared<ObjectsVec>()), m_SleepObjects(std::make_shared<ObjectsVec>())

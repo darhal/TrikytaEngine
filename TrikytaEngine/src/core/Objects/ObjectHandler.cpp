@@ -51,3 +51,4 @@ void ObjectHandler::PushObjectAsSleep(Object* p_Obj)
 {
 	GetSleepingObjects()->push_back(p_Obj);
 }
+

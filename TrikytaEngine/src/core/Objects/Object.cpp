@@ -3,7 +3,6 @@
 #include "ObjectHandler.h"
 #include "core/Drawable/Drawable.h"
 
-
 Object::Object(bool pRegisterInHandler)
 {
 	m_Childrens = new std::vector<Object*>;
@@ -45,7 +44,6 @@ void Object::addChildren(Object* obj)
 	if (obj == nullptr) { LogConsole(MESSAGE_TYPE::ERROR,  "Attempt to add null as a child!") return; }
 	m_Childrens->push_back(obj);
 }
-
 
 void Object::attachTo(Object* obj, Vec2f p_Offset)
 {

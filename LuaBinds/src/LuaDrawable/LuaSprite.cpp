@@ -6,6 +6,8 @@
 #include <core/Objects/ObjectHandler.h>
 #include <core/Physics/PhysicsEngine.h>
 #include "Shared/ldefines.h"
+#include <core/Drawable/Animation.h>
+#include <UI/UIText.h>
 
 using namespace LuaEngine;
 
@@ -89,6 +91,15 @@ void LuaSprite::LoadSpriteFunction()
 
 	lua_pushcfunction(L, LuaSprite::PhysicalizeWithOffset);
 	lua_setglobal(L, "physicalizeWithOffset");
+
+	lua_pushcfunction(L, LuaSprite::SetZOrder);
+	lua_setglobal(L, "setZOrder");
+
+	lua_pushcfunction(L, LuaSprite::getBody);
+	lua_setglobal(L, "getBody");
+
+	lua_pushcfunction(L, LuaSprite::getObjectsByType);
+	lua_setglobal(L, "getObjectsByType");
 }
 
 LuaSprite* LuaSprite::GetSpriteManager()
@@ -261,54 +272,110 @@ int LuaSprite::IsSpriteVisisble(lua_State* L)
 int LuaSprite::Physicalize(lua_State* L) 
 {
 	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
-	float mass = (float)lua_tonumber(L, 2);
-	float friction = (float)lua_tonumber(L, 3);
-	const char* bodyType = lua_tostring(L, 4);
-	Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
-	if (strcmp(bodyType, "Dynamic") == 0) {
-		rBodyType = Physics2D::BodyType::DYNAMIC;
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
+		float mass = (float)lua_tonumber(L, 2);
+		float friction = (float)lua_tonumber(L, 3);
+		const char* bodyType = lua_tostring(L, 4);
+		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
+		if (strcmp(bodyType, "Dynamic") == 0) {
+			rBodyType = Physics2D::BodyType::DYNAMIC;
+		}
+		else if (strcmp(bodyType, "Static") == 0) {
+			rBodyType = Physics2D::BodyType::STATIC;
+		}
+		else if (strcmp(bodyType, "Kinematic") == 0) {
+			rBodyType = Physics2D::BodyType::KINEMATIC;
+		}
+		auto body = phySprt->Physicalize(mass, friction, rBodyType);
+		lua_pushlightuserdata(L, (void*)body);
+		return 1;
 	}
-	else if (strcmp(bodyType, "Static") == 0) {
-		rBodyType = Physics2D::BodyType::STATIC;
-	}
-	else if (strcmp(bodyType, "Kinematic") == 0) {
-		rBodyType = Physics2D::BodyType::KINEMATIC;
-	}
-	auto body = phySprt->Physicalize(mass, friction, rBodyType);
-	lua_pushlightuserdata(L, (void*)body);
-	return 1;
 }
 
 int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 {
 	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
-	float mass = (float)lua_tonumber(L, 2);
-	float friction = (float)lua_tonumber(L, 3);
-	const char* bodyType = lua_tostring(L, 4);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
+		float mass = (float)lua_tonumber(L, 2);
+		float friction = (float)lua_tonumber(L, 3);
+		const char* bodyType = lua_tostring(L, 4);
 
-	Physics2D::BodyType rBodyType;
-	if (strcmp(bodyType, "Dynamic") == 0) {
-		rBodyType = Physics2D::BodyType::DYNAMIC;
-	}
-	else if (strcmp(bodyType, "Static") == 0) {
-		rBodyType = Physics2D::BodyType::STATIC;
-	}
-	else if (strcmp(bodyType, "Kinematic") == 0) {
-		rBodyType = Physics2D::BodyType::KINEMATIC;
-	}
+		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
+		if (strcmp(bodyType, "Dynamic") == 0) {
+			rBodyType = Physics2D::BodyType::DYNAMIC;
+		}
+		else if (strcmp(bodyType, "Static") == 0) {
+			rBodyType = Physics2D::BodyType::STATIC;
+		}
+		else if (strcmp(bodyType, "Kinematic") == 0) {
+			rBodyType = Physics2D::BodyType::KINEMATIC;
+		}
 
-	float offx = (float)lua_tonumber(L, 5);
-	float offy = (float)lua_tonumber(L, 6);
-	auto body = phySprt->Physicalize(mass, friction, rBodyType, Vec2f(offx, offy));
-	lua_pushlightuserdata(L, (void*)body);
-	return 1;
+		float offx = (float)lua_tonumber(L, 5);
+		float offy = (float)lua_tonumber(L, 6);
+		auto body = phySprt->Physicalize(mass, friction, rBodyType, Vec2f(offx, offy));
+		lua_pushlightuserdata(L, (void*)body);
+		return 1;
+	}
 }
 
-/*typedef int (LuaSprite::*mem_func)(lua_State * L);
+int LuaSprite::SetZOrder(lua_State* L)
+{
+	Drawable* drawable = (Drawable*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), drawable) != ObjectHandler::GetObjectHandler()->end()) {
+		int zorder = (int)lua_tonumber(L, 2);
+		drawable->setZOrder(zorder);
+		return 1;
+	}
+}
 
-// This template wraps a member function into a C-style "free" function compatible with lua.
-template <mem_func func>
-int dispatch(lua_State * L) {
-	LuaSprite * ptr = *static_cast<LuaSprite**>(lua_getextraspace(L));
-	return ((*ptr).*func)(L);
-}*/
+int LuaSprite::getBody(lua_State* L)
+{
+	Drawable* drawable = (Drawable*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), drawable) != ObjectHandler::GetObjectHandler()->end()) {
+		lua_pushlightuserdata(L, (void*)drawable->getBody());
+		return 1;
+	}
+}
+
+void l_pushtabledrawable(lua_State* L, int key, void* value) {
+	lua_pushinteger(L, key);
+	lua_pushlightuserdata(L, value);
+	lua_settable(L, -3);
+}
+
+int LuaSprite::getObjectsByType(lua_State* L)
+{
+	const char* type = lua_tostring(L, 1);
+	int index = 0;
+	lua_newtable(L);
+	if (strcmp(type, "Sprite") == 0) {
+		for (auto& itr : *ObjectHandler::GetObjectHandler())
+		{
+			auto sprite = dynamic_cast<Sprite*>(itr);
+			if (sprite != nullptr) {
+				l_pushtabledrawable(L, index + 1, (void*)sprite);
+				index++;
+			}
+		}
+	}else if (strcmp(type, "Animation") == 0) {
+		for (auto& itr : *ObjectHandler::GetObjectHandler())
+		{
+			auto anim = dynamic_cast<Animation*>(itr);
+			if (anim != nullptr) {
+				l_pushtabledrawable(L, index + 1, (void*)anim);
+				index++;
+			}
+		}
+	}else if (strcmp(type, "Text") == 0) {
+		for (auto& itr : *ObjectHandler::GetObjectHandler())
+		{
+			auto anim = dynamic_cast<UI::Text*>(itr);
+			if (anim != nullptr) {
+				l_pushtabledrawable(L, index + 1, (void*)anim);
+				index++;
+			}
+		}
+	}
+	return 1;
+}

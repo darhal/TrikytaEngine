@@ -13,6 +13,11 @@ enum class FLIPTYPE {
 class Drawable : public Object
 {
 public:
+	void SortZOrder();
+	void setZOrder(int p_ZOrder);
+	int getZOrder() const;
+	Physics2D::PhysicsBody* getBody();
+
 	// SET GET ROT FUNCTIONS
 	virtual double GetRotation() override { return m_Angle; }
 
@@ -90,6 +95,7 @@ protected:
 	SDL_Rect m_SourceDrawCoord;
 	Vec2i m_ToFollowPos;
 	Vec2i m_Offset;
+	int m_ZOrder;
 
 	class Physics2D::PhysicsBody* m_Body = nullptr;
 private:

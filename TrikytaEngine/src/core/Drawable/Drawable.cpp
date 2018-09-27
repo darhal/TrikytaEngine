@@ -1,6 +1,8 @@
 #include "Drawable.h"
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Common/TrikytaEngine.h"
+#include "core/Objects/ObjectHandler.h"
+
 
 Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
 	m_Position(new Vec2i(m_Pos)), m_Size(new Vec2i(p_Size)),
@@ -10,7 +12,8 @@ Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
 	m_Angle(0.f),
 	m_RotationCenter(SDL_Point{ p_Size.x/2, p_Size.y/2 }),
 	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE),
-	Object(p_RegisterInHandler)
+	Object(p_RegisterInHandler),
+	m_ZOrder(0)
 {
 }
 
@@ -22,6 +25,17 @@ Drawable::~Drawable()
 		FREE(m_Body);
 	SDL_DestroyTexture(m_Texture);
 
+}
+
+void Drawable::setZOrder(int p_ZOrder)
+{
+	m_ZOrder = p_ZOrder;
+	Drawable::SortZOrder();
+}
+
+int Drawable::getZOrder() const
+{
+	return m_ZOrder;
 }
 
 void Drawable::render(float dt)
@@ -79,5 +93,26 @@ Physics2D::PhysicsBody* Drawable::Physicalize(float p_Mass, float p_Friction, Ph
 	);
 
 	attachTo(m_Body, Vec2f(-0.5f, -0.5f));
+	return m_Body;
+}
+
+
+void Drawable::SortZOrder()
+{
+	ObjectHandler::GetObjectHandler()->sort
+	(
+		[](Object* a, Object* b) 
+		{ 
+			Drawable* da = dynamic_cast<Drawable*>(a);
+			Drawable* db = dynamic_cast<Drawable*>(b);
+			if (da && db)
+				return da->getZOrder() < db->getZOrder();
+			return false;
+		}
+	);
+}
+
+Physics2D::PhysicsBody* Drawable::getBody()
+{
 	return m_Body;
 }

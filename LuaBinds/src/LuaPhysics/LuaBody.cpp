@@ -42,8 +42,28 @@ int LuaBody::CreateBody(lua_State *L)
 	float friction = (float)lua_tonumber(L, 4);
 	float px = (float)lua_tonumber(L, 5);
 	float py = (float)lua_tonumber(L, 6);
+
 	float sx = (float)lua_tonumber(L, 7);
 	float sy = (float)lua_tonumber(L, 8);
+
+/*	std::vector<Vec2f> coords;
+	Vec2f tempV;
+	luaL_checktype(L, 7, LUA_TTABLE);
+	int n = lua_rawlen(L, 7);
+	if (n == 1) {
+		LogConsole(MESSAGE_TYPE::ERROR, "Expected a table with length >= 2 at argument 2");
+		return 0;
+	}
+	for (int i = 1; i <= n; i++) {
+		lua_rawgeti(L, 1, i);  
+		if (i % 2 != 0)
+		{
+			tempV.x = (float)lua_tonumber(L, -1);
+		}else if (i % 2 == 0){
+			tempV.y = (float)lua_tonumber(L, -1);
+			coords.emplace_back(tempV.x, tempV.y);
+		}
+	}*/
 
 	Physics2D::BodyShape rBodyShape;
 	Physics2D::BodyType rBodyType;
@@ -66,7 +86,7 @@ int LuaBody::CreateBody(lua_State *L)
 	(
 		Physics2D::PhysicsEngine::GetPhysicsWorld(), rBodyType,
 		rBodyShape, Physics2D::BodyParams{mass, friction},
-		Vec2f{px, py},
+		Vec2f{px, py}, //coords
 		std::vector<Vec2f>{Vec2f(sx, sy)}
 	);
 
