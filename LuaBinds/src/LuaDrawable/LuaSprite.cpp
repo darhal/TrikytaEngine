@@ -68,11 +68,11 @@ LuaSprite* LuaSprite::GetSpriteManager()
 
 int LuaSprite::CreateSprite(lua_State *L)
 {
-	const char* path = lua_tostring(L, -5);  // get argument 
-	int w = (int)lua_tonumber(L, -4);
-	int h = (int)lua_tonumber(L, -3);
-	int x = (int)lua_tonumber(L, -2);
-	int y = (int)lua_tonumber(L, -1);
+	const char* path = lua_tostring(L, 1);  // get argument 
+	int w = (int)lua_tonumber(L, 2);
+	int h = (int)lua_tonumber(L, 3);
+	int x = (int)lua_tonumber(L, 4);
+	int y = (int)lua_tonumber(L, 5);
 	auto obj = Sprite::Create(path, Vec2i(w, h), Vec2i(x, y));
 
 	lua_pushlightuserdata(L, (void*)obj);
