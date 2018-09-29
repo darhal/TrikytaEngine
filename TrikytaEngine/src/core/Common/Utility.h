@@ -1,10 +1,11 @@
 #pragma once
 #include "Vec2.h"
+#include <string>
 
 class Utility
 {
 public:
-	static char* getDateNow();
+	static std::string getDateNow();
 
 	static float ToMeters(float x);
 	static float ToPixels(float x);

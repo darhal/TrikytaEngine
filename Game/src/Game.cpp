@@ -35,8 +35,7 @@ void Game::On_Engine_Init()
 	//sprite test
 	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(50, 100));
 	//Log("Sprite obj : %s", obj->getFileName().c_str());
-	//obj->Physicalize(1.f, 1.f, Physics2D::BodyType::STATIC);
-
+	//obj->Physicalize({ 1.f, 1.f }, Physics2D::BodyType::DYNAMIC);
 
 	/*text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(0, 50), Color{ 255,255,255, 255 });
 	text->setScale(1);

@@ -67,7 +67,7 @@ public:
 
 	void render(float);
 
-	class Physics2D::PhysicsBody* Physicalize(float, float, enum class Physics2D::BodyType, Vec2f = Vec2f(0.0f, 0.0f));
+	class Physics2D::PhysicsBody* Physicalize(struct Physics2D::BodyParams p_BodyParam, enum class Physics2D::BodyType, Vec2f = Vec2f(0.0f, 0.0f));
 	~Drawable();
 protected:
 	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0), bool p_RegisterInHandler=true);

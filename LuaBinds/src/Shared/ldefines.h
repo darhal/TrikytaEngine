@@ -5,7 +5,7 @@
 #define SCRIPTS_PATH		"scripts/"
 
 #ifdef __DEBUG__
-#define LogL(TYPE, ...) printf("[TrikytaEngine-%s][LUA ENGINE][%s]: ", Utility::getDateNow(), TYPE); printf(__VA_ARGS__); printf("\n");
+#define LogL(TYPE, ...) printf("[%s][TrikytaEngine][LUA ENGINE][%s]: ", Utility::getDateNow().c_str(), TYPE); printf(__VA_ARGS__); printf("\n");
 #else
 #define Log(...) ;
 #endif

@@ -13,6 +13,7 @@
 #include "LuaDrawable/LuaAnimation.h"
 #include "LuaMisc/LuaConsole.h"
 #include "LuaUI/LuaText.h"
+#include "LuaCore/ErrorManager.h"
 
 using namespace LuaEngine;
 
@@ -57,6 +58,7 @@ WND_CONFIG LStateManager::LLoadConfig(lua_State* L)
 
 std::shared_ptr<std::vector<std::string>> LStateManager::LoadScriptList()
 {
+	//luaA_open(_LUA_STATE_);
 	LStateManager::LoadingTrikytaEnv(); // LOAD GLOBAL FUNCTIONS
 
 	using namespace std;
@@ -100,12 +102,14 @@ void LStateManager::LoadScripts()
 			return;
 		}
 	}
+	
 }
 
 void LStateManager::LoadingTrikytaEnv()
 {
 	LogConsole(MESSAGE_TYPE::INFO, "Loading Trikyta Enviroument");
-
+	
+	ErrorManager::InitErrorManager();
 	LuaEvents::GetLuaEventMnager()->RegisterLuaEventManager();
 	LuaSprite::LoadSpriteSystem();
 	LuaAnimation::LoadAnimationFunctions();

@@ -119,6 +119,7 @@ PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType,
 	}
 	fixtureDef.density = p_BodyParams.mass;
 	fixtureDef.friction = p_BodyParams.friction;
+	fixtureDef.restitution = p_BodyParams.restitution;
 	b2Body* Body = p_World->getWorld()->CreateBody(&BodyDef);
 	Body->CreateFixture(&fixtureDef);
 	return new PhysicsBody(Body, p_BodyType, p_Shape, p_BodyParams);

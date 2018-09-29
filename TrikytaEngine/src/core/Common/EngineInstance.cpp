@@ -57,9 +57,9 @@ bool EngineInstance::Init()
 	m_EngineState = true;
 	const Physics2D::PhysicsEngineParams a = {{ 0, 10.f }, 1 / 60.f, 8, 3 };
 	this->InitPhysics(a);
+	TimerManager::InitTimerManager(); // Init timer system!
 
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
-	TimerManager::InitTimerManager(); // Init timer system!
 	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
 	On_Engine_Init(); // CALL INIT
 
@@ -80,7 +80,8 @@ void EngineInstance::EngineLogic()
 	while (m_EngineState) {
 		EventManager::GetEventManager()->HandleSDLEvents(Event, this);
 		Render();
-		SDL_Delay(1);
+		TimerManager::Update();
+		SDL_Delay(1); // 1ms
 	}
 }
 
@@ -89,7 +90,6 @@ void EngineInstance::Render()
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
 	std::chrono::duration<float> dt = (TimeNow - LastTick);
 	float dtf = dt.count();
-
 	SDL_RenderClear(m_Renderer);
 
 	for (auto itr : *(ObjectHandler::GetObjectHandler()))
@@ -101,10 +101,8 @@ void EngineInstance::Render()
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
 	Console::getConsole()->Draw(dtf);
 	SDL_RenderPresent(m_Renderer);
-	TimerManager::Update();
 	LastTick = std::chrono::system_clock::now();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
-	
 }
 
 

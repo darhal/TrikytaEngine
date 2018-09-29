@@ -7,13 +7,19 @@
 
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
 
-char* Utility::getDateNow()
+std::string Utility::getDateNow()
 {
 	auto time = std::chrono::system_clock::now();
 	std::time_t log_time = std::chrono::system_clock::to_time_t(time);
-	char* date = std::ctime(&log_time);
-	date[strlen(date) - 1] = '\0';
-	return date;
+	//char* date = std::ctime(&log_time);
+
+	std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+	char buf[20] = { 0 };
+	std::strftime(buf, sizeof(buf), "%Y-%m-%d %X", std::localtime(&now));
+
+	//date[strlen(date) - 1] = '\0';
+	return std::string(buf);
 }
 
 void Utility::LogVaradicConsole(MESSAGE_TYPE msg_type, const char* format, ...)

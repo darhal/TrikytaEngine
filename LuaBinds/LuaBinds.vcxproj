@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="src\LStateManager\LStateManager.cpp" />
     <ClCompile Include="src\LuaCompiler.cpp" />
+    <ClCompile Include="src\LuaCore\ErrorManager.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaAnimation.cpp" />
     <ClCompile Include="src\LuaDrawable\LuaSprite.cpp" />
     <ClCompile Include="src\LuaEvents\LuaEvents.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="src\LuaUI\LuaText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LuaCore\ErrorManager.h" />
     <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
     <ClInclude Include="src\LuaDrawable\LuaSprite.h" />
     <ClInclude Include="src\LuaMisc\LuaConsole.h" />

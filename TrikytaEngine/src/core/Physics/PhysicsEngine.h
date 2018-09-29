@@ -19,7 +19,7 @@ namespace Physics2D {
 
 	enum class BodyType {STATIC, DYNAMIC, KINEMATIC};
 	enum class BodyShape {BOX, CIRCLE, POLYGON, CHAIN, EDGE};
-	struct BodyParams { float mass = 1.0; float friction = 1.0; };
+	struct BodyParams { float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool isSensor = false; };
 	struct PhysicsEngineParams { Vec2f gravity{ 0, 10.f }; float timeStep = 1 / 60.f; int velocityIterations = 8; int positionIterations = 3; bool debugDraw = true; };
 
 	class PhysicsWorld;

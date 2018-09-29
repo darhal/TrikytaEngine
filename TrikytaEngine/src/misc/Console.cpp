@@ -44,7 +44,7 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 	}
 	ConsoleText* output;
 	output = ConsoleText::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, Vec2i(START_POS_X, m_StartPos), p_Color);
-	Log(("[CONSOLE]"+p_Text).c_str());
+	LogTerminalFromConsole(("[CONSOLE]"+p_Text).c_str());
 	m_Output.emplace_back(output);
 	removeConsoleMessage();
 }

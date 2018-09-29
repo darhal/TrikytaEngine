@@ -2,6 +2,7 @@
 #include <core/Physics/PhysicsEngine.h>
 #include "LuaBody.h"
 #include <lua.hpp>
+#include "LuaCore/ErrorManager.h"
 
 using namespace LuaEngine;
 
@@ -34,28 +35,40 @@ void LuaBody::LoadBodyFunction()
 	lua_setglobal(L, "setAngularDamping");
 }
 
+//Legacy:
+/*float sx = (float)lua_tonumber(L, 9);
+if (ErrorManager::GetErrorManager()->CheckType(L, 9, "number")) {
+	lua_pushnil(L);
+	return 1;
+}
+float sy = (float)lua_tonumber(L, 10);
+if (ErrorManager::GetErrorManager()->CheckType(L, 10, "number")) {
+	lua_pushnil(L);
+	return 1;
+}*/
 int LuaBody::CreateBody(lua_State *L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ssnnnbnnt")) {
+		return 1;
+	}
 	const char* bodyType = lua_tostring(L, 1);
 	const char* bodyShape = lua_tostring(L, 2);
 	float mass = (float)lua_tonumber(L, 3);
 	float friction = (float)lua_tonumber(L, 4);
-	float px = (float)lua_tonumber(L, 5);
-	float py = (float)lua_tonumber(L, 6);
-
-	float sx = (float)lua_tonumber(L, 7);
-	float sy = (float)lua_tonumber(L, 8);
-
-/*	std::vector<Vec2f> coords;
+	float res = (float)lua_tonumber(L, 5);
+	bool sensor = (bool)lua_toboolean(L, 6);
+	float px = (float)lua_tonumber(L, 7);
+	float py = (float)lua_tonumber(L, 8);
+	//lua_type(L, 1);
+	std::vector<Vec2f> coords;
 	Vec2f tempV;
-	luaL_checktype(L, 7, LUA_TTABLE);
-	int n = lua_rawlen(L, 7);
+	int n = lua_rawlen(L, 9);
 	if (n == 1) {
 		LogConsole(MESSAGE_TYPE::ERROR, "Expected a table with length >= 2 at argument 2");
 		return 0;
 	}
 	for (int i = 1; i <= n; i++) {
-		lua_rawgeti(L, 1, i);  
+		lua_rawgeti(L, 9, i);  
 		if (i % 2 != 0)
 		{
 			tempV.x = (float)lua_tonumber(L, -1);
@@ -63,7 +76,7 @@ int LuaBody::CreateBody(lua_State *L)
 			tempV.y = (float)lua_tonumber(L, -1);
 			coords.emplace_back(tempV.x, tempV.y);
 		}
-	}*/
+	}
 
 	Physics2D::BodyShape rBodyShape;
 	Physics2D::BodyType rBodyType;
@@ -85,9 +98,9 @@ int LuaBody::CreateBody(lua_State *L)
 	auto body = Physics2D::PhysicsBody::CreateBody
 	(
 		Physics2D::PhysicsEngine::GetPhysicsWorld(), rBodyType,
-		rBodyShape, Physics2D::BodyParams{mass, friction},
-		Vec2f{px, py}, //coords
-		std::vector<Vec2f>{Vec2f(sx, sy)}
+		rBodyShape, Physics2D::BodyParams{mass, friction, res, sensor},
+		Vec2f{px, py}, coords
+		//std::vector<Vec2f>{Vec2f(sx, sy)}
 	);
 
 	lua_pushlightuserdata(L, (void*)body);
@@ -114,4 +127,5 @@ int LuaBody::SetAngularDamping(lua_State* L)
 	lua_pushboolean(L, true);
 	return 1;
 }
+
 

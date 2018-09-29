@@ -8,6 +8,7 @@
 #include "Shared/ldefines.h"
 #include <core/Drawable/Animation.h>
 #include <UI/UIText.h>
+#include "LuaCore/ErrorManager.h"
 
 using namespace LuaEngine;
 
@@ -22,7 +23,6 @@ void LuaSprite::LoadSpriteSystem()
 void LuaSprite::LoadSpriteFunction()
 {
 	auto L = LStateManager::GetLuaState();
-	
 	lua_pushcfunction(L, LuaSprite::CreateSprite);
 	lua_setglobal(L, "createSprite");
 
@@ -109,13 +109,15 @@ LuaSprite* LuaSprite::GetSpriteManager()
 
 int LuaSprite::CreateSprite(lua_State *L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "snnn")) {
+		return 1;
+	}
 	const char* path = lua_tostring(L, 1);  // get argument 
 	int w = (int)lua_tonumber(L, 2);
 	int h = (int)lua_tonumber(L, 3);
 	int x = (int)lua_tonumber(L, 4);
 	int y = (int)lua_tonumber(L, 5);
 	auto obj = Sprite::Create(path, Vec2i(w, h), Vec2i(x, y));
-
 	lua_pushlightuserdata(L, (void*)obj);
 	return 1;
 }
@@ -275,7 +277,9 @@ int LuaSprite::Physicalize(lua_State* L)
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
 		float mass = (float)lua_tonumber(L, 2);
 		float friction = (float)lua_tonumber(L, 3);
-		const char* bodyType = lua_tostring(L, 4);
+		float restitution = (float)lua_tonumber(L, 4);
+		bool isSensor = (float)lua_toboolean(L, 5);
+		const char* bodyType = lua_tostring(L, 6);
 		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
 		if (strcmp(bodyType, "Dynamic") == 0) {
 			rBodyType = Physics2D::BodyType::DYNAMIC;
@@ -286,10 +290,11 @@ int LuaSprite::Physicalize(lua_State* L)
 		else if (strcmp(bodyType, "Kinematic") == 0) {
 			rBodyType = Physics2D::BodyType::KINEMATIC;
 		}
-		auto body = phySprt->Physicalize(mass, friction, rBodyType);
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType);
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;
 	}
+	return 0;
 }
 
 int LuaSprite::PhysicalizeWithOffset(lua_State* L)
@@ -298,7 +303,9 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
 		float mass = (float)lua_tonumber(L, 2);
 		float friction = (float)lua_tonumber(L, 3);
-		const char* bodyType = lua_tostring(L, 4);
+		float restitution = (float)lua_tonumber(L, 4);
+		bool isSensor = (float)lua_tonumber(L, 5);
+		const char* bodyType = lua_tostring(L, 6);
 
 		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
 		if (strcmp(bodyType, "Dynamic") == 0) {
@@ -311,12 +318,13 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 			rBodyType = Physics2D::BodyType::KINEMATIC;
 		}
 
-		float offx = (float)lua_tonumber(L, 5);
-		float offy = (float)lua_tonumber(L, 6);
-		auto body = phySprt->Physicalize(mass, friction, rBodyType, Vec2f(offx, offy));
+		float offx = (float)lua_tonumber(L, 7);
+		float offy = (float)lua_tonumber(L, 8);
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{mass, friction, restitution, isSensor}, rBodyType, Vec2f(offx, offy));
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;
 	}
+	return 0;
 }
 
 int LuaSprite::SetZOrder(lua_State* L)
@@ -327,6 +335,7 @@ int LuaSprite::SetZOrder(lua_State* L)
 		drawable->setZOrder(zorder);
 		return 1;
 	}
+	return 0;
 }
 
 int LuaSprite::getBody(lua_State* L)
@@ -336,6 +345,7 @@ int LuaSprite::getBody(lua_State* L)
 		lua_pushlightuserdata(L, (void*)drawable->getBody());
 		return 1;
 	}
+	return 0;
 }
 
 void l_pushtabledrawable(lua_State* L, int key, void* value) {
