@@ -110,6 +110,12 @@ void LuaSprite::LoadSpriteFunction()
 	lua_pushcfunction(L, LuaSprite::PhysicalizeWithOffset);
 	lua_setglobal(L, "physicalizeWithOffset");
 
+	lua_pushcfunction(L, LuaSprite::PhysicalizeV2);
+	lua_setglobal(L, "physicalizeV2");
+
+	lua_pushcfunction(L, LuaSprite::PhysicalizeWithOffsetV2);
+	lua_setglobal(L, "physicalizeWithOffsetV2");
+
 	lua_pushcfunction(L, LuaSprite::SetZOrder);
 	lua_setglobal(L, "setZOrder");
 
@@ -410,6 +416,94 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 		float offx = (float)lua_tonumber(L, 8);
 		float offy = (float)lua_tonumber(L, 9);
 		auto body = phySprt->Physicalize(Physics2D::BodyParams{mass, friction, restitution, isSensor}, rBodyType, rBodyShape,Vec2f(offx, offy));
+		lua_pushlightuserdata(L, (void*)body);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaSprite::PhysicalizeV2(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ltt")) {
+		return 1;
+	}
+	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
+		lua_getfield(L, 2, "mass");
+		float mass = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "friction");
+		float friction = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "restitution");
+		float restitution = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "sensor");
+		bool isSensor = (bool)lua_toboolean(L, -1);
+		lua_getfield(L, 3, "type");
+		const char* bodyType = lua_tostring(L, -1);
+		lua_getfield(L, 3, "shape");
+		const char* bodyShape = lua_tostring(L, -1);
+		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
+		Physics2D::BodyShape rBodyShape = Physics2D::BodyShape::BOX;
+		if (strcmp(bodyType, "Dynamic") == 0) {
+			rBodyType = Physics2D::BodyType::DYNAMIC;
+		}
+		else if (strcmp(bodyType, "Static") == 0) {
+			rBodyType = Physics2D::BodyType::STATIC;
+		}
+		else if (strcmp(bodyType, "Kinematic") == 0) {
+			rBodyType = Physics2D::BodyType::KINEMATIC;
+		}
+		if (strcmp(bodyShape, "Box") == 0) {
+			rBodyShape = Physics2D::BodyShape::BOX;
+		}
+		else if (strcmp(bodyShape, "Circle") == 0) {
+			rBodyShape = Physics2D::BodyShape::CIRCLE;
+		}
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType, rBodyShape);
+		lua_pushlightuserdata(L, (void*)body);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaSprite::PhysicalizeWithOffsetV2(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lttnn")) {
+		return 1;
+	}
+	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
+		lua_getfield(L, 2, "mass");
+		float mass = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "friction");
+		float friction = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "restitution");
+		float restitution = (float)lua_tonumber(L, -1);
+		lua_getfield(L, 2, "sensor");
+		bool isSensor = (bool)lua_toboolean(L, -1);
+		lua_getfield(L, 3, "type");
+		const char* bodyType = lua_tostring(L, -1);
+		lua_getfield(L, 3, "shape");
+		const char* bodyShape = lua_tostring(L, -1);
+		Physics2D::BodyShape rBodyShape = Physics2D::BodyShape::BOX;
+		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
+		if (strcmp(bodyType, "Dynamic") == 0) {
+			rBodyType = Physics2D::BodyType::DYNAMIC;
+		}
+		else if (strcmp(bodyType, "Static") == 0) {
+			rBodyType = Physics2D::BodyType::STATIC;
+		}
+		else if (strcmp(bodyType, "Kinematic") == 0) {
+			rBodyType = Physics2D::BodyType::KINEMATIC;
+		}
+		if (strcmp(bodyShape, "Box") == 0) {
+			rBodyShape = Physics2D::BodyShape::BOX;
+		}
+		else if (strcmp(bodyShape, "Circle") == 0) {
+			rBodyShape = Physics2D::BodyShape::CIRCLE;
+		}
+		float offx = (float)lua_tonumber(L, 8);
+		float offy = (float)lua_tonumber(L, 9);
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType, rBodyShape, Vec2f(offx, offy));
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;
 	}

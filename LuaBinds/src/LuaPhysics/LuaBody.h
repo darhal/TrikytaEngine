@@ -12,6 +12,7 @@ namespace LuaEngine {
 		static void LoadBodyFunction();
 
 		static int CreateBody(lua_State *L);
+		static int CreateBodyV2(lua_State *L);
 		static int SetLinearVelocity(lua_State *L);
 		static int SetAngularDamping(lua_State* L);
 		static int GetLinearVelocity(lua_State* L);

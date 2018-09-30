@@ -29,6 +29,8 @@ namespace LuaEngine {
 
 		static int Physicalize(lua_State* L);
 		static int PhysicalizeWithOffset(lua_State* L);
+		static int PhysicalizeV2(lua_State* L);
+		static int PhysicalizeWithOffsetV2(lua_State* L);
 		static int AttachSpriteTo(lua_State* L);
 
 		static int SetZOrder(lua_State* L);

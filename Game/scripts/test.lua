@@ -44,9 +44,9 @@ end
 function OnEngineLoad()
 	print("____________________________________________________________________")
 	local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
-	local ba = physicalize(ground, 1, 1,0.0,false, "Static", "Box")
+	local ba = physicalizeV2(ground, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Static", shape="Box"})
 
-	createBody("Dynamic", "Polygon", 1,1,0,false,550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
+	createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
 
 	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
 	local b = createSprite("assets/test.png", 464, 464, 50, 100)
@@ -62,7 +62,7 @@ function OnEngineLoad()
 	setZOrder(d, -1)
 	
 	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",200, 200, 600, 100, 0.0019)
-	physicalizeWithOffset(c, 1, 1,0.0,false, "Dynamic", "Box", 0.2, 0.09)
+	physicalizeWithOffsetV2(c, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Circle"}, 0.2, 0.09)
 	spritecount = 0
 	for i, v in pairs(getObjectsByType("Sprite")) do
 		outputConsole("I FOUND A SPRITE", "INFO")
