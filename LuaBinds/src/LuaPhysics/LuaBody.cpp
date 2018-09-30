@@ -40,6 +40,12 @@ void LuaBody::LoadBodyFunction()
 
 	lua_pushcfunction(L, LuaBody::GetAngularDamping);
 	lua_setglobal(L, "getAngularDamping");
+
+	lua_pushcfunction(L, LuaBody::GetBodyPosition);
+	lua_setglobal(L, "getBodyPosition");
+
+	lua_pushcfunction(L, LuaBody::SetBodyTransform);
+	lua_setglobal(L, "setBodyTransform");
 }
 
 int LuaBody::GetLinearVelocity(lua_State* L)
@@ -53,7 +59,6 @@ int LuaBody::GetLinearVelocity(lua_State* L)
 	return 2;
 }
 
-
 int LuaBody::GetAngularDamping(lua_State* L)
 {
 	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
@@ -62,6 +67,27 @@ int LuaBody::GetAngularDamping(lua_State* L)
 	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
 	lua_pushnumber(L, body->GetAngularDamping());
 	return 1;
+}
+
+int LuaBody::GetBodyPosition(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
+	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	lua_pushnumber(L, body->GetPosition().x);
+	lua_pushnumber(L, body->GetPosition().y);
+	return 2;
+}
+
+int LuaBody::SetBodyTransform(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnnn")) {
+		return 1;
+	}
+	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	body->SetTransform(Vec2f((float)lua_tonumber(L,2), (float)lua_tonumber(L, 3)), (float)lua_tonumber(L, 4));
+	return 0;
 }
 
 int LuaBody::CreateBody(lua_State *L)
