@@ -3,6 +3,7 @@
 #include "LuaBody.h"
 #include <lua.hpp>
 #include "LuaCore/ErrorManager.h"
+#include <core/Objects/ObjectHandler.h>
 
 using namespace LuaEngine;
 using namespace Physics2D;
@@ -49,6 +50,21 @@ void LuaBody::LoadBodyFunction()
 
 	lua_pushcfunction(L, LuaBody::SetBodyTransform);
 	lua_setglobal(L, "setBodyTransform");
+
+	lua_pushcfunction(L, LuaBody::deleteBody);
+	lua_setglobal(L, "deleteBody");
+}
+
+int LuaBody::deleteBody(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
+	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end()) {
+		FREE(body);
+	}
+	return 0;
 }
 
 int LuaBody::GetLinearVelocity(lua_State* L)
@@ -57,8 +73,12 @@ int LuaBody::GetLinearVelocity(lua_State* L)
 		return 1;
 	}
 	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	lua_pushnumber(L, body->GetLinearVelocity().x);
 	lua_pushnumber(L, body->GetLinearVelocity().y);
+
 	return 2;
 }
 
@@ -68,6 +88,9 @@ int LuaBody::GetAngularDamping(lua_State* L)
 		return 1;
 	}
 	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	lua_pushnumber(L, body->GetAngularDamping());
 	return 1;
 }
@@ -78,6 +101,9 @@ int LuaBody::GetBodyPosition(lua_State* L)
 		return 1;
 	}
 	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	lua_pushnumber(L, body->GetPosition().x);
 	lua_pushnumber(L, body->GetPosition().y);
 	return 2;
@@ -89,6 +115,9 @@ int LuaBody::SetBodyTransform(lua_State* L)
 		return 1;
 	}
 	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	body->SetTransform(Vec2f((float)lua_tonumber(L,2), (float)lua_tonumber(L, 3)), (float)lua_tonumber(L, 4));
 	return 0;
 }
@@ -235,10 +264,14 @@ int LuaBody::SetLinearVelocity(lua_State *L)
 	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
 		return 1;
 	}
-	Physics2D::PhysicsBody* bodyType = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
+
+	Physics2D::PhysicsBody* body = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	float vx = (float)lua_tonumber(L, 2);
 	float vy = (float)lua_tonumber(L, 3);
-	bodyType->SetLinearVelocity(Vec2f(vx, vy));
+	body->SetLinearVelocity(Vec2f(vx, vy));
 
 	lua_pushboolean(L, true);
 	return 1;
@@ -249,9 +282,12 @@ int LuaBody::SetAngularDamping(lua_State* L)
 	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ln")) {
 		return 1;
 	}
-	Physics2D::PhysicsBody* bodyType = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
+	Physics2D::PhysicsBody* body = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
+	if (!(std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), body) != ObjectHandler::GetObjectHandler()->end())) {
+		return 0;
+	}
 	float r = (float)lua_tonumber(L, 2);
-	bodyType->SetAngularDamping(r);
+	body->SetAngularDamping(r);
 
 	lua_pushboolean(L, true);
 	return 1;
