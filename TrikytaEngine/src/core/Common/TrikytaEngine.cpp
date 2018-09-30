@@ -4,19 +4,19 @@
 
 EngineInstance* TrikytaEngine::G_Engine;
 
-std::shared_ptr<Game> TrikytaEngine::Create(std::string p_Wnd_Name, const int p_WindowWidth, const int p_WindowHeight)
+std::shared_ptr<Game> TrikytaEngine::Create(ENGINE_CONFIG& p_Config)
 {
-	auto _Engine = std::make_shared<Game>(p_Wnd_Name, p_WindowWidth, p_WindowHeight);
+	auto _Engine = std::make_shared<Game>(p_Config);
 	TrikytaEngine::init(_Engine.get());
 	return 0;
 };
 
-std::shared_ptr<Game> TrikytaEngine::Create(const int p_WindowWidth, const int p_WindowHeight)
+/*std::shared_ptr<Game> TrikytaEngine::Create(ENGINE_CONFIG& p_Config)
 {
-	auto _Engine = std::make_shared<Game>(DEFAULT_WND_NAME, p_WindowWidth, p_WindowHeight);
+	auto _Engine = std::make_shared<Game>(p_Config);
 	TrikytaEngine::init(_Engine.get());
 	return 0;
-};
+};*/
 
 void TrikytaEngine::init(Game* _Engine)
 {

@@ -74,7 +74,7 @@ void Drawable::attachTo(Physics2D::PhysicsBody* p_Phyobj, Vec2f p_Offset)
 	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
 }
 
-Physics2D::PhysicsBody* Drawable::Physicalize(Physics2D::BodyParams p_BodyParam, Physics2D::BodyType p_Type, Vec2f p_Offset)
+Physics2D::PhysicsBody* Drawable::Physicalize(Physics2D::BodyParams p_BodyParam,Physics2D::BodyType p_Type, Physics2D::BodyShape p_BodyShape=Physics2D::BodyShape::BOX, Vec2f p_Offset)
 {
 	using namespace Physics2D;
 	auto size = Vec2i((int)(p_Offset.x*getSize().x), (int)(p_Offset.y*getSize().y));
@@ -82,7 +82,7 @@ Physics2D::PhysicsBody* Drawable::Physicalize(Physics2D::BodyParams p_BodyParam,
 	m_Body = PhysicsBody::CreateBody
 	(
 		PhysicsEngine::GetPhysicsWorld(), p_Type,
-		BodyShape::BOX, p_BodyParam,
+		p_BodyShape, p_BodyParam,
 		Vec2f{ getPosition().x + (float)Utility::ToMeters(getSize().x), getPosition().y + (float)Utility::ToMeters(getSize().y) },
 		std::vector<Vec2f>{
 		Vec2f(

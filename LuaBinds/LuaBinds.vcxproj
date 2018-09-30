@@ -100,6 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LuaBinds\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -126,6 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)LuaBinds\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -162,6 +164,27 @@
     <ClCompile Include="src\LuaUI\LuaText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LuaBridge\detail\CFunctions.h" />
+    <ClInclude Include="src\LuaBridge\detail\ClassInfo.h" />
+    <ClInclude Include="src\LuaBridge\detail\Constructor.h" />
+    <ClInclude Include="src\LuaBridge\detail\dump.h" />
+    <ClInclude Include="src\LuaBridge\detail\FuncTraits.h" />
+    <ClInclude Include="src\LuaBridge\detail\Iterator.h" />
+    <ClInclude Include="src\LuaBridge\detail\LuaException.h" />
+    <ClInclude Include="src\LuaBridge\detail\LuaHelpers.h" />
+    <ClInclude Include="src\LuaBridge\detail\LuaRef.h" />
+    <ClInclude Include="src\LuaBridge\detail\Namespace.h" />
+    <ClInclude Include="src\LuaBridge\detail\Security.h" />
+    <ClInclude Include="src\LuaBridge\detail\Stack.h" />
+    <ClInclude Include="src\LuaBridge\detail\TypeList.h" />
+    <ClInclude Include="src\LuaBridge\detail\TypeTraits.h" />
+    <ClInclude Include="src\LuaBridge\detail\Userdata.h" />
+    <ClInclude Include="src\LuaBridge\List.h" />
+    <ClInclude Include="src\LuaBridge\LuaBridge.h" />
+    <ClInclude Include="src\LuaBridge\Map.h" />
+    <ClInclude Include="src\LuaBridge\RefCountedObject.h" />
+    <ClInclude Include="src\LuaBridge\RefCountedPtr.h" />
+    <ClInclude Include="src\LuaBridge\Vector.h" />
     <ClInclude Include="src\LuaCore\ErrorManager.h" />
     <ClInclude Include="src\LuaDrawable\LuaAnimation.h" />
     <ClInclude Include="src\LuaDrawable\LuaSprite.h" />

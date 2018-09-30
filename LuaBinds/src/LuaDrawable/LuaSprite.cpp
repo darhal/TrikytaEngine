@@ -1,4 +1,5 @@
 #include <lua.hpp>
+#include "LuaBridge/LuaBridge.h"
 #include "LuaSprite.h"
 #include <core/Drawable/Sprite.h>
 #include "LStateManager/LStateManager.h"
@@ -9,6 +10,8 @@
 #include <core/Drawable/Animation.h>
 #include <UI/UIText.h>
 #include "LuaCore/ErrorManager.h"
+#include <iostream>
+
 
 using namespace LuaEngine;
 
@@ -23,6 +26,21 @@ void LuaSprite::LoadSpriteSystem()
 void LuaSprite::LoadSpriteFunction()
 {
 	auto L = LStateManager::GetLuaState();
+	using namespace luabridge;
+	//getGlobalNamespace(L).addFunction("printMessage", printMessage);
+	getGlobalNamespace(L)
+		//.addFunction("createSprite", createSprite)
+		.beginClass <::Vec2i>("Vec2i")
+			.addConstructor <void(*) (int, int)>()
+			.addData("x", &::Vec2i::x)
+			.addData("y", &::Vec2i::y)
+		.endClass()
+		.beginClass<::Sprite>("Sprite")
+			.addStaticFunction("createSprite", &Sprite::Create)
+		.endClass();
+	//.endNamespace();
+
+
 	lua_pushcfunction(L, LuaSprite::CreateSprite);
 	lua_setglobal(L, "createSprite");
 
@@ -124,6 +142,9 @@ int LuaSprite::CreateSprite(lua_State *L)
 
 int LuaSprite::SetSpritePosition(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
@@ -133,6 +154,9 @@ int LuaSprite::SetSpritePosition(lua_State* L)
 
 int LuaSprite::GetSpritePosition(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	Vec2i p = sprt->getPosition();
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -146,6 +170,9 @@ int LuaSprite::GetSpritePosition(lua_State* L)
 
 int LuaSprite::DeleteSprite(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
 		FREE(sprt);
@@ -155,6 +182,9 @@ int LuaSprite::DeleteSprite(lua_State* L)
 
 int LuaSprite::RotateSprite(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ln")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	int rot = (int)lua_tonumber(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -165,6 +195,17 @@ int LuaSprite::RotateSprite(lua_State* L)
 
 int LuaSprite::FlipSpriteHorizental(lua_State* L)
 {
+	/*Variable v[2];
+	ErrorManager::GetErrorManager()->ParseArgs<Drawable*, bool>(L, "bl", v, NULL, true);
+	v[0].Get<Drawable>().Flip(v[1].Get<bool>() ? FLIPTYPE::HORIZONTAL : FLIPTYPE::NONE);*/
+
+	/*	Function f = FUNCTION(v[0]->Flip);
+
+	f(v[1]);*/
+
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -175,6 +216,13 @@ int LuaSprite::FlipSpriteHorizental(lua_State* L)
 
 int LuaSprite::FlipSpriteVertical(lua_State* L)
 {
+	/*Variable v[2];
+	ErrorManager::GetErrorManager()->ParseArgs<Drawable*, bool>(L, "bl", v, NULL, true);
+	v[0].Get<Drawable>().Flip(v[1].Get<bool>(true) ? FLIPTYPE::VERTICAL : FLIPTYPE::NONE);
+	return 0;*/
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -185,6 +233,9 @@ int LuaSprite::FlipSpriteVertical(lua_State* L)
 
 int LuaSprite::SetSpriteRotationCenter(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
@@ -196,6 +247,9 @@ int LuaSprite::SetSpriteRotationCenter(lua_State* L)
 
 int LuaSprite::GetSpriteSize(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	Vec2i sz;
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -210,6 +264,9 @@ int LuaSprite::GetSpriteSize(lua_State* L)
 
 int LuaEngine::LuaSprite::SetSpriteVisisble(lua_State * L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	bool isVis = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -223,6 +280,9 @@ int LuaEngine::LuaSprite::SetSpriteVisisble(lua_State * L)
 
 int LuaSprite::GetSpriteFilename(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Sprite* sprt = (Sprite*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushstring(L, sprt->getFileName().c_str());
@@ -234,6 +294,9 @@ int LuaSprite::GetSpriteFilename(lua_State* L)
 
 int LuaSprite::GetSpriteRotation(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushnumber(L, sprt->GetRotation());
@@ -245,6 +308,9 @@ int LuaSprite::GetSpriteRotation(lua_State* L)
 
 int LuaSprite::AttachSpriteTo(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "llnn")) {
+		return 1;
+	}
 	Drawable* toBeAttached = (Drawable*)lua_touserdata(L, 1);
 	Drawable* AttachedTo = (Drawable*)lua_touserdata(L, 2);
 	float offsetX = (float)lua_tonumber(L, 3);
@@ -260,6 +326,9 @@ int LuaSprite::AttachSpriteTo(lua_State* L)
 
 int LuaSprite::IsSpriteVisisble(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* sprt = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), sprt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushboolean(L, sprt->isRender());
@@ -273,14 +342,19 @@ int LuaSprite::IsSpriteVisisble(lua_State* L)
 //THIS IS FRO DRAWABLE
 int LuaSprite::Physicalize(lua_State* L) 
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnnnbss")) {
+		return 1;
+	}
 	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
 		float mass = (float)lua_tonumber(L, 2);
 		float friction = (float)lua_tonumber(L, 3);
 		float restitution = (float)lua_tonumber(L, 4);
-		bool isSensor = (float)lua_toboolean(L, 5);
+		bool isSensor = (bool)lua_toboolean(L, 5);
 		const char* bodyType = lua_tostring(L, 6);
+		const char* bodyShape = lua_tostring(L, 7);
 		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
+		Physics2D::BodyShape rBodyShape = Physics2D::BodyShape::BOX;
 		if (strcmp(bodyType, "Dynamic") == 0) {
 			rBodyType = Physics2D::BodyType::DYNAMIC;
 		}
@@ -290,7 +364,13 @@ int LuaSprite::Physicalize(lua_State* L)
 		else if (strcmp(bodyType, "Kinematic") == 0) {
 			rBodyType = Physics2D::BodyType::KINEMATIC;
 		}
-		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType);
+		if (strcmp(bodyShape, "Box") == 0) {
+			rBodyShape = Physics2D::BodyShape::BOX;
+		}
+		else if (strcmp(bodyShape, "Circle") == 0) {
+			rBodyShape = Physics2D::BodyShape::CIRCLE;
+		}
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType, rBodyShape);
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;
 	}
@@ -299,6 +379,9 @@ int LuaSprite::Physicalize(lua_State* L)
 
 int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnnnbssnn")) {
+		return 1;
+	}
 	Drawable* phySprt = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), phySprt) != ObjectHandler::GetObjectHandler()->end()) {
 		float mass = (float)lua_tonumber(L, 2);
@@ -306,7 +389,8 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 		float restitution = (float)lua_tonumber(L, 4);
 		bool isSensor = (float)lua_tonumber(L, 5);
 		const char* bodyType = lua_tostring(L, 6);
-
+		const char* bodyShape = lua_tostring(L, 7);
+		Physics2D::BodyShape rBodyShape = Physics2D::BodyShape::BOX;
 		Physics2D::BodyType rBodyType = Physics2D::BodyType::STATIC;
 		if (strcmp(bodyType, "Dynamic") == 0) {
 			rBodyType = Physics2D::BodyType::DYNAMIC;
@@ -317,10 +401,15 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 		else if (strcmp(bodyType, "Kinematic") == 0) {
 			rBodyType = Physics2D::BodyType::KINEMATIC;
 		}
-
-		float offx = (float)lua_tonumber(L, 7);
-		float offy = (float)lua_tonumber(L, 8);
-		auto body = phySprt->Physicalize(Physics2D::BodyParams{mass, friction, restitution, isSensor}, rBodyType, Vec2f(offx, offy));
+		if (strcmp(bodyShape, "Box") == 0) {
+			rBodyShape = Physics2D::BodyShape::BOX;
+		}
+		else if (strcmp(bodyShape, "Circle") == 0) {
+			rBodyShape = Physics2D::BodyShape::CIRCLE;
+		}
+		float offx = (float)lua_tonumber(L, 8);
+		float offy = (float)lua_tonumber(L, 9);
+		auto body = phySprt->Physicalize(Physics2D::BodyParams{mass, friction, restitution, isSensor}, rBodyType, rBodyShape,Vec2f(offx, offy));
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;
 	}
@@ -329,6 +418,9 @@ int LuaSprite::PhysicalizeWithOffset(lua_State* L)
 
 int LuaSprite::SetZOrder(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ln")) {
+		return 1;
+	}
 	Drawable* drawable = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), drawable) != ObjectHandler::GetObjectHandler()->end()) {
 		int zorder = (int)lua_tonumber(L, 2);
@@ -340,6 +432,9 @@ int LuaSprite::SetZOrder(lua_State* L)
 
 int LuaSprite::getBody(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* drawable = (Drawable*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), drawable) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushlightuserdata(L, (void*)drawable->getBody());
@@ -356,6 +451,9 @@ void l_pushtabledrawable(lua_State* L, int key, void* value) {
 
 int LuaSprite::getObjectsByType(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "s")) {
+		return 1;
+	}
 	const char* type = lua_tostring(L, 1);
 	int index = 0;
 	lua_newtable(L);

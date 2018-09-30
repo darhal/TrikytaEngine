@@ -5,24 +5,21 @@
 #include <chrono>
 #include <functional> 
 #include <SDL/SDL.h>
-#include "defines.h"
+#include "core/Common/defines.h"
 
 class EngineInstance
 {
 public:
-	EngineInstance() :
+	/*EngineInstance() :
 		m_Wnd_Name(DEFAULT_WND_NAME),
-		m_WindowWidth(),
-		m_WindowHeight(),
+		m_EngineConfig(m_EngineConfig(p_Config),z),
 		m_Window(nullptr),
 		m_Renderer(nullptr),
 		m_PrimarySurface(nullptr)
-	{};
+	{};*/
 
-	EngineInstance(std::string p_Wnd_Name, const int p_WindowWidth, const int p_WindowHeight) :
-		m_Wnd_Name(p_Wnd_Name),
-		m_WindowWidth(p_WindowWidth),
-		m_WindowHeight(p_WindowHeight),
+	EngineInstance(struct ENGINE_CONFIG& p_Config) :
+		m_EngineConfig(p_Config),
 		m_Window(nullptr),
 		m_Renderer(nullptr),
 		m_PrimarySurface(nullptr)
@@ -45,17 +42,15 @@ public:
 
 	inline void setEngineState(bool p_State) { m_EngineState = p_State; }
 
-	const int GetScreenWeight() const { return m_WindowWidth; }
-	const int GetScreenHeight() const { return m_WindowHeight; }
+	const int GetScreenWeight() const { return m_EngineConfig.WINDOW_WIDTH; }
+	const int GetScreenHeight() const { return m_EngineConfig.WINDOW_HEIGHT; }
 
 private:
+	struct ENGINE_CONFIG& m_EngineConfig;
 	bool m_EngineState;
 	std::string m_Wnd_Name;
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Surface* m_PrimarySurface;
 	std::chrono::time_point<std::chrono::system_clock> LastTick;
-
-	const int m_WindowHeight;
-	const int m_WindowWidth;
 };

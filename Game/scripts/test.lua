@@ -42,21 +42,27 @@ end
 
 --Called when engine is already loaded!
 function OnEngineLoad()
+	print("____________________________________________________________________")
 	local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
-	local ba = physicalize(ground, 1, 1,0.0,false, "Static")
+	local ba = physicalize(ground, 1, 1,0.0,false, "Static", "Box")
+
 	createBody("Dynamic", "Polygon", 1,1,0,false,550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
-	--[[print("____________________________________________________________________")
-	local a = createSprite("assets/test.png", 464, 464, 50, 100)
-	local ba = physicalize(a, 1, 1,0.0,false, "Dynamic")
+
+	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
+	local b = createSprite("assets/test.png", 464, 464, 50, 100)
+	flipSpriteVertical(ba, true)
+	flipSpriteVertical(ground, false)
+	local ba = physicalize(b, 1, 1,0.0,false, "Dynamic", "Box")
 	setLinearVelocity(ba, 0, -100)
-	--setZOrder(a, 1)
-	--local b = createSprite("assets/test.png", 464, 464, 250, 100)
-	--setZOrder(b, 2)
-	--local d = createSprite("assets/test.png", 464, 464, -50, 100)
-	--setZOrder(d, -1)
+	flipSpriteVertical(ground, false)
+	setZOrder(b, 1)
+	local b = createSprite("assets/test.png", 464, 464, 250, 100)
+	setZOrder(b, 2)
+	local d = createSprite("assets/test.png", 464, 464, -50, 100)
+	setZOrder(d, -1)
 	
 	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",200, 200, 600, 100, 0.0019)
-	physicalizeWithOffset(c, 1, 1,0.0,false, "Dynamic", 0.2, 0.09)
+	physicalizeWithOffset(c, 1, 1,0.0,false, "Dynamic", "Box", 0.2, 0.09)
 	spritecount = 0
 	for i, v in pairs(getObjectsByType("Sprite")) do
 		outputConsole("I FOUND A SPRITE", "INFO")
@@ -64,19 +70,16 @@ function OnEngineLoad()
 	end
 	outputConsole("THERE IS "..spritecount.." Sprites", "INFO")
 	
-	print("____________________________________________________________________")
-	local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
-	local ba = physicalize(ground, 1, 1,0.0,false, "Static")
 	
 	local txt1 = createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 16, 500, math.random(50),  255,255,255);
-	setLinearVelocity(physicalize(txt1, 1, 1,0.0,false, "Dynamic"), 20, 0)
+	setLinearVelocity(physicalize(txt1, 1, 1,0.0,false, "Dynamic", "Box"), 20, 0)
 
 	
 	local txt2 = createText("THIS IS ANOTHER PHYSICLIZED TEXT", "Engine_Assets/fonts/DroidSans.ttf", 16, 550,  math.random(20),  255,255,255);
-	setLinearVelocity(physicalize(txt2, 1, 1,0.6,false, "Dynamic"), -20, 0)
+	setLinearVelocity(physicalize(txt2, 1, 1,0.6,false, "Dynamic", "Box"), -20, 0)
 	
 	local txt3 = createText("This is so funny bro", "Engine_Assets/fonts/DroidSans.ttf", 16, 750,  math.random(10),  255,255,255);
-	setLinearVelocity(physicalize(txt3, 1, 1,0.6,false, "Dynamic"), 30, 0)--]]
+	setLinearVelocity(physicalize(txt3, 1, 1,0.6,false, "Dynamic", "Box"), 30, 0)
 	--deleteSprite(a)
 	--deleteSprite(a)
 	--deleteSprite(a)

@@ -9,9 +9,6 @@
 
 Animation::~Animation()
 {
-	/*for (auto itr : *SpriteFramesCoords) {
-		FREE(itr);
-	}*/
 	FREE(SpriteFramesCoords);
 };
 
@@ -41,7 +38,7 @@ void Animation::loadAnimationCoordinates()
 	string line;
 	if (AnimFile.is_open())
 	{
-		Log("[INFO] Reading file %s ...", AnimFilename.c_str());
+		LogConsole(MESSAGE_TYPE::INFO,"[INFO] Reading file %s ...", AnimFilename.c_str());
 		while (getline(AnimFile, line))
 		{
 			string coord;
@@ -61,7 +58,7 @@ void Animation::loadAnimationCoordinates()
 		}
 		AnimFile.close();
 	}else {
-		Log("[ERROR] Attempt reading file %s Failed", AnimFilename.c_str());
+		LogConsole(MESSAGE_TYPE::INFO, "[ERROR] Attempt reading file %s Failed", AnimFilename.c_str());
 	}
 	m_MaxFrames = SpriteFramesCoords->size() - 1;
 }

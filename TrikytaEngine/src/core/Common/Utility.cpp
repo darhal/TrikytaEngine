@@ -4,6 +4,7 @@
 #include "TrikytaEngine.h"
 #include "EngineInstance.h"
 #include "Utility.h"
+#include "core/Common/defines.h"
 
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
 

@@ -27,6 +27,19 @@ namespace UI {
 	class Text;
 }
 
+struct ENGINE_CONFIG
+{
+	unsigned int WINDOW_WIDTH		= (unsigned int)(1024 * 1.2);
+	unsigned int WINDOW_HEIGHT		= (unsigned int)(768 * 1.2);
+	const char*	WINDOW_NAME			= "Trikyta Engine";
+	unsigned int ACCELERATION_RATE	= 1;
+	bool PHYSICS_DEBUG				= true;
+	float PHYSICS_TIME_STEP			= 1 / 60;
+	int PHYSICS_VELOCITY_ITERATIONS = 8;
+	int PHYSICS_POSITION_ITERATIONS = 3;
+	float PHYSICS_WORLD_GRAVITY_X	= 0;
+	float PHYSICS_WORLD_GRAVITY_Y	= 10;
+};
 
 #define CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
 #define CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)

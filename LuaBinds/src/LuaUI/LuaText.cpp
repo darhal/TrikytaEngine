@@ -3,6 +3,7 @@
 #include <lua.hpp>
 #include "LuaText.h"
 #include <core/Objects/ObjectHandler.h>
+#include "LuaCore/ErrorManager.h"
 
 
 using namespace UI;
@@ -75,7 +76,9 @@ void LuaText::LoadTextFunction()
 
 int LuaText::createText(lua_State* L)
 {
-	
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ssnnnnn")) {
+		return 1;
+	}
 	lua_pushlightuserdata(L,
 		(void*)UI::Text::createText(
 			lua_tostring(L, 1), lua_tostring(L, 2), (uint8)lua_tonumber(L, 3),
@@ -88,6 +91,9 @@ int LuaText::createText(lua_State* L)
 
 int LuaText::setTextColor(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnnn")) {
+		return 1;
+	}
 	UI::Text* txt = (UI::Text*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		txt->setColor(Color{ (uint8)lua_tonumber(L, 2), (uint8)lua_tonumber(L, 3), (uint8)lua_tonumber(L, 4), 255 });
@@ -97,6 +103,9 @@ int LuaText::setTextColor(lua_State* L)
 
 int LuaText::setText(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ls")) {
+		return 1;
+	}
 	UI::Text* txt = (UI::Text*)lua_touserdata(L, 1);
 	auto text = lua_tostring(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -108,6 +117,9 @@ int LuaText::setText(lua_State* L)
 
 int LuaText::SetTextPosition(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
@@ -117,6 +129,9 @@ int LuaText::SetTextPosition(lua_State* L)
 
 int LuaText::GetTextPosition(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	Vec2i p = txt->getPosition();
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -130,6 +145,9 @@ int LuaText::GetTextPosition(lua_State* L)
 
 int LuaText::DeleteText(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		FREE(txt);
@@ -139,6 +157,9 @@ int LuaText::DeleteText(lua_State* L)
 
 int LuaText::RotateText(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ln")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int rot = (int)lua_tonumber(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -149,6 +170,9 @@ int LuaText::RotateText(lua_State* L)
 
 int LuaText::FlipTextHorizental(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -159,6 +183,9 @@ int LuaText::FlipTextHorizental(lua_State* L)
 
 int LuaText::FlipTextVertical(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int bFlip = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -169,6 +196,9 @@ int LuaText::FlipTextVertical(lua_State* L)
 
 int LuaText::SetTextRotationCenter(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
@@ -180,6 +210,9 @@ int LuaText::SetTextRotationCenter(lua_State* L)
 
 int LuaText::GetTextSize(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Drawable* txt = (Drawable*)lua_touserdata(L, 1);
 	Vec2i sz;
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -194,6 +227,9 @@ int LuaText::GetTextSize(lua_State* L)
 
 int LuaEngine::LuaText::SetTextVisisble(lua_State * L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lb")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	bool isVis = lua_toboolean(L, 2);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
@@ -218,6 +254,9 @@ int LuaEngine::LuaText::SetTextVisisble(lua_State * L)
 
 int LuaText::GetTextRotation(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushnumber(L, txt->GetRotation());
@@ -229,6 +268,9 @@ int LuaText::GetTextRotation(lua_State* L)
 
 int LuaText::AttachTextTo(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "llnn")) {
+		return 1;
+	}
 	Text* toBeAttached = (Text*)lua_touserdata(L, 1);
 	Drawable* AttachedTo = (Drawable*)lua_touserdata(L, 2);
 	float offsetX = (float)lua_tonumber(L, 3);
@@ -244,6 +286,9 @@ int LuaText::AttachTextTo(lua_State* L)
 
 int LuaText::IsTextVisisble(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
 	Text* txt = (Text*)lua_touserdata(L, 1);
 	if (std::find(ObjectHandler::GetObjectHandler()->begin(), ObjectHandler::GetObjectHandler()->end(), txt) != ObjectHandler::GetObjectHandler()->end()) {
 		lua_pushboolean(L, txt->isRender());

@@ -4,6 +4,8 @@
 #include <core/Common/defines.h>
 #include <map>
 
+auto L = LuaEngine::LStateManager::GetLuaState();
+
 const char* ErrorManager::LuaTypesMap[] = {"nil", "bool", "lightuserdata", "number", "string", "table", "function", "userdata", "thread"};
 
 ErrorManager* ErrorManager::_ErrorManager = nullptr;
@@ -49,9 +51,13 @@ bool ErrorManager::CheckType(lua_State* L, int p_StackIndex, std::string p_TypeT
 {
 	if (p_ArgNum == 0)
 		p_ArgNum = p_StackIndex;
+	if (lua_type(L, p_StackIndex) < 0) {
+		LogConsole(MESSAGE_TYPE::ERROR, "%s Line %d: Expected a %s at argument #%d of function " LUA_QS " got %s",
+			GetFile(L, 1), GetLine(L, 1), p_TypeToCheck.c_str(), p_ArgNum, GetFunction(L, 0), "nil");
+		return true;
+	}
 	if (LuaTypesMap[lua_type(L, p_StackIndex)] != p_TypeToCheck) {
-		//luaL_argerror(L, p_ArgNum, "");
-		LogConsole(MESSAGE_TYPE::ERROR, "%s Line %d: Expected a %s at \nargument #%d of function " LUA_QS " got %s",
+		LogConsole(MESSAGE_TYPE::ERROR, "%s Line %d: Expected a %s at argument #%d of function " LUA_QS " got %s",
 			GetFile(L, 1), GetLine(L, 1), p_TypeToCheck.c_str(),p_ArgNum, GetFunction(L, 0), LuaTypesMap[lua_type(L, p_StackIndex)]);
 		return true;
 	}
@@ -113,4 +119,6 @@ bool ErrorManager::isValidArgument(lua_State* L, const char* sig)
 	}
 	return shouldContinue;
 }
+
+
 

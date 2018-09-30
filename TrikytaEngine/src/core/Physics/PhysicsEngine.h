@@ -62,7 +62,10 @@ namespace Physics2D {
 			BodyShape p_Shape, BodyParams p_BodyParams,
 			Vec2f p_Position, std::vector<Vec2f> p_Dimentions
 		);
-
+		~PhysicsBody() 
+		{
+			m_Body->GetWorld()->DestroyBody(m_Body);
+		};
 		b2Body* GetBody() const { return m_Body; }
 
 		virtual Vec2i getPosition() override { return Vec2i((int)m_Body->GetPosition().x, (int)m_Body->GetPosition().y); }
@@ -239,7 +242,7 @@ namespace Physics2D {
 		void SetLinearDamping(float32 linearDamping) { m_Body->SetLinearDamping(linearDamping); }
 
 		/// Get the angular damping of the body.
-		float32 GetAngularDamping() const { m_Body->GetAngularDamping(); }
+		float32 GetAngularDamping() const { return m_Body->GetAngularDamping(); }
 
 		/// Set the angular damping of the body.
 		void SetAngularDamping(float32 angularDamping) { m_Body->SetAngularDamping(angularDamping); }

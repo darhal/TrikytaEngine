@@ -1,11 +1,13 @@
 #pragma once
 #include "core/Common/EngineInstance.h"
 
+struct ENGINE_CONFIG;
+
 class Game : public EngineInstance
 {
 public:
-	Game(std::string p_Wnd_Name, const int p_WindowWidth, const int p_WindowHeight) :
-		EngineInstance(p_Wnd_Name, p_WindowWidth, p_WindowHeight)
+	Game(ENGINE_CONFIG& p_Config) :
+		EngineInstance(p_Config)
 	{}
 
 	void On_Engine_Pre_Init() override;
@@ -15,7 +17,7 @@ public:
 
 	void On_Input(int, unsigned int);
 	void OnCollision(class b2Contact*);
-	void OnCollisionEnd(b2Contact*);
+	void OnCollisionEnd(class b2Contact*);
 	void OnClick(unsigned int, int, Vec2i);
 	void OnMouseMove(Vec2i);
 

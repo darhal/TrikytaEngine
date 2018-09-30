@@ -25,8 +25,7 @@ public:
 
 	/*
 	*/
-	Vec2(T x, T y): x(static_cast<T>(x)), y(static_cast<T>(y)) {};
-
+	Vec2(T x, T y) : x(static_cast<T>(x)), y(static_cast<T>(y)) {};
 	/*
 		Copy Constructor!
 	*/
@@ -127,7 +126,6 @@ public:
 
 	inline T getX() const { return this->x; };
 	inline T getY() const { return this->y; };
-
 	virtual ~Vec2() {};
 
 private:

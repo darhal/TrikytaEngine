@@ -5,6 +5,7 @@
 #include "LuaCore/ErrorManager.h"
 
 using namespace LuaEngine;
+using namespace Physics2D;
 
 LuaBody* LuaBody::_LUA_BODY_ = nullptr;
 
@@ -33,19 +34,36 @@ void LuaBody::LoadBodyFunction()
 
 	lua_pushcfunction(L, LuaBody::SetAngularDamping);
 	lua_setglobal(L, "setAngularDamping");
+
+	lua_pushcfunction(L, LuaBody::GetLinearVelocity);
+	lua_setglobal(L, "getLinearVelocity");
+
+	lua_pushcfunction(L, LuaBody::GetAngularDamping);
+	lua_setglobal(L, "getAngularDamping");
 }
 
-//Legacy:
-/*float sx = (float)lua_tonumber(L, 9);
-if (ErrorManager::GetErrorManager()->CheckType(L, 9, "number")) {
-	lua_pushnil(L);
+int LuaBody::GetLinearVelocity(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
+	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	lua_pushnumber(L, body->GetLinearVelocity().x);
+	lua_pushnumber(L, body->GetLinearVelocity().y);
+	return 2;
+}
+
+
+int LuaBody::GetAngularDamping(lua_State* L)
+{
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "l")) {
+		return 1;
+	}
+	PhysicsBody* body = (PhysicsBody*)lua_touserdata(L, 1);
+	lua_pushnumber(L, body->GetAngularDamping());
 	return 1;
 }
-float sy = (float)lua_tonumber(L, 10);
-if (ErrorManager::GetErrorManager()->CheckType(L, 10, "number")) {
-	lua_pushnil(L);
-	return 1;
-}*/
+
 int LuaBody::CreateBody(lua_State *L)
 {
 	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ssnnnbnnt")) {
@@ -109,6 +127,9 @@ int LuaBody::CreateBody(lua_State *L)
 
 int LuaBody::SetLinearVelocity(lua_State *L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "lnn")) {
+		return 1;
+	}
 	Physics2D::PhysicsBody* bodyType = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
 	float vx = (float)lua_tonumber(L, 2);
 	float vy = (float)lua_tonumber(L, 3);
@@ -120,6 +141,9 @@ int LuaBody::SetLinearVelocity(lua_State *L)
 
 int LuaBody::SetAngularDamping(lua_State* L)
 {
+	if (!ErrorManager::GetErrorManager()->isValidArgument(L, "ln")) {
+		return 1;
+	}
 	Physics2D::PhysicsBody* bodyType = (Physics2D::PhysicsBody*)lua_touserdata(L, 1);
 	float r = (float)lua_tonumber(L, 2);
 	bodyType->SetAngularDamping(r);

@@ -14,6 +14,8 @@ namespace LuaEngine {
 		static int CreateBody(lua_State *L);
 		static int SetLinearVelocity(lua_State *L);
 		static int SetAngularDamping(lua_State* L);
+		static int GetLinearVelocity(lua_State* L);
+		static int GetAngularDamping(lua_State* L);
 	private:
 		static LuaBody* _LUA_BODY_;
 	};

@@ -73,7 +73,7 @@ int LuaAnimation::CreateAnimation(lua_State* L)
 	int x = (int)lua_tonumber(L, 5);
 	int y = (int)lua_tonumber(L, 6);
 	float timeToUpdate = (float)lua_tonumber(L, 7);
-	LogL("Info", "Path : %s, parser: %s, w:%d, h:%d, x:%d, y:%d", spritePath, parserPath, w, h, x, y);
+	LogConsole(MESSAGE_TYPE::INFO, "Path : %s, parser: %s, w:%d, h:%d, x:%d, y:%d", spritePath, parserPath, w, h, x, y);
 	auto obj = Animation::Create(spritePath, parserPath, Vec2i(w, h), Vec2i(x, y), timeToUpdate);
 	lua_pushlightuserdata(L, (void*)obj);
 	return 1;

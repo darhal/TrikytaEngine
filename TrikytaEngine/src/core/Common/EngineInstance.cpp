@@ -10,7 +10,7 @@
 #include <LStateManager/LStateManager.h>
 #include "core/Utility/TimerManager.h"
 #include "misc/Console.h"
-
+#include "core/Common/defines.h"
 
 bool EngineInstance::Init()
 {
@@ -29,9 +29,9 @@ bool EngineInstance::Init()
 	}
 
 	if ((m_Window = SDL_CreateWindow(
-		m_Wnd_Name.c_str(),
+		m_EngineConfig.WINDOW_NAME,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		m_WindowWidth, m_WindowHeight, SDL_WINDOW_SHOWN)
+		m_EngineConfig.WINDOW_WIDTH, m_EngineConfig.WINDOW_HEIGHT, SDL_WINDOW_SHOWN)
 		) == NULL) {
 		LogTerminal("Unable to create SDL Window: %s", SDL_GetError());
 		return false;
@@ -50,13 +50,14 @@ bool EngineInstance::Init()
 		return false;
 	}
 	TTF_Init();
+	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
+	LogTerminal("__________________________________________________________________________")
 	Console::InitConsole();
 	LogInfoConsole("Engine is ready...");
-
-	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
-	m_EngineState = true;
-	const Physics2D::PhysicsEngineParams a = {{ 0, 10.f }, 1 / 60.f, 8, 3 };
-	this->InitPhysics(a);
+	
+	const Physics2D::PhysicsEngineParams phyParams = {{ m_EngineConfig.PHYSICS_WORLD_GRAVITY_X, m_EngineConfig.PHYSICS_WORLD_GRAVITY_Y }, m_EngineConfig.PHYSICS_TIME_STEP,
+		m_EngineConfig.PHYSICS_VELOCITY_ITERATIONS, m_EngineConfig.PHYSICS_POSITION_ITERATIONS,  m_EngineConfig.PHYSICS_DEBUG};
+	this->InitPhysics(phyParams);
 	TimerManager::InitTimerManager(); // Init timer system!
 
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
@@ -64,6 +65,7 @@ bool EngineInstance::Init()
 	On_Engine_Init(); // CALL INIT
 
 	LogInfoConsole("Engine is active and rendering!");
+	m_EngineState = true;
 	return true;
 }
 
@@ -81,7 +83,7 @@ void EngineInstance::EngineLogic()
 		EventManager::GetEventManager()->HandleSDLEvents(Event, this);
 		Render();
 		TimerManager::Update();
-		SDL_Delay(1); // 1ms
+		SDL_Delay(m_EngineConfig.ACCELERATION_RATE); // 1ms
 	}
 }
 

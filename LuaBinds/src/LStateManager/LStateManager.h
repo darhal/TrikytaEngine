@@ -4,15 +4,9 @@
 #include <vector>
 
 struct lua_State;
+struct ENGINE_CONFIG;
 
 namespace LuaEngine {
-	struct WND_CONFIG
-	{
-		int w;
-		int h;
-		const char* name;
-	};
-
 	class LStateManager
 	{
 	public:
@@ -20,7 +14,7 @@ namespace LuaEngine {
 		static ::lua_State* GetLuaState();
 
 		void LoadScripts();
-		WND_CONFIG LLoadConfig(::lua_State* L);
+		::ENGINE_CONFIG LLoadConfig(::lua_State* L);
 		std::shared_ptr<std::vector<std::string>> LoadScriptList();
 		void LoadingTrikytaEnv();
 	private:
