@@ -8,13 +8,13 @@ class Sprite : public Drawable
 {
 protected:
 
-	Sprite(std::string p_Filename, Vec2<int> p_Size, Vec2<int> p_Position) :
+	Sprite(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position) :
 		Drawable(p_Position, p_Size), m_Filename(p_Filename)
 	{
 		init();
 	}
 
-	Sprite(std::string p_Filename, Vec2<int> p_Position) :
+	Sprite(const std::string& p_Filename, Vec2<int>& p_Position) :
 		m_Filename(p_Filename), Drawable(p_Position)
 	{
 		init();

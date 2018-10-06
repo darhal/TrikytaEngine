@@ -78,26 +78,6 @@ public:
 		return Vec2(x + v.x, y + v.y);
 	}
 
-	friend Vec2<T> operator+(Vec2<T>& rhs, Vec2<T>& lhs) {
-		return Vec2<T>(rhs.x + lhs.x, rhs.y + lhs.y);
-	}
-
-	friend Vec2 operator-(Vec2& rhs, Vec2& lhs) {
-		return Vec2(rhs.x - rhs.x, rhs - lhs.y);
-	}
-
-	friend Vec2 operator/(Vec2& rhs, Vec2& lhs) {
-		return Vec2(rhs.x / rhs.x, lhs / lhs.y);
-	}
-
-	friend Vec2 operator*(Vec2& rhs, Vec2& lhs) {
-		return Vec2(rhs.x * rhs.x, lhs * lhs.y);
-	}
-
-	friend bool operator==(Vec2 rhs, Vec2 lhs) {
-		return (rhs.x == lhs.x && rhs.y == lhs.y);
-	}
-
 	/*template<typename Typ>
 	Vec2 operator+(Typ& s) {
 		return Vec2(x + s, y + s);
@@ -131,6 +111,31 @@ public:
 private:
 
 };
+
+template<typename T>
+Vec2<T> operator+(const Vec2<T>& rhs, const Vec2<T>& lhs) {
+	return Vec2<T>(rhs.x + lhs.x, rhs.y + lhs.y);
+}
+
+template<typename T>
+Vec2<T> operator-(const Vec2<T>& rhs, const Vec2<T>& lhs) {
+	return Vec2<T>(rhs.x - rhs.x, rhs - lhs.y);
+}
+
+template<typename T>
+Vec2<T> operator/(const Vec2<T>& rhs, const Vec2<T>& lhs) {
+	return Vec2<T>(rhs.x / rhs.x, lhs / lhs.y);
+}
+
+template<typename T>
+Vec2<T> operator*(const Vec2<T>& rhs, const Vec2<T>& lhs) {
+	return Vec2<T>(rhs.x * rhs.x, lhs * lhs.y);
+}
+
+template<typename T>
+bool operator==(const Vec2<T>& rhs, const Vec2<T>& lhs) {
+	return (rhs.x == lhs.x && rhs.y == lhs.y);
+}
 
 typedef Vec2<int> Vec2i;
 typedef Vec2<float> Vec2f;

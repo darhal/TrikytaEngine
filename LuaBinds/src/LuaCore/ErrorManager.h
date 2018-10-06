@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <lua.hpp>
-#include <misc/Console.h>
+#include <misc/Console/Console.h>
 
 struct lua_State;
 

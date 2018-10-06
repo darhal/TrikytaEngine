@@ -146,9 +146,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Camera\Camera.cpp" />
     <ClCompile Include="src\core\Common\EngineInstance.cpp" />
     <ClCompile Include="src\core\Common\TrikytaEngine.cpp" />
     <ClCompile Include="src\core\Common\Utility.cpp" />
+    <ClCompile Include="src\core\Common\Vec2.cpp" />
     <ClCompile Include="src\core\Drawable\Animation.cpp" />
     <ClCompile Include="src\core\Drawable\Drawable.cpp" />
     <ClCompile Include="src\core\Drawable\Sprite.cpp" />
@@ -184,8 +186,8 @@
     <ClCompile Include="src\core\TiledMap\Tilesets.cpp" />
     <ClCompile Include="src\core\Utility\Timer.cpp" />
     <ClCompile Include="src\core\Utility\TimerManager.cpp" />
-    <ClCompile Include="src\misc\Console.cpp" />
-    <ClCompile Include="src\misc\ConsoleText.cpp" />
+    <ClCompile Include="src\misc\Console\Console.cpp" />
+    <ClCompile Include="src\misc\Console\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
@@ -194,6 +196,7 @@
     <ClCompile Include="src\utils\SDL2_rotozoom.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\Camera\Camera.h" />
     <ClInclude Include="libs\includes\SDL\begin_code.h" />
     <ClInclude Include="libs\includes\SDL\close_code.h" />
     <ClInclude Include="libs\includes\SDL\SDL.h" />
@@ -322,8 +325,8 @@
     <ClInclude Include="src\core\TiledMap\Tilesets.h" />
     <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\core\Utility\TimerManager.h" />
-    <ClInclude Include="src\misc\Console.h" />
-    <ClInclude Include="src\misc\ConsoleText.h" />
+    <ClInclude Include="src\misc\Console\Console.h" />
+    <ClInclude Include="src\misc\Console\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
     <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />

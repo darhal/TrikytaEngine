@@ -2,7 +2,7 @@
 #include "core/Common/TrikytaEngine.h"
 #include "core/Common/Utility.h"
 #include "ConsoleText.h"
-#include "Font.h"
+#include "misc/Font.h"
 
 Console* Console::_Console = nullptr;
 class Font* Console::m_Font = nullptr;

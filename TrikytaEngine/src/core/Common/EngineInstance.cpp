@@ -9,8 +9,26 @@
 #include <core/Objects/ObjectHandler.h>
 #include <LStateManager/LStateManager.h>
 #include "core/Utility/TimerManager.h"
-#include "misc/Console.h"
+#include "misc/Console/Console.h"
 #include "core/Common/defines.h"
+//#include <GL/glew.h>
+/*
+bool SetOpenGLAttributes()
+{
+	// Set our OpenGL version.
+	// SDL_GL_CONTEXT_CORE gives us only the newer version, deprecated functions are disabled
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	// 3.2 is part of the modern versions of OpenGL, but most video cards whould be able to run it
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
+	// Turn on double buffering with a 24bit Z buffer.
+	// You may need to change this to 16 or 32 for your system
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+	return true;
+}*/
 
 bool EngineInstance::Init()
 {
@@ -27,15 +45,22 @@ bool EngineInstance::Init()
 		LogTerminal("Unable to Init hinting: %s", SDL_GetError());
 		return false;
 	}
-
+	
 	if ((m_Window = SDL_CreateWindow(
 		m_EngineConfig.WINDOW_NAME,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		m_EngineConfig.WINDOW_WIDTH, m_EngineConfig.WINDOW_HEIGHT, SDL_WINDOW_SHOWN)
+		m_EngineConfig.WINDOW_WIDTH, m_EngineConfig.WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN)
 		) == NULL) {
 		LogTerminal("Unable to create SDL Window: %s", SDL_GetError());
 		return false;
 	}
+	
+	// Create an OpenGL context associated with the window.
+	//SDL_GLContext glcontext = SDL_GL_CreateContext(m_Window);
+	//SetOpenGLAttributes();
+
+	// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
+	//SDL_GL_DeleteContext(glcontext);
 
 	m_PrimarySurface = SDL_GetWindowSurface(m_Window);
 
@@ -66,6 +91,9 @@ bool EngineInstance::Init()
 
 	LogInfoConsole("Engine is active and rendering!");
 	m_EngineState = true;
+	
+	auto rect = SDL_Rect{0,0,(int)m_EngineConfig.WINDOW_WIDTH,(int)m_EngineConfig.WINDOW_HEIGHT};
+	SDL_RenderSetViewport(m_Renderer, &rect);
 	return true;
 }
 
@@ -98,8 +126,8 @@ void EngineInstance::Render()
 	{
 		itr->render(dtf);
 	}
-
 	On_Engine_Render(dtf);
+	SDL_GL_SwapWindow(m_Window);
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
 	Console::getConsole()->Draw(dtf);
 	SDL_RenderPresent(m_Renderer);

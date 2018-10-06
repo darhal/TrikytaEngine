@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdarg>
 #include "Utility.h"
-#include "misc/Console.h"
+#include "misc/Console/Console.h"
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
 
 

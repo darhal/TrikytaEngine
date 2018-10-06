@@ -22,7 +22,7 @@ TiledMap* TiledMap::Create(std::string p_Filename)
 	return new TiledMap(map, p_Filename);
 }
 
-TiledMap::TiledMap(Tmx::Map* p_Map,std::string p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath)
+TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath)
 {
 	TiledMap::init();
 }

@@ -1,6 +1,6 @@
 #include "ConsoleText.h"
 #include "core/Common/TrikytaEngine.h"
-#include "Font.h"
+#include "misc/Font.h"
 
 ConsoleText::ConsoleText(std::string p_Text,Vec2i p_Pos, Color p_Color)
 {
@@ -15,7 +15,7 @@ ConsoleText::~ConsoleText()
 bool ConsoleText::init(std::string p_Text, Vec2i p_Pos, Color p_Color)
 {
 	auto font = Console::getConsoleFont();
-	SDL_Surface* textSurface = TTF_RenderText_Solid(font->getFont(), p_Text.c_str(), { p_Color.r,p_Color.g, p_Color.b });
+	SDL_Surface* textSurface = TTF_RenderText_Shaded(font->getFont(), p_Text.c_str(), { p_Color.r,p_Color.g, p_Color.b }, {0,0,0,255});
 	m_Texture = SDL_CreateTextureFromSurface(ENGINE->getRenderer(), textSurface);
 	int temp_w, temp_h;
 	TTF_SizeText(font->getFont(), p_Text.c_str(), &temp_w, &temp_h);

@@ -36,7 +36,7 @@ public:
 	std::thread* LoadThread;
 	bool isReady;
 protected:
-	TiledMap(Tmx::Map*, std::string);
+	TiledMap(Tmx::Map*, std::string&);
 private:
 	Vec2i m_Position;
 	Tmx::Map* m_Map;

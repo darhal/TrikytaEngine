@@ -1,6 +1,6 @@
 #include "LStateManager/LStateManager.h"
 #include "LuaMisc/LuaConsole.h"
-#include <misc/Console.h>
+#include <misc/Console/Console.h>
 #include <UI/UIText.h>
 #include <algorithm>
 #include <lua.hpp>

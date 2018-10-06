@@ -4,13 +4,14 @@
 
 using namespace UI;
 
-Text::Text(std::string p_Text, std::string p_Font, uint8 p_TextSize,Vec2i p_Pos, Color p_Color, bool p_IsRegister):
+Text::Text(const std::string& p_Text,const std::string& p_Font, uint8 p_TextSize,Vec2i p_Pos, Color p_Color, bool p_IsRegister):
 	Drawable(p_Pos, Vec2i(0, 0), p_IsRegister),
 	m_Text(p_Text),
 	m_FontPath(p_Font),
 	m_TextSize(p_TextSize),
 	m_Color(p_Color),
-	m_Scale(1)
+	m_Scale(1),
+	m_BGColor(0,0,0,0)
 {
 	init();
 }
@@ -26,7 +27,8 @@ bool Text::init()
 	if (m_Font == NULL) {
 		LogInfoConsole("ERROR: loading font path %s", m_FontPath.c_str());
 	}
-	SDL_Surface* textSurface = TTF_RenderText_Solid(m_Font->getFont(), m_Text.c_str(), { m_Color.r,m_Color.g, m_Color.b });
+	///TODO: IMPLMENT BG COLLOUR
+	SDL_Surface* textSurface = TTF_RenderText_Blended(m_Font->getFont(), m_Text.c_str(), { m_Color.r,m_Color.g, m_Color.b });
 	if (textSurface == NULL) {
 		LogInfoConsole("ERROR: loading text with font %s", m_FontPath.c_str());
 		return false;
@@ -44,7 +46,7 @@ bool Text::init()
 	return true;
 }
 
-void Text::updateText(std::string p_Text)
+void Text::updateText(const std::string& p_Text)
 {
 	m_Text = p_Text;
 	if (m_Font == NULL) {
