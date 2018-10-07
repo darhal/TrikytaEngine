@@ -4,9 +4,9 @@
 #include "Parser/Tmx.h"
 #include "core/Common/Vec2.h"
 #include "core/Common/defines.h"
-#include <thread>
 #include "ObjectGroup.h"
 #include <SDL/SDL.h>
+#include "core/Physics/PhysicsEngine.h"
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
@@ -48,9 +48,10 @@ TiledMap::~TiledMap()
 bool TiledMap::init() 
 {
 	isReady = false;
-	m_Position = Vec2i(0,0);
+	m_Position = Vec2i(-50,0);
 	TiledMap::LoadTilesets();
-	/*auto LoadThread = new std::thread(&*/TiledMap::LoadLayers();/*, this);*/
+	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
+	TiledMap::LoadLayers();
 	return true;
 }
 
@@ -81,41 +82,52 @@ void TiledMap::LoadLayers()
 {
 	int ind = 0;
 	m_LayerData = new std::vector<TiledLayerData>;
-	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex)
-	{
+	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex){
 		const Tmx::TileLayer* tileLayer = m_Map->GetTileLayer(LayerIndex);
-		//if (tileLayer->GetLayerType() != Tmx::LayerType::TMX_LAYERTYPE_OBJECTGROUP) {
-			Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight())
-			for (int y = 0; y < tileLayer->GetHeight(); ++y)
-			{
-				for (int x = 0; x < tileLayer->GetWidth(); ++x)
-				{
-					if (tileLayer->GetTileTilesetIndex(x, y) != -1)
-					{
-						m_LayerData->reserve(m_LayerData->size() + 1);
-						ind++;
-						int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
-						Uint32 Gid = tileLayer->GetTileGid(x, y);
-						auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
-						int Tile_SizeX = TilesetData->m_TileSize.x;
-						int Tile_SizeY = TilesetData->m_TileSize.y;
-						SDL_Rect* m_SourceDrawCoord = new SDL_Rect{
-							TilesetData->m_TilesPos[Gid]->x,
-							TilesetData->m_TilesPos[Gid]->y,
-							Tile_SizeX,
-							Tile_SizeY
-						};
-						SDL_Rect* m_DestinationDrawCoord = new SDL_Rect{
-							x*Tile_SizeX + m_Position.x,
-							y*Tile_SizeY + m_Position.y,
-							Tile_SizeX,
-							Tile_SizeY
-						};
-						m_LayerData->emplace_back(LayerIndex, m_SourceDrawCoord, m_DestinationDrawCoord, m_MapTilesets->at(TilesetIndex).m_ImageTexture);
+		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight())
+		for (int y = 0; y < tileLayer->GetHeight(); ++y){
+			for (int x = 0; x < tileLayer->GetWidth(); ++x){
+				if (tileLayer->GetTileTilesetIndex(x, y) != -1){
+					m_LayerData->reserve(m_LayerData->size() + 1);
+					ind++;
+					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
+					Uint32 Gid = tileLayer->GetTileGid(x, y);
+					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
+					int Tile_SizeX = TilesetData->m_TileSize.x;
+					int Tile_SizeY = TilesetData->m_TileSize.y;
+					int YAdjuster = m_Map->GetTileHeight()-Tile_SizeY; // adjust the Y to fit in the grids!
+					SDL_Rect* m_SourceDrawCoord = new SDL_Rect{
+						TilesetData->m_TilesPos[Gid]->x,
+						TilesetData->m_TilesPos[Gid]->y,
+						Tile_SizeX,
+						Tile_SizeY
+					};
+					SDL_Rect* m_DestinationDrawCoord = new SDL_Rect{
+						x*(m_Map->GetTileWidth()) + m_Position.x,
+						y*m_Map->GetTileHeight() + m_Position.y + YAdjuster,
+						Tile_SizeX,
+						Tile_SizeY
+					};
+					if (TilesetData->m_TileObjects[Gid].size() == 0) { 
+						m_LayerData->emplace_back(LayerIndex, m_SourceDrawCoord, m_DestinationDrawCoord, m_MapTilesets->at(TilesetIndex).m_ImageTexture, nullptr);
+						continue; 
 					}
+					std::vector<Physics2D::PhysicsBody*>* bodyVec = new std::vector<Physics2D::PhysicsBody*>;
+					bodyVec->reserve(TilesetData->m_TileObjects[Gid].size());
+					for (auto& itr : TilesetData->m_TileObjects[Gid]) {
+						auto tileBody = Physics2D::PhysicsBody::CreateBody
+						(
+							Physics2D::PhysicsEngine::GetPhysicsWorld(), itr->m_BodyType,
+							itr->m_BodyShape, Physics2D::BodyParams{ 1.f,0.1f },
+							itr->m_ObjectPos + Vec2f((float)m_DestinationDrawCoord->x, (float)m_DestinationDrawCoord->y),
+							itr->m_ObjectCoord
+						);
+						bodyVec->push_back(tileBody);
+					}
+					m_LayerData->emplace_back(LayerIndex, m_SourceDrawCoord, m_DestinationDrawCoord, m_MapTilesets->at(TilesetIndex).m_ImageTexture, bodyVec);
 				}
 			}
-		//}
+		}
 	}
 	isReady = true;
 	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)

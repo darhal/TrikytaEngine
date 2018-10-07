@@ -24,12 +24,12 @@ void b2GLDraw::DrawPolygon(const b2Vec2 *vertices, int32 vertexCount, const b2Co
 	{
 		auto vec1 = b2Vec2(vertices[i].x, vertices[i].y);
 		auto vec2 = b2Vec2(vertices[i+1].x, vertices[i+1].y);
-		lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y,0, 255, 0, 125);
+		lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y,255, 0, 0, 125);
 	}
 	int i = vertexCount-1;
 	auto vec1 = b2Vec2(vertices[i].x, vertices[i].y);
 	auto vec2 = b2Vec2(vertices[0].x, vertices[0].y);
-	lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y, 0, 255, 0, 125);
+	lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y, 255, 0, 0, 125);
 
 	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
 }

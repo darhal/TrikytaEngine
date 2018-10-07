@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <core/Objects/Object.h>
-
+#include "core/Common/defines.h"
 namespace Tmx {
 	class Map;
 	class Tileset;
@@ -9,15 +9,17 @@ namespace Tmx {
 
 struct TiledLayerData 
 {
-	TiledLayerData(int i, struct SDL_Rect* p_SourceDraw, struct SDL_Rect* p_DestDraw, struct SDL_Texture* p_Tex):
+	TiledLayerData(int i, struct SDL_Rect* p_SourceDraw, struct SDL_Rect* p_DestDraw, struct SDL_Texture* p_Tex, std::vector<Physics2D::PhysicsBody*>* p_Body):
 		SourceDraw(p_SourceDraw), 
 		DestDraw(p_DestDraw), 
 		Layer_Id(i),
-		Tex(p_Tex)
+		Tex(p_Tex),
+		Body(p_Body)
 	{}
 	struct SDL_Rect* SourceDraw;
 	struct SDL_Rect* DestDraw;
 	struct SDL_Texture* Tex;
+	std::vector<Physics2D::PhysicsBody*>* Body;
 	int Layer_Id;
 };
 

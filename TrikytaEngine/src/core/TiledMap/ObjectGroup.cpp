@@ -13,63 +13,63 @@ void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
 	{
 		// Get an object group.
 		const Tmx::ObjectGroup *objectGroup = p_Map->GetObjectGroup(i);
-
 		// Iterate through all objects in the object group.
-		for (int j = 0; j < objectGroup->GetNumObjects(); ++j)
-		{
-			// Get an object.
-			const Tmx::Object *object = objectGroup->GetObject(j);
-			/*if (object->GetGid() != 0) {
-				printf("Object(tile) gid: %d\n", object->GetGid());
-				printf("Object(tile) type: %s\n", object->GetType().c_str());
-			}*/
-
-			if (object->GetProperties().GetBoolProperty("collision") == true) {
-				//Apply physics!
+		if (objectGroup->GetProperties().GetBoolProperty("collision") == true) {
+			for (int j = 0; j < objectGroup->GetNumObjects(); ++j) {
+				// Get an object.
+				const Tmx::Object *object = objectGroup->GetObject(j);
 				ObjectGroup::ProcessPhysicalizedObject(object);
-			}
+				/*if (object->GetProperties().GetBoolProperty("collision") == true) {
+					//Apply physics!
 
-			// Print Polyline points.
-			/*const Tmx::Polyline *polyline = object->GetPolyline();
-			if (polyline != 0)
-			{
-				for (int i = 0; i < polyline->GetNumPoints(); i++)
+				}*/
+				/*if (object->GetGid() != 0) {
+					printf("Object(tile) gid: %d\n", object->GetGid());
+					printf("Object(tile) type: %s\n", object->GetType().c_str());
+				}*/
+				// Print Polyline points.
+				/*const Tmx::Polyline *polyline = object->GetPolyline();
+				if (polyline != 0)
 				{
-					const Tmx::Point &point = polyline->GetPoint(i);
-					printf("Object Polyline: Point %d: (%f, %f)\n", i, point.x,
-						point.y);
-				}
-			}*/
+					for (int i = 0; i < polyline->GetNumPoints(); i++)
+					{
+						const Tmx::Point &point = polyline->GetPoint(i);
+						printf("Object Polyline: Point %d: (%f, %f)\n", i, point.x,
+							point.y);
+					}
+				}*/
 
-			// Print Text information
-			/*const Tmx::Text *text = object->GetText();
-			if (text != 0)
-			{
-				printf("--Object Text--\n");
-				printf("Font family: %s\n", text->GetFontFamily().c_str());
-				printf("Pixel size: %d\n", text->GetPixelSize());
-				printf("Wraps: %d\n", text->Wraps());
-				printf("Bold: %d, Italic: %d, Underline: %d, Strikeout: %d\n", text->IsBold(), text->IsItalic(),
-					text->IsUnderline(), text->IsStrikeout());
-				printf("Kerning: %d\n", text->UseKerning());
-				printf("Horizontal ALignment: %d\n", text->GetHorizontalAlignment());
-				printf("Vertical Alignment: %d\n", text->GetVerticalAlignment());
-				printf("Color: %d, %d, %d, %d", text->GetColor()->GetRed(), text->GetColor()->GetGreen(),
-					text->GetColor()->GetBlue(), text->GetColor()->GetAlpha());
-			}*/
+				// Print Text information
+				/*const Tmx::Text *text = object->GetText();
+				if (text != 0)
+				{
+					printf("--Object Text--\n");
+					printf("Font family: %s\n", text->GetFontFamily().c_str());
+					printf("Pixel size: %d\n", text->GetPixelSize());
+					printf("Wraps: %d\n", text->Wraps());
+					printf("Bold: %d, Italic: %d, Underline: %d, Strikeout: %d\n", text->IsBold(), text->IsItalic(),
+						text->IsUnderline(), text->IsStrikeout());
+					printf("Kerning: %d\n", text->UseKerning());
+					printf("Horizontal ALignment: %d\n", text->GetHorizontalAlignment());
+					printf("Vertical Alignment: %d\n", text->GetVerticalAlignment());
+					printf("Color: %d, %d, %d, %d", text->GetColor()->GetRed(), text->GetColor()->GetGreen(),
+						text->GetColor()->GetBlue(), text->GetColor()->GetAlpha());
+				}*/
+			}
 		}
 	}
 }
 
 void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 {
+	///TODO READ PHY PROP FROM TILED MAP!
 	if (p_Object->GetHeight() == 0 && p_Object->GetWidth() == 0) {
 		///Process Polygones
 		const Tmx::Polygon *polygon = p_Object->GetPolygon();
 		if (polygon != 0)
 		{
 			std::vector<Vec2f> polyBufferPoints;
-			polyBufferPoints.reserve(polygon->GetNumPoints() + 1);
+			polyBufferPoints.reserve(polygon->GetNumPoints()+1);
 			for (int i = 0; i < polygon->GetNumPoints(); i++)
 			{
 				const Tmx::Point &point = polygon->GetPoint(i);
@@ -89,7 +89,7 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 		if (polyline != 0)
 		{
 			std::vector<Vec2f> polyBufferPoints;
-			polyBufferPoints.reserve(polyline->GetNumPoints() + 1);
+			polyBufferPoints.reserve(polyline->GetNumPoints()+1);
 			for (int i = 0; i < polyline->GetNumPoints(); i++)
 			{
 				const Tmx::Point &point = polyline->GetPoint(i);
@@ -104,8 +104,7 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 				polyBufferPoints
 			);
 		}
-	}
-	else {
+	}else {
 		///PROCESS CIRCLES AND BOXES
 		auto body2 = Physics2D::PhysicsBody::CreateBody
 		(

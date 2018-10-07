@@ -6,7 +6,6 @@
 #include "core/Common/defines.h"
 #include "core/Common/EngineInstance.h"
 #include "core/Common/TrikytaEngine.h"
-//#include "core/Physics/PhysicsEngine.h"
 
 Tilesets::Tilesets(TiledMap* p_Map, int i): 
 	m_Tileset(*p_Map->m_Map->GetTileset(i)), 
@@ -65,25 +64,24 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 	int margin = m_Tileset.GetMargin(), spacing = m_Tileset.GetSpacing();
 	int x = 0, y = 0;
 	int _id = 1;
-	bool processTileFlag = false;
-	if (m_Tileset.GetTiles().size() < 0) { return; }//processTileFlag = true; }
+	//if (m_Tileset.GetTiles().size() < 0) { return; }
 	for (int gid = m_FirstGid; gid <= m_Lastgid; gid++) {
-		/*if (m_Tileset.GetTile(_id - 1) != NULL) {
-			LogTerminal("PROCESSING TILE WITH ID : %d", _id - 1);
-			ProcessTile(m_Tileset.GetTile(_id - 1));
-		}*/
+		if (m_Tileset.GetTile(_id - 1) != NULL) {
+			ProcessTile(m_Tileset.GetTile(_id - 1), gid); //PROCESS COLLISION!
+		}
 		if (_id % m_TileAmountWidth == 1) {
 			y = ((m_TileSize.y+spacing) * ((_id / m_TileAmountWidth) - 1)) + (m_TileSize.y+ spacing)+ spacing;
 		}
 		x = (m_TileSize.x+ margin) * ((_id % m_TileAmountWidth ? _id % m_TileAmountWidth : m_TileAmountWidth)-1)+ margin;
 		_id++;
 		m_TilesPos[gid] = new Vec2i(x, y);
-		//auto tile = m_Tileset.GetTile(_id);
-		//Log("Pos (%d, %d):", x, y);
+		if (m_ImgSource == "assets/example/maps/flowers.png") {
+			LogConsole(MESSAGE_TYPE::WARNING, "TILE POS X= %d // POS Y=%d", x, y);
+		}
 	}
 }
 
-void Tilesets::ProcessTile(const Tmx::Tile* p_Tile)
+void Tilesets::ProcessTile(const Tmx::Tile* p_Tile, int gid)
 {
 	/*if (p_Tile->IsAnimated())
 	{
@@ -104,62 +102,63 @@ void Tilesets::ProcessTile(const Tmx::Tile* p_Tile)
 		//TREAT ANIMATIONS!
 	}*/
 
-	/*if (p_Tile->HasObjects())
+	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
 	{
-		printf(
-			"Tile has objects.\n");
-
 		if (p_Tile->GetType() != "")
 			printf("Tile has type: %s\n", p_Tile->GetType().c_str());
 
 		// Iterate through all Collision objects in the p_Tile.
+		m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
 		for (int j = 0; j < p_Tile->GetNumObjects(); ++j)
 		{
 			// Get an object.
 			const Tmx::Object *object = p_Tile->GetObject(j);
 
-			// Print information about the object.
-			printf("Object Name: %s\n", object->GetName().c_str());
-			printf("Object Position: (%03d, %03d)\n", object->GetX(),
-				object->GetY());
-			printf("Object Size: (%03d, %03d)\n", object->GetWidth(),
-				object->GetHeight());
-
-			// Print Polygon points.
-			const Tmx::Polygon *polygon = object->GetPolygon();
-			if (polygon != 0)
-			{
-				std::vector<Vec2f> polyBufferPoints;
-				polyBufferPoints.reserve(polygon->GetNumPoints()+1);
-				for (int i = 0; i < polygon->GetNumPoints(); i++)
+			if (object->GetHeight() == 0 && object->GetWidth() == 0) {
+				// Print Polygon points.
+				const Tmx::Polygon *polygon = object->GetPolygon();
+				if (polygon != 0)
 				{
-					const Tmx::Point &point = polygon->GetPoint(i);
-					printf("Object polygon: Point %d: (%f, %f)\n", i, point.x,
-						point.y);
-					polyBufferPoints.emplace_back(point.x, point.y);
+					std::vector<Vec2f> polyBufferPoints;
+					polyBufferPoints.reserve(polygon->GetNumPoints() + 1);
+					for (int i = 0; i < polygon->GetNumPoints(); i++)
+					{
+						const Tmx::Point &point = polygon->GetPoint(i);
+						polyBufferPoints.emplace_back(point.x, point.y);
+					}
+					polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
+					auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC };
+					m_TileObjects[gid].push_back(tile_Object);
 				}
-				polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-				auto body2 = Physics2D::PhysicsBody::CreateBody
+				// Print Polyline points.
+				const Tmx::Polyline *polyline = object->GetPolyline();
+				if (polyline != 0)
+				{
+					std::vector<Vec2f> polyBufferPoints;
+					polyBufferPoints.reserve(polyline->GetNumPoints() + 1);
+					for (int i = 0; i < polyline->GetNumPoints(); i++)
+					{
+						const Tmx::Point &point = polyline->GetPoint(i);
+						polyBufferPoints.emplace_back(point.x, point.y);
+
+					}
+					polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
+					auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC };
+					m_TileObjects[gid].push_back(tile_Object);
+				}
+			}else {
+				/*auto body2 = Physics2D::PhysicsBody::CreateBody
 				(
-					Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::DYNAMIC,
+					Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::STATIC,
 					Physics2D::BodyShape::BOX, Physics2D::BodyParams{ 1.f,0.1f },
-					Vec2f{ polyBufferPoints.at(0).x, polyBufferPoints.at(0).y },
-					polyBufferPoints
-				);
-			}
-
-			// Print Polyline points.
-			const Tmx::Polyline *polyline = object->GetPolyline();
-			if (polyline != 0)
-			{
-				for (int i = 0; i < polyline->GetNumPoints(); i++)
-				{
-					const Tmx::Point &point = polyline->GetPoint(i);
-					printf("Object Polyline: Point %d: (%f, %f)\n", i, point.x,
-						point.y);
-					
-				}
+					Vec2f{ (float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM },
+					std::vector<Vec2f>{Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM)}
+				);*/
+				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
+				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
+				auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC };
+				m_TileObjects[gid].push_back(tile_Object);
 			}
 		}
-	}*/
+	}
 }

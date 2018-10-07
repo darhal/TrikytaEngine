@@ -49,7 +49,7 @@ function OnEngineLoad()
 	--flipSpriteVertical(ground, false)
 	--createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
 	local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
-	map = Map.createMap("assets/example/maps/map.tmx")
+	map = Map.createMap("assets/example/maps/map2.tmx")
 	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
 	--local b = createSprite("assets/test.png", 464/2, 464/2, 50, 100)
 	--flipSpriteVertical(ba, true)
@@ -66,7 +66,7 @@ function OnEngineLoad()
 	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, 600, 100, 0.02)
 	setZOrder(c, 10)
 	local cbody = physicalizeWithOffsetV2(c, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Box"}, 0.35, 0.013)
-	getAngularDamping(cbody, 100)
+	getAngularDamping(cbody, 1000)
 	
 	
 	--[[spritecount = 0

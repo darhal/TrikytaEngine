@@ -111,6 +111,9 @@
 </data>
  </layer>
  <objectgroup id="11" name="collsiion">
+  <properties>
+   <property name="collision" type="bool" value="true"/>
+  </properties>
   <object id="3" x="2" y="833" width="2431" height="128">
    <properties>
     <property name="collision" type="bool" value="true"/>
