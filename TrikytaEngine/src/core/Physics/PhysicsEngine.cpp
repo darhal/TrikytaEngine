@@ -67,7 +67,7 @@ PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType,
 {
 	BodyDef BodyDef;
 	FixtureDef fixtureDef;
-	BodyDef.position.Set(p_Position.x, p_Position.y); //TODO: CONVER THIS TO METERS
+	BodyDef.position.Set(p_Position.x, p_Position.y);
 	if (p_BodyType == BodyType::STATIC) {
 		BodyDef.type = b2_staticBody;
 	}

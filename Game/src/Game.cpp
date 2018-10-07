@@ -23,7 +23,7 @@ void Game::On_Engine_Init()
 	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
 	//}
 	//TILED MAP TEST
-	map = TiledMap::Create("assets/example/maps/map.tmx");
+	map = TiledMap::Create("assets/example/maps/map.tmx");//"assets/example/maps/map.tmx");
 
 	//std::string lol = "FPS: " + std::to_string(1));
 	//a->updateText(lol);

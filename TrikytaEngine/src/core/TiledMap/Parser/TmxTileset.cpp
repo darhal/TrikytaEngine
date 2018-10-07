@@ -191,7 +191,6 @@ namespace Tmx
             if (tiles.at(i)->GetId() == index) 
                 return tiles.at(i);
         }
-
         return NULL;
     }
 }

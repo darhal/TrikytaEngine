@@ -1,8 +1,6 @@
 #pragma once
 #include <map>
-#include <thread>
 #include <core/Objects/Object.h>
-#include "Tilesets.h"
 
 namespace Tmx {
 	class Map;
@@ -33,7 +31,6 @@ public:
 	Tmx::Map* getMap() { return m_Map; }
 	~TiledMap();
 
-	std::thread* LoadThread;
 	bool isReady;
 protected:
 	TiledMap(Tmx::Map*, std::string&);
@@ -41,11 +38,12 @@ private:
 	Vec2i m_Position;
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
-	std::vector<Tilesets>* m_MapTilesets;
+	std::vector<class Tilesets>* m_MapTilesets;
 	// contain TiledLayerData indexed with layer index!
 	std::vector<TiledLayerData>* m_LayerData;
 private:
 	bool LoadTilesets();
 	void LoadLayers();
 	friend class Tilesets;
+	friend class ObjectGroup;
 };

@@ -159,6 +159,7 @@
     <ClCompile Include="src\core\Objects\ObjectHandler.cpp" />
     <ClCompile Include="src\core\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="src\core\Physics\PhysicsEngine.cpp" />
+    <ClCompile Include="src\core\TiledMap\ObjectGroup.cpp" />
     <ClCompile Include="src\core\TiledMap\Parser\base64\base64.cpp" />
     <ClCompile Include="src\core\TiledMap\Parser\miniz.c" />
     <ClCompile Include="src\core\TiledMap\Parser\TmxColor.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="src\core\Objects\ObjectHandler.h" />
     <ClInclude Include="src\core\Physics\PhysicsContactListener.h" />
     <ClInclude Include="src\core\Physics\PhysicsEngine.h" />
+    <ClInclude Include="src\core\TiledMap\ObjectGroup.h" />
     <ClInclude Include="src\core\TiledMap\Parser\base64\base64.h" />
     <ClInclude Include="src\core\TiledMap\Parser\Tmx.h" />
     <ClInclude Include="src\core\TiledMap\Parser\TmxColor.h" />

@@ -42,7 +42,7 @@ end
 
 --Called when engine is already loaded!
 function OnEngineLoad()
-	print("____________________________________________________________________")
+	--[[print("____________________________________________________________________")
 	local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
 	local ba = physicalizeV2(ground, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Static", shape="Box"})
 
@@ -79,7 +79,7 @@ function OnEngineLoad()
 	setLinearVelocity(physicalize(txt2, 1, 1,0.6,false, "Dynamic", "Box"), -20, 0)
 	
 	local txt3 = createText("This is so funny bro", "Engine_Assets/fonts/DroidSans.ttf", 16, 750,  math.random(10),  255,255,255);
-	setLinearVelocity(physicalize(txt3, 1, 1,0.6,false, "Dynamic", "Box"), 30, 0)
+	setLinearVelocity(physicalize(txt3, 1, 1,0.6,false, "Dynamic", "Box"), 30, 0)--]]
 	--deleteSprite(a)
 	--deleteSprite(a)
 	--deleteSprite(a)

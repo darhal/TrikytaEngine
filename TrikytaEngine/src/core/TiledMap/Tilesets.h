@@ -8,6 +8,7 @@
 namespace Tmx {
 	class Map;
 	class Tileset;
+	class Tile;
 }
 
 class Tilesets 
@@ -21,6 +22,7 @@ private:
 	void LoadTilesets(class TiledMap*);
 	void LoadTiles(std::string, class TiledMap*);
 	bool LoadImage(std::string, class TiledMap*);
+	void ProcessTile(const Tmx::Tile*);
 	friend class TiledMap;
 private:
 	const std::string m_TilesetName;
