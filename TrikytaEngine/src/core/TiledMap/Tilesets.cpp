@@ -66,12 +66,12 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 	int x = 0, y = 0;
 	int _id = 1;
 	bool processTileFlag = false;
-	if (m_Tileset.GetTiles().size() <= 0) { return; }//processTileFlag = true; }
+	if (m_Tileset.GetTiles().size() < 0) { return; }//processTileFlag = true; }
 	for (int gid = m_FirstGid; gid <= m_Lastgid; gid++) {
-		if (m_Tileset.GetTile(_id - 1) != NULL) {
+		/*if (m_Tileset.GetTile(_id - 1) != NULL) {
 			LogTerminal("PROCESSING TILE WITH ID : %d", _id - 1);
 			ProcessTile(m_Tileset.GetTile(_id - 1));
-		}
+		}*/
 		if (_id % m_TileAmountWidth == 1) {
 			y = ((m_TileSize.y+spacing) * ((_id / m_TileAmountWidth) - 1)) + (m_TileSize.y+ spacing)+ spacing;
 		}

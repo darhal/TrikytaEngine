@@ -11,6 +11,7 @@
 #include <UI/UIText.h>
 #include "LuaCore/ErrorManager.h"
 #include <iostream>
+#include <core/TiledMap/TiledMap.h>
 
 
 using namespace LuaEngine;
@@ -37,6 +38,9 @@ void LuaSprite::LoadSpriteFunction()
 		.endClass()
 		.beginClass<::Sprite>("Sprite")
 			.addStaticFunction("createSprite", &Sprite::Create)
+		.endClass()
+		.beginClass<::TiledMap>("Map")
+			.addStaticFunction("createMap", &TiledMap::Create)
 		.endClass();
 	//.endNamespace();
 
@@ -501,8 +505,8 @@ int LuaSprite::PhysicalizeWithOffsetV2(lua_State* L)
 		else if (strcmp(bodyShape, "Circle") == 0) {
 			rBodyShape = Physics2D::BodyShape::CIRCLE;
 		}
-		float offx = (float)lua_tonumber(L, 8);
-		float offy = (float)lua_tonumber(L, 9);
+		float offx = (float)lua_tonumber(L, 4);
+		float offy = (float)lua_tonumber(L, 5);
 		auto body = phySprt->Physicalize(Physics2D::BodyParams{ mass, friction, restitution, isSensor }, rBodyType, rBodyShape, Vec2f(offx, offy));
 		lua_pushlightuserdata(L, (void*)body);
 		return 1;

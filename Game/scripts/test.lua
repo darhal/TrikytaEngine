@@ -42,28 +42,34 @@ end
 
 --Called when engine is already loaded!
 function OnEngineLoad()
-	--[[print("____________________________________________________________________")
-	local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
-	local ba = physicalizeV2(ground, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Static", shape="Box"})
-
-	createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
-
+	--print("____________________________________________________________________")
+	--local ground = createSprite("assets/ground.png", WINDOW_WIDTH, 210, 0, WINDOW_HEIGHT-105)
+	--local ba = physicalizeV2(ground, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Static", shape="Box"})
+	--flipSpriteVertical(ground, false)
+	--flipSpriteVertical(ground, false)
+	--createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
+	local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
+	map = Map.createMap("assets/example/maps/map.tmx")
 	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
-	local b = createSprite("assets/test.png", 464, 464, 50, 100)
+	--local b = createSprite("assets/test.png", 464/2, 464/2, 50, 100)
 	--flipSpriteVertical(ba, true)
-	flipSpriteVertical(ground, false)
-	local ba = physicalize(b, 1, 1,0.0,false, "Dynamic", "Box")
-	setLinearVelocity(ba, 0, -100)
-	flipSpriteVertical(ground, false)
-	--setZOrder(b, 1)
-	--local b = createSprite("assets/test.png", 464, 464, 250, 100)
-	--setZOrder(b, 2)
-	--local d = createSprite("assets/test.png", 464, 464, -50, 100)
-	--setZOrder(d, -1)
+	--setZOrder(b, 0)
+	--local ba = physicalize(b, 1, 1,0.0,false, "Dynamic", "Box")
+	--setLinearVelocity(ba, 0, -100)
 	
-	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",200, 200, 600, 100, 0.0019)
-	physicalizeWithOffsetV2(c, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Circle"}, 0.2, 0.09)
-	spritecount = 0
+	--setZOrder(b, 1)
+	--[[local b = createSprite("assets/test.png", 464, 464, 250, 100)
+	setZOrder(b, -1)
+	local d = createSprite("assets/test.png", 464, 464, -50, 100)
+	setZOrder(d, 1)--]]
+	
+	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, 600, 100, 0.02)
+	setZOrder(c, 10)
+	local cbody = physicalizeWithOffsetV2(c, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Box"}, 0.35, 0.013)
+	getAngularDamping(cbody, 100)
+	
+	
+	--[[spritecount = 0
 	for i, v in pairs(getObjectsByType("Sprite")) do
 		outputConsole("I FOUND A SPRITE", "INFO")
 		spritecount = spritecount+1
@@ -72,7 +78,7 @@ function OnEngineLoad()
 	
 	
 	local txt1 = createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 16, 500, math.random(50),  255,255,255);
-	setLinearVelocity(physicalize(txt1, 1, 1,0.0,false, "Dynamic", "Box"), 20, 0)
+	setLinearVelocity(physicalize(txt1, 1, 1,0.0,false, "Dynamic", "Box"), 20, 0)--]]
 
 	
 	local txt2 = createText("THIS IS ANOTHER PHYSICLIZED TEXT", "Engine_Assets/fonts/DroidSans.ttf", 16, 550,  math.random(20),  255,255,255);

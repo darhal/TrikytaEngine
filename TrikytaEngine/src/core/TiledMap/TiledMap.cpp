@@ -6,6 +6,7 @@
 #include "core/Common/defines.h"
 #include <thread>
 #include "ObjectGroup.h"
+#include <SDL/SDL.h>
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
@@ -72,7 +73,7 @@ bool TiledMap::LoadTilesets()
 		m_MapTilesets->emplace_back(this, i);
 		//Log("[TILEDMAPS] Tilesets ID: %d || Tileset name : %s", i, m_Map->GetTileset(i)->GetName().c_str())
 	}
-	//auto groups = ObjectGroup(m_Map);
+	auto groups = ObjectGroup(m_Map);
 	return true;
 }
 
