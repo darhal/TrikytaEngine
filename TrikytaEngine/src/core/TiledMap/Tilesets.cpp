@@ -66,8 +66,14 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 	int _id = 1;
 	//if (m_Tileset.GetTiles().size() < 0) { return; }
 	for (int gid = m_FirstGid; gid <= m_Lastgid; gid++) {
-		if (m_Tileset.GetTile(_id - 1) != NULL) {
-			ProcessTile(m_Tileset.GetTile(_id - 1), gid); //PROCESS COLLISION!
+		auto currentTile = m_Tileset.GetTile(_id - 1);
+		if (currentTile != NULL) {
+			if (currentTile->HasObjects()) {
+				ProcessTileObjects(currentTile, gid); //PROCESS COLLISION!
+			}
+			if (currentTile->IsAnimated()) {
+				Tilesets::ProcessTileAnimation(currentTile, gid);
+			}
 		}
 		if (_id % m_TileAmountWidth == 1) {
 			y = ((m_TileSize.y+spacing) * ((_id / m_TileAmountWidth) - 1)) + (m_TileSize.y+ spacing)+ spacing;
@@ -75,15 +81,12 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 		x = (m_TileSize.x+ margin) * ((_id % m_TileAmountWidth ? _id % m_TileAmountWidth : m_TileAmountWidth)-1)+ margin;
 		_id++;
 		m_TilesPos[gid] = new Vec2i(x, y);
-		if (m_ImgSource == "assets/example/maps/flowers.png") {
-			LogConsole(MESSAGE_TYPE::WARNING, "TILE POS X= %d // POS Y=%d", x, y);
-		}
 	}
 }
 
-void Tilesets::ProcessTile(const Tmx::Tile* p_Tile, int gid)
+void Tilesets::ProcessTileAnimation(const Tmx::Tile* p_Tile,const int& gid)
 {
-	/*if (p_Tile->IsAnimated())
+	if (p_Tile->IsAnimated())
 	{
 		printf(
 			"Tile is animated: %d frames with total duration of %dms.\n",
@@ -98,15 +101,16 @@ void Tilesets::ProcessTile(const Tmx::Tile* p_Tile, int gid)
 		{
 			printf("\tFrame %d: Tile ID = %d, Duration = %dms\n", i,
 				it->GetTileID(), it->GetDuration());
+			m_TileAnimData[gid].push_back(std::make_pair(it->GetTileID(), it->GetDuration()));
 		}
-		//TREAT ANIMATIONS!
-	}*/
+	}
+}
 
+
+void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
+{
 	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
 	{
-		if (p_Tile->GetType() != "")
-			printf("Tile has type: %s\n", p_Tile->GetType().c_str());
-
 		// Iterate through all Collision objects in the p_Tile.
 		m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
 		for (int j = 0; j < p_Tile->GetNumObjects(); ++j)
@@ -147,13 +151,6 @@ void Tilesets::ProcessTile(const Tmx::Tile* p_Tile, int gid)
 					m_TileObjects[gid].push_back(tile_Object);
 				}
 			}else {
-				/*auto body2 = Physics2D::PhysicsBody::CreateBody
-				(
-					Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::STATIC,
-					Physics2D::BodyShape::BOX, Physics2D::BodyParams{ 1.f,0.1f },
-					Vec2f{ (float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM },
-					std::vector<Vec2f>{Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM)}
-				);*/
 				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
 				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
 				auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC };

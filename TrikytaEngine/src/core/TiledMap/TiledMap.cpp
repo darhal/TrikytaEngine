@@ -48,7 +48,7 @@ TiledMap::~TiledMap()
 bool TiledMap::init() 
 {
 	isReady = false;
-	m_Position = Vec2i(-50,0);
+	m_Position = Vec2i(0,0);
 	TiledMap::LoadTilesets();
 	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
 	TiledMap::LoadLayers();

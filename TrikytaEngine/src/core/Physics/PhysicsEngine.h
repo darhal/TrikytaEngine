@@ -3,8 +3,8 @@
 #include "Core/Objects/Object.h"
 #include <PhysicsEngine/Core/Box2D.h>
 #include <PhysicsEngine/DebugDraw/b2GLDraw.h>
-#include "Core/Common/defines.h"
-#include "Core/Common/Vec2.h"
+#include "core/Common/defines.h"
+#include "core/Common/Vec2.h"
 
 class PhysicsContactListener;
 

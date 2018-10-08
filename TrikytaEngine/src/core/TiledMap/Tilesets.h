@@ -31,13 +31,15 @@ private:
 	void LoadTilesets(class TiledMap*);
 	void LoadTiles(std::string, class TiledMap*);
 	bool LoadImage(std::string, class TiledMap*);
-	void ProcessTile(const Tmx::Tile*, int);
+	void ProcessTileObjects(const Tmx::Tile*,const int&);
+	void ProcessTileAnimation(const Tmx::Tile*,const int&);
 	friend class TiledMap;
 private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, Vec2i*> m_TilesPos;
 	std::map<int, std::vector<TilesetObjectData*>> m_TileObjects;
+	std::map<int, std::vector<std::pair<int, int>>> m_TileAnimData;
 	SDL_Texture* m_ImageTexture;
 	Vec2i m_ImageSize;
 	Vec2i m_TileSize;
