@@ -22,12 +22,12 @@ void ObjectHandler::PushObject(Object* p_Obj)
 {
 	GetObjectHandler()->push_back(p_Obj);
 	p_Obj->m_Manager_Index = GetObjectHandler()->size() - 1;
-	LogInfoConsole("Creating object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
+	//LogInfoConsole("Creating object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
 }
  
 void ObjectHandler::RemoveObject(Object* p_Obj)
 {
-	LogInfoConsole("Deleted object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
+	//LogInfoConsole("Deleted object : %p at %d", p_Obj, p_Obj->m_Manager_Index);
 	GetObjectHandler()->remove(p_Obj);
 }
 

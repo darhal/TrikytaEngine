@@ -15,4 +15,6 @@
 	#define LogTerminal(...) ;
 #endif
 
-
+#define LogInfo MESSAGE_TYPE::INFO
+#define LogWarning MESSAGE_TYPE::WARNING
+#define LogError MESSAGE_TYPE::ERROR

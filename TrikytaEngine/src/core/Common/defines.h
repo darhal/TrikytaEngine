@@ -77,6 +77,3 @@ typedef long long          intmax;
 typedef unsigned long long uintmax;
 
 #include "Logger.h"
-#define INFO MESSAGE_TYPE::INFO
-#define WARNING MESSAGE_TYPE::WARNING
-#define ERROR MESSAGE_TYPE::ERROR
