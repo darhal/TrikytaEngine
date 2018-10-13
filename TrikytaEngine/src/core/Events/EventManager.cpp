@@ -19,6 +19,9 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 {
 	while (SDL_PollEvent(&p_Event) != 0) {
 		if (p_Event.type == SDL_QUIT) { p_Engine->setEngineState(false); p_Engine->On_Engine_Quit(); };
+		for (auto onEditBoxChangeFunc : *(m_OnEditBoxChangeCallbacks)) {
+			onEditBoxChangeFunc(p_Event);
+		}
 		if (p_Event.type == SDL_KEYDOWN || p_Event.type == SDL_KEYUP) {
 			for (auto inputCallbackFunc : *(m_InputCallbacks)) { 
 				inputCallbackFunc(p_Event.key.keysym.sym, p_Event.type);

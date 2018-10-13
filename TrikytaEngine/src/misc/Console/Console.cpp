@@ -22,8 +22,9 @@ Console* Console::getConsole()
 
 Console::Console():m_isActive(false)
 {
-	m_StartPos = ENGINE->GetScreenWeight() / 6;
+	m_StartPos = (int)ENGINE->GetScreenWeight() / 6;
 	m_Output.reserve(MAX_CONSOLE_OUPUT);
+	m_ConsoleBoundries = SDL_Rect{ (int)START_POS_X, 0, (int)(ENGINE->GetScreenWeight() - START_POS_X * 2), m_StartPos };
 }
 
 void Console::outputConsole(std::string p_Text, MESSAGE_TYPE p_Type)
@@ -44,6 +45,7 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 	}
 	ConsoleText* output;
 	output = ConsoleText::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, Vec2i(START_POS_X, m_StartPos), p_Color);
+	output->setPosition(Vec2i(START_POS_X, m_StartPos- output->getSize().y));
 	LogTerminalFromConsole(("[CONSOLE]"+p_Text).c_str());
 	m_Output.emplace_back(output);
 	removeConsoleMessage();
@@ -60,6 +62,7 @@ void Console::removeConsoleMessage()
 void Console::Draw(float dt)
 {
 	if (!m_isActive) return;
+	SDL_RenderFillRect(ENGINE->getRenderer(), &m_ConsoleBoundries);
 	for (auto msg : m_Output) {
 		msg->renderConsoleText();
 	}

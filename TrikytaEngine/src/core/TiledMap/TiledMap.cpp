@@ -136,9 +136,6 @@ void TiledMap::LoadLayers()
 
 
 
-
-
-
 /////////////////////////////////////////////////
 int PrintMapInfo(Tmx::Map* map)
 {

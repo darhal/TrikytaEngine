@@ -190,6 +190,7 @@
     <ClCompile Include="src\misc\Console\Console.cpp" />
     <ClCompile Include="src\misc\Console\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
+    <ClCompile Include="src\UI\UIEditBox.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
@@ -330,6 +331,7 @@
     <ClInclude Include="src\misc\Console\Console.h" />
     <ClInclude Include="src\misc\Console\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
+    <ClInclude Include="src\UI\UIEditBox.h" />
     <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />

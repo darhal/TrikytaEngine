@@ -5,6 +5,8 @@
 #include "core/Common/Color.h"
 
 namespace UI {
+	class EditBox;
+
 	class Text : public Drawable
 	{
 	public:
@@ -18,9 +20,12 @@ namespace UI {
 		void updateText(const std::string&);
 		void setScale(uint8);
 		void setColor(Color);
+		std::string getText() const { return m_Text; }
+		void setBackgroundColor(Color);
 	protected:
 		Text(const std::string&, const std::string&, uint8, Vec2i, Color, bool=true);
 		virtual bool init() override;
+		void updateTextHelper();
 	private:
 		class Font* m_Font;
 		std::string m_FontPath;
@@ -29,5 +34,6 @@ namespace UI {
 		Color m_Color;
 		Color m_BGColor;
 		uint8 m_Scale;
+		friend class EditBox;
 	};
 }

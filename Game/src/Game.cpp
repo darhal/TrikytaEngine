@@ -11,6 +11,7 @@
 #include <iostream>
 #include <UI/UIText.h>
 #include <misc/Console/Console.h>
+#include <UI/UIEditBox.h>
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -19,6 +20,11 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
+
+	auto editBox = UI::EditBox::createEditBox("Enter something:", "Engine_Assets/fonts/DroidSans.ttf", 18, 
+		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
+	editBox->getText()->setBackgroundColor(Color{0,0,0,255});
+	EventManager::GetEventManager()->addEventHandler<Events::ON_EDITBOX_CHANGE>(CALLBACK_1(UI::EditBox::PorcessInput , editBox));
 	//for (int i = 0; i < 100; i++) {
 	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
 	//}
@@ -135,10 +141,19 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 		}
 	}*/
 	if (p_Key == SDLK_DOLLAR) {
-		if (p_KeyState == SDL_KEYDOWN)
+		if (p_KeyState == SDL_KEYDOWN) {
 			Console::getConsole()->Activate(!Console::getConsole()->IsActive());
-		/*else if(p_KeyState == SDL_KEYUP)
-			Console::getConsole()->Activate(false);*/
+		}
+	}
+	if (p_Key == SDLK_a && p_KeyState == SDL_KEYDOWN)
+	{
+		SDL_StartTextInput();
+		LogConsole(LogError, "Inputed started!");
+	}
+	if (p_Key == SDLK_z && p_KeyState == SDL_KEYDOWN)
+	{
+		SDL_StopTextInput();
+		LogConsole(LogError, "Inputed Ended!");
 	}
 };
 

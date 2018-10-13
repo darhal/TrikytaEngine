@@ -84,7 +84,7 @@ bool EngineInstance::Init()
 		m_EngineConfig.PHYSICS_VELOCITY_ITERATIONS, m_EngineConfig.PHYSICS_POSITION_ITERATIONS,  m_EngineConfig.PHYSICS_DEBUG};
 	this->InitPhysics(phyParams);
 	TimerManager::InitTimerManager(); // Init timer system!
-
+	SDL_StopTextInput();
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
 	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
 	On_Engine_Init(); // CALL INIT

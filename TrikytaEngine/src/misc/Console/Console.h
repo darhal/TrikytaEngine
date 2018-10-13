@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <SDL/SDL.h>
 
 #define CONSOLE_TEXT_SIZE	14
 #define START_POS_X			25
@@ -28,11 +29,13 @@ public:
 
 	void Activate(bool);
 	bool IsActive() const;
+	int getStartYPos() { return m_StartPos; }
 protected:
 	Console();
 private:
 	static Console* _Console;
 	static class Font* m_Font;
+	SDL_Rect m_ConsoleBoundries;
 	std::vector<class ConsoleText*> m_Output;
 	int m_StartPos;
 	bool m_isActive;
