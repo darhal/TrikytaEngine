@@ -172,7 +172,7 @@
    </properties>
    <polygon points="0,0 51,-24 60,33"/>
   </object>
-  <object id="3" name="tesr" x="280.667" y="57.3333">
+  <object id="3" name="tesr" x="215.334" y="60">
    <properties>
     <property name="collision" type="bool" value="true"/>
    </properties>

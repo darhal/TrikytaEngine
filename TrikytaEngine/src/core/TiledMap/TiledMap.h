@@ -2,25 +2,19 @@
 #include <map>
 #include <core/Objects/Object.h>
 #include "core/Common/defines.h"
+
 namespace Tmx {
 	class Map;
 	class Tileset;
 }
 
-struct TiledLayerData 
+struct LayerData
 {
-	TiledLayerData(int i, struct SDL_Rect* p_SourceDraw, struct SDL_Rect* p_DestDraw, struct SDL_Texture* p_Tex, std::vector<Physics2D::PhysicsBody*>* p_Body):
-		SourceDraw(p_SourceDraw), 
-		DestDraw(p_DestDraw), 
-		Layer_Id(i),
-		Tex(p_Tex),
-		Body(p_Body)
+	LayerData(int layerId, struct TileData* tiledLayerData):
+		layerId(layerId), tiledLayerData(tiledLayerData)
 	{}
-	struct SDL_Rect* SourceDraw;
-	struct SDL_Rect* DestDraw;
-	struct SDL_Texture* Tex;
-	std::vector<Physics2D::PhysicsBody*>* Body;
-	int Layer_Id;
+	int layerId;
+	struct TileData* tiledLayerData;
 };
 
 class TiledMap: public Object
@@ -41,11 +35,12 @@ private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
-	// contain TiledLayerData indexed with layer index!
-	std::vector<TiledLayerData>* m_LayerData;
+	// contain TileData indexed with layer index!
+	std::vector<LayerData>* m_LayerData;
 private:
 	bool LoadTilesets();
 	void LoadLayers();
 	friend class Tilesets;
 	friend class ObjectGroup;
+	friend struct TileData;
 };

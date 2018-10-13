@@ -36,9 +36,7 @@ TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_
 TiledMap::~TiledMap()
 {
 	for (auto& itr : *m_LayerData) {
-		FREE(itr.DestDraw);
-		FREE(itr.SourceDraw);
-		SDL_DestroyTexture(itr.Tex);
+		FREE(itr.tiledLayerData);
 	}
 	FREE(m_LayerData);
 	FREE(m_MapTilesets);
@@ -60,7 +58,20 @@ void TiledMap::render(float dt)
 	if (!isReady) { return; }
 	auto r = ENGINE->getRenderer();
 	for (auto& itr : *m_LayerData) {
-		SDL_RenderCopy(r, itr.Tex, itr.SourceDraw, itr.DestDraw);
+		if (itr.tiledLayerData->isAnimated) {
+			itr.tiledLayerData->LastDeltaTime = itr.tiledLayerData->LastDeltaTime + dt; 
+			if (itr.tiledLayerData->LastDeltaTime > 0.1f) {
+				itr.tiledLayerData->m_CurrentFrame++;
+				if (itr.tiledLayerData->m_CurrentFrame >= itr.tiledLayerData->m_FramesVec.size()) {
+					itr.tiledLayerData->m_CurrentFrame = 0;
+				}
+				itr.tiledLayerData->LastDeltaTime = 0;
+			}
+			SDL_RenderCopy(r, itr.tiledLayerData->m_FramesVec.at(itr.tiledLayerData->m_CurrentFrame)->Tex, 
+				itr.tiledLayerData->m_FramesVec.at(itr.tiledLayerData->m_CurrentFrame)->SourceDraw, itr.tiledLayerData->DestDraw);
+		}else{
+			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+		}
 	}
 }
 
@@ -81,50 +92,37 @@ bool TiledMap::LoadTilesets()
 void TiledMap::LoadLayers()
 {
 	int ind = 0;
-	m_LayerData = new std::vector<TiledLayerData>;
-	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex){
+	m_LayerData = new std::vector<LayerData>; 
+	//std::map<int, std::vector<std::pair<int, unsigned int>>*> cachedLayerData;
+	//std::map<int, TileData*> mapLayerData;
+	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex) {
 		const Tmx::TileLayer* tileLayer = m_Map->GetTileLayer(LayerIndex);
-		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight())
-		for (int y = 0; y < tileLayer->GetHeight(); ++y){
-			for (int x = 0; x < tileLayer->GetWidth(); ++x){
-				if (tileLayer->GetTileTilesetIndex(x, y) != -1){
+		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight());
+		for (int y = 0; y < tileLayer->GetHeight(); ++y) {
+			for (int x = 0; x < tileLayer->GetWidth(); ++x) {
+				if (tileLayer->GetTileTilesetIndex(x, y) != -1) {
 					m_LayerData->reserve(m_LayerData->size() + 1);
 					ind++;
 					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
 					Uint32 Gid = tileLayer->GetTileGid(x, y);
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
-					int Tile_SizeX = TilesetData->m_TileSize.x;
-					int Tile_SizeY = TilesetData->m_TileSize.y;
-					int YAdjuster = m_Map->GetTileHeight()-Tile_SizeY; // adjust the Y to fit in the grids!
-					SDL_Rect* m_SourceDrawCoord = new SDL_Rect{
-						TilesetData->m_TilesPos[Gid]->x,
-						TilesetData->m_TilesPos[Gid]->y,
-						Tile_SizeX,
-						Tile_SizeY
-					};
-					SDL_Rect* m_DestinationDrawCoord = new SDL_Rect{
-						x*(m_Map->GetTileWidth()) + m_Position.x,
-						y*m_Map->GetTileHeight() + m_Position.y + YAdjuster,
-						Tile_SizeX,
-						Tile_SizeY
-					};
-					if (TilesetData->m_TileObjects[Gid].size() == 0) { 
-						m_LayerData->emplace_back(LayerIndex, m_SourceDrawCoord, m_DestinationDrawCoord, m_MapTilesets->at(TilesetIndex).m_ImageTexture, nullptr);
-						continue; 
+					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]);
+					tileData->setPosition(Vec2i(x, y), this);
+					if (TilesetData->m_TileObjects[Gid].size() > 0) {
+						tileData->PhyBodys = new std::vector<Physics2D::PhysicsBody*>;
+						tileData->PhyBodys->reserve(TilesetData->m_TileObjects[Gid].size());
+						for (auto& itr : TilesetData->m_TileObjects[Gid]) {
+							auto tileBody = Physics2D::PhysicsBody::CreateBody
+							(
+								Physics2D::PhysicsEngine::GetPhysicsWorld(), itr->m_BodyType,
+								itr->m_BodyShape, Physics2D::BodyParams{ 1.f,0.1f },
+								itr->m_ObjectPos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y),
+								itr->m_ObjectCoord
+							);
+							tileData->PhyBodys->push_back(tileBody);
+						}
 					}
-					std::vector<Physics2D::PhysicsBody*>* bodyVec = new std::vector<Physics2D::PhysicsBody*>;
-					bodyVec->reserve(TilesetData->m_TileObjects[Gid].size());
-					for (auto& itr : TilesetData->m_TileObjects[Gid]) {
-						auto tileBody = Physics2D::PhysicsBody::CreateBody
-						(
-							Physics2D::PhysicsEngine::GetPhysicsWorld(), itr->m_BodyType,
-							itr->m_BodyShape, Physics2D::BodyParams{ 1.f,0.1f },
-							itr->m_ObjectPos + Vec2f((float)m_DestinationDrawCoord->x, (float)m_DestinationDrawCoord->y),
-							itr->m_ObjectCoord
-						);
-						bodyVec->push_back(tileBody);
-					}
-					m_LayerData->emplace_back(LayerIndex, m_SourceDrawCoord, m_DestinationDrawCoord, m_MapTilesets->at(TilesetIndex).m_ImageTexture, bodyVec);
+					m_LayerData->emplace_back(LayerIndex, tileData);
 				}
 			}
 		}

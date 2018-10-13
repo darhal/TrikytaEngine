@@ -82,7 +82,6 @@ protected:
 		m_DestinationDrawCoord.h = m_Size->y;
 	}
 
-
 	double m_Angle;
 	SDL_Point m_RotationCenter;
 	SDL_RendererFlip m_Flip;
@@ -99,5 +98,5 @@ protected:
 
 	class Physics2D::PhysicsBody* m_Body = nullptr;
 private:
-
+	
 };

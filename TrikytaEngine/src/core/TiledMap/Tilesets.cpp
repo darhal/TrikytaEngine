@@ -18,8 +18,9 @@ Tilesets::Tilesets(TiledMap* p_Map, int i):
 
 Tilesets::~Tilesets() 
 {
-	for (auto& data : m_TilesPos) {
-		FREE(data.second);
+	for (auto data : m_Tiles) {
+		FREE(data.second->SourceDraw);
+		FREE(data.second->DestDraw);
 	}
 	SDL_DestroyTexture(m_ImageTexture);
 }
@@ -79,8 +80,34 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 			y = ((m_TileSize.y+spacing) * ((_id / m_TileAmountWidth) - 1)) + (m_TileSize.y+ spacing)+ spacing;
 		}
 		x = (m_TileSize.x+ margin) * ((_id % m_TileAmountWidth ? _id % m_TileAmountWidth : m_TileAmountWidth)-1)+ margin;
+		int Tile_SizeX = m_TileSize.x;
+		int Tile_SizeY = m_TileSize.y;
+		int YAdjuster = p_Map->getMap()->GetTileHeight() - Tile_SizeY; // adjust the Y to fit in the grids!
+		int map_x = 0, map_y = 0;
+		SDL_Rect* m_SourceDrawCoord = new SDL_Rect{
+			x,
+			y,
+			Tile_SizeX,
+			Tile_SizeY
+		};
+		SDL_Rect* m_DestinationDrawCoord = new SDL_Rect{
+			map_x*(p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x,
+			map_y*p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster,
+			Tile_SizeX,
+			Tile_SizeY
+		};
 		_id++;
-		m_TilesPos[gid] = new Vec2i(x, y);
+		m_Tiles[gid] = new TileData(gid, m_SourceDrawCoord, m_DestinationDrawCoord, m_ImageTexture, false, false);
+		m_Tiles[gid]->isAnimated = false;
+	}
+	for (auto animTiles : m_TileAnimations) {
+		m_Tiles[animTiles.first]->isAnimated = true;
+		m_Tiles[animTiles.first]->m_FramesVec.reserve(animTiles.second.size());
+		m_Tiles[animTiles.first]->m_CurrentFrame = 0;
+		m_Tiles[animTiles.first]->LastDeltaTime = 0;
+		for (auto animFrameGIDs : animTiles.second) {
+			m_Tiles[animTiles.first]->m_FramesVec.push_back(m_Tiles[animFrameGIDs.first]);
+		}
 	}
 }
 
@@ -88,20 +115,17 @@ void Tilesets::ProcessTileAnimation(const Tmx::Tile* p_Tile,const int& gid)
 {
 	if (p_Tile->IsAnimated())
 	{
-		printf(
-			"Tile is animated: %d frames with total duration of %dms.\n",
-			p_Tile->GetFrameCount(), p_Tile->GetTotalDuration());
-
-		const std::vector<Tmx::AnimationFrame> &frames =
-			p_Tile->GetFrames();
-
-		int i = 0;
+		//printf(
+		//	"Tile is animated: %d frames with total duration of %dms.\n",
+		//	p_Tile->GetFrameCount(), p_Tile->GetTotalDuration());
+		const std::vector<Tmx::AnimationFrame> &frames = p_Tile->GetFrames();
 		for (std::vector<Tmx::AnimationFrame>::const_iterator it =
-			frames.begin(); it != frames.end(); it++, i++)
+			frames.begin(); it != frames.end(); it++)
 		{
-			printf("\tFrame %d: Tile ID = %d, Duration = %dms\n", i,
-				it->GetTileID(), it->GetDuration());
-			m_TileAnimData[gid].push_back(std::make_pair(it->GetTileID(), it->GetDuration()));
+			//printf("\tFrame Tile ID = %d, Duration = %dms\n",
+			//	it->GetTileID(), it->GetDuration());
+			int tileGid = it->GetTileID() + m_FirstGid;
+			m_TileAnimations[gid].push_back(std::make_pair(tileGid, it->GetDuration()));
 		}
 	}
 }
