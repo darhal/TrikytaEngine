@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
+#include <functional>
 #include <SDL/SDL.h>
 
 #define CONSOLE_TEXT_SIZE	14
@@ -16,6 +18,7 @@ enum class MESSAGE_TYPE {
 class Console
 {
 public:
+	typedef std::function<void(std::vector<std::string>)> CmdFunc;
 	static void InitConsole();
 	static Console* getConsole();
 	static class Font* getConsoleFont() {
@@ -26,10 +29,13 @@ public:
 	void outputConsole(std::string, MESSAGE_TYPE=MESSAGE_TYPE::INFO);
 	void removeConsoleMessage();
 	void Draw(float);
+	void initConsoleCommandField();
 
 	void Activate(bool);
 	bool IsActive() const;
 	int getStartYPos() { return m_StartPos; }
+	void ProcessConsole(SDL_Event&);
+	void CommandExec(std::string&);
 protected:
 	Console();
 private:
@@ -37,6 +43,9 @@ private:
 	static class Font* m_Font;
 	SDL_Rect m_ConsoleBoundries;
 	std::vector<class ConsoleText*> m_Output;
+	ConsoleText* m_CommandField;
 	int m_StartPos;
 	bool m_isActive;
+	std::vector<std::string> m_Commands;
+	std::vector<CmdFunc> m_CmdFunctions;
 };

@@ -1,4 +1,4 @@
-#include <core/Common/TrikytaEngine.h>
+﻿#include <core/Common/TrikytaEngine.h>
 #include <cstdio>
 #include <windows.h>
 #include <LStateManager/LStateManager.h>
@@ -30,4 +30,4 @@ int main()
 	return 0;
 };
 
-#endif
+#endif*/

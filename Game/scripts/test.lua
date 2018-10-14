@@ -6,8 +6,39 @@ Called On Keyboard Input
 	- is equal to 768 On Button Pressed
 	- is equal to 769 On Button Release
 --]]
+local cbody
+local RunAnimation
+local IdleAnimation
+local lastY
 function OnKeyboardInput(key, state)
-	print("KEY BOARD INPUT DETECTED!!!"..key)
+	if state == 768 then
+		if (key == 1073741903) then -- Right
+			vx, vy = getLinearVelocity(cbody)
+			setLinearVelocity(cbody, 30, vy)
+			flipAnimationHorizental(RunAnimation, false)
+			--setAnimationVisible(IdleAnimation, false)
+			--setAnimationVisible(RunAnimation, true)
+		end
+		if (key == 1073741904) then -- Left
+			vx, vy = getLinearVelocity(cbody)
+			setLinearVelocity(cbody, -30, vy)
+			flipAnimationHorizental(RunAnimation, true)
+			--setAnimationVisible(IdleAnimation, false)
+			--setAnimationVisible(RunAnimation, true)
+		end
+		if (key == 32) then -- Up
+			vx, vy = getLinearVelocity(cbody)
+			setLinearVelocity(cbody, vx, -45)
+			setAnimationVisible(IdleAnimation, false)
+			setAnimationVisible(RunAnimation, true)
+		end
+	else
+		setLinearVelocity(cbody, 0, 0)
+		--setAnimationVisible(IdleAnimation, true)
+		--setAnimationVisible(RunAnimation, false)
+		--x, y = getAnimationPosition(RunAnimation)
+		--setAnimationPosition(IdleAnimation, x, y)
+	end
 end
 
 --[[
@@ -33,11 +64,22 @@ end
 
 -- Called every frame arguments: ([double] dt)
 function OnRender1(dt) 
-	--print("    "..dt)
+	
 end
 
 function Hello()
 	print("HELLO FROM LUA EVERY 3k MS")
+end
+
+function DetectFalls()
+	local x, y = getAnimationPosition(RunAnimation)
+	if not lastY then
+		lastY = x
+	end
+	if lastY-y < -250 then
+		outputConsole("YOU felt down!", "Info")
+	end
+	lastY = y
 end
 
 --Called when engine is already loaded!
@@ -64,11 +106,16 @@ function OnEngineLoad()
 	setZOrder(b, -1)
 	local d = createSprite("assets/test.png", 464, 464, -50, 100)
 	setZOrder(d, 1)--]]
-	
-	local c = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, 600, 100, 0.02)
-	setZOrder(c, 10)
-	local cbody = physicalizeWithOffsetV2(c, {mass=1, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Box"}, 0.35, 0.013)
-	getAngularDamping(cbody, 1000)
+	txt1 = createText("HP: 100", "Engine_Assets/fonts/DroidSans.ttf", 16, 500, math.random(50),  0,255,0);
+	RunAnimation = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, 50, 100, 0.02)
+	IdleAnimation = createAnimation("assets/Idle/idle.png", "assets/Idle/idle.a",256/2, 217/2, 250, 100, 0.02)
+	setAnimationVisible(IdleAnimation, false)
+	--setAnimationVisible(RunAnimation, false)
+	setZOrder(RunAnimation, 10)
+	attachDrawableTo(txt1, RunAnimation, 0.5, -1)
+	cbody = physicalizeWithOffsetV2(RunAnimation, {mass=0.2, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Circle"}, 0.35, 0.013)
+	setAngularDamping(cbody, 1000)
+	setTimer(DetectFalls, 1000, 0)
 	
 	
 	--[[spritecount = 0
@@ -83,7 +130,7 @@ function OnEngineLoad()
 	setLinearVelocity(physicalize(txt1, 1, 1,0.0,false, "Dynamic", "Box"), 20, 0)--]]
 
 	
-	local txt2 = createText("THIS IS ANOTHER PHYSICLIZED TEXT", "Engine_Assets/fonts/DroidSans.ttf", 16, 550,  math.random(20),  255,255,255);
+	--[[local txt2 = createText("THIS IS ANOTHER PHYSICLIZED TEXT", "Engine_Assets/fonts/DroidSans.ttf", 16, 550,  math.random(20),  255,255,255);
 	setLinearVelocity(physicalize(txt2, 1, 1,0.6,false, "Dynamic", "Box"), -20, 0)
 	
 	local txt3 = createText("This is so funny bro", "Engine_Assets/fonts/DroidSans.ttf", 16, 750,  math.random(10),  255,255,255);
@@ -91,8 +138,8 @@ function OnEngineLoad()
 	--deleteSprite(a)
 	--deleteSprite(a)
 	--deleteSprite(a)
-	--setTimer(Hello, 3000, 5)
-	--AddEventHandler("OnKeyboardInput", OnKeyboardInput)
+	--
+	AddEventHandler("OnKeyboardInput", OnKeyboardInput)
 	--AddEventHandler("OnMouseClick", OnMouseClick)
 	--AddEventHandler("OnMouseMove", OnMouseMove)
 	--AddEventHandler("OnEngineRender", OnRender1)

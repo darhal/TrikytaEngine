@@ -11,6 +11,9 @@
 #include "core/Utility/TimerManager.h"
 #include "misc/Console/Console.h"
 #include "core/Common/defines.h"
+#include "UI/UIManager.h"
+#include "core/InputManager/InputManager.h"
+
 //#include <GL/glew.h>
 /*
 bool SetOpenGLAttributes()
@@ -78,6 +81,8 @@ bool EngineInstance::Init()
 	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
 	LogTerminal("__________________________________________________________________________")
 	Console::InitConsole();
+	UI::Manager::InitManager();
+	InputManager::initInputManager();
 	LogInfoConsole("Engine is ready...");
 	
 	const Physics2D::PhysicsEngineParams phyParams = {{ m_EngineConfig.PHYSICS_WORLD_GRAVITY_X, m_EngineConfig.PHYSICS_WORLD_GRAVITY_Y }, m_EngineConfig.PHYSICS_TIME_STEP,
@@ -121,8 +126,7 @@ void EngineInstance::Render()
 	std::chrono::duration<float> dt = (TimeNow - LastTick);
 	float dtf = dt.count();
 	SDL_RenderClear(m_Renderer);
-
-	for (auto itr : *(ObjectHandler::GetObjectHandler()))
+	for (auto& itr : *(ObjectHandler::GetObjectHandler()))
 	{
 		itr->render(dtf);
 	}

@@ -25,6 +25,7 @@ namespace Physics2D {
 
 namespace UI {
 	class Text;
+	class EditBox;
 }
 
 struct ENGINE_CONFIG
@@ -41,10 +42,35 @@ struct ENGINE_CONFIG
 	float PHYSICS_WORLD_GRAVITY_Y	= 10;
 };
 
+enum Events
+{
+	//INPUT EVENTS
+	ON_KEYBOARD_INPUT = 1,
+	ON_MOUSE_CLICK = 2,
+	ON_MOUSE_MOVE = 3,
+
+	//Physics EVENTS
+	ON_COLLISION_START = 4,
+	ON_COLLISION_END = 5,
+	ON_COLLISION_PRE_SOLVE = 6,
+	ON_COLLISION_POST_SOLVE = 7,
+
+	//Engine EVENTS
+	ON_ENGINE_LOAD = 8,
+	ON_ENGINE_PRE_INIT = 9,
+	ON_ENGINE_RENDER = 10,
+
+	//UI EVENTS
+	ON_EDITBOX_CHANGE = 11,
+};
+
 #define CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
 #define CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)
 #define CALLBACK_2(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, ##__VA_ARGS__)
 #define CALLBACK_3(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, ##__VA_ARGS__)
+#define CALLBACK_4(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, ##__VA_ARGS__)
+#define CALLBACK_5(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, ##__VA_ARGS__)
+#define CALLBACK_6(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5,std::placeholders::_6,##__VA_ARGS__)
 
 typedef signed char        int8;
 typedef short              int16;

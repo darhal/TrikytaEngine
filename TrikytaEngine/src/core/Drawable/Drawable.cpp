@@ -2,7 +2,12 @@
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Common/TrikytaEngine.h"
 #include "core/Objects/ObjectHandler.h"
-
+/*
+TODO:
+ISSUES:
+-Attach rotations should be optional!
+-Add system to handle a bundle of animations, physics (player, entity, charecter...)
+*/
 
 Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
 	m_Position(new Vec2i(m_Pos)), m_Size(new Vec2i(p_Size)),
@@ -24,7 +29,6 @@ Drawable::~Drawable()
 	if (m_Body != nullptr)
 		FREE(m_Body);
 	SDL_DestroyTexture(m_Texture);
-
 }
 
 void Drawable::setZOrder(int p_ZOrder)
@@ -44,11 +48,10 @@ void Drawable::render(float dt)
 		int px = (int)m_Parent->getPosition().x;
 		int py = (int)m_Parent->getPosition().y;
 		setPosition(Vec2i(px+m_Offset.x, py+m_Offset.y));
-		m_Angle = m_Parent->GetRotation();
+		//m_Angle = m_Parent->GetRotation();
 	}
 	SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 }
-
 
 void Drawable::attachTo(Drawable* obj, Vec2f p_Offset)
 {

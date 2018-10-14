@@ -17,10 +17,16 @@ public:
 	inline void setPosition(const Vec2i& p_Position) { m_DestinationDrawCoord.x = p_Position.x; m_DestinationDrawCoord.y = p_Position.y; }
 	Vec2i getSize() const { return Vec2i(m_DestinationDrawCoord.w, m_DestinationDrawCoord.h); }
 	Vec2i getPosition() { return Vec2i(m_DestinationDrawCoord.x, m_DestinationDrawCoord.y); }
+
+	void updateText(const std::string&);
+	void updateTextHelper();
 protected:
 	ConsoleText(std::string, Vec2i, Color);
 	bool init(std::string, Vec2i, Color);
 private:
+	std::string m_Text;
+	Color m_Color;
 	struct SDL_Texture* m_Texture;
 	struct SDL_Rect m_DestinationDrawCoord;
+	friend class Console;
 };
