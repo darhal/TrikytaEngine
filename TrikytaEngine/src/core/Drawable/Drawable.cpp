@@ -3,8 +3,7 @@
 #include "core/Common/TrikytaEngine.h"
 #include "core/Objects/ObjectHandler.h"
 /*
-TODO:
-ISSUES:
+TODO: ISSUES
 -Attach rotations should be optional!
 -Add system to handle a bundle of animations, physics (player, entity, charecter...)
 */

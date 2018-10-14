@@ -5,6 +5,7 @@
 #include "misc/Font.h"
 #include "core/InputManager/InputManager.h"
 #include <sstream>
+#include <LStateManager/LStateManager.h>
 
 Console* Console::_Console = nullptr;
 class Font* Console::m_Font = nullptr;
@@ -23,11 +24,22 @@ Console* Console::getConsole()
 	return _Console;
 }
 
-Console::Console():m_isActive(false)
+Console::Console() : m_isActive(false)
 {
 	m_StartPos = (int)ENGINE->GetScreenHeight() / 6;
 	m_Output.reserve(MAX_CONSOLE_OUPUT);
 	m_ConsoleBoundries = SDL_Rect{ (int)START_POS_X, 0, (int)(ENGINE->GetScreenWeight() - START_POS_X * 2), m_StartPos };
+	
+	// adding a command restart!
+	m_Commands.push_back("restart");
+	m_CmdFunctions.push_back
+	(
+		[](std::vector<std::string> args) 
+		{ 
+			LogConsole(LogInfo, "Restarting script %s ...", args.at(0).c_str()); 
+			LuaEngine::LStateManager::GetLStateManager()->RestertScript(args.at(0));
+		}
+	);
 }
 
 void Console::outputConsole(std::string p_Text, MESSAGE_TYPE p_Type)
@@ -47,8 +59,8 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 		msg->setPosition(Vec2i(msg->getPosition().x, msg->getPosition().y - m_Output.back()->getSize().y));
 	}
 	ConsoleText* output;
-	output = ConsoleText::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, Vec2i(START_POS_X, m_StartPos), p_Color);
-	output->setPosition(Vec2i(START_POS_X, m_StartPos - output->getSize().y*2));
+	output = ConsoleText::createText("["+std::string(Utility::getDateNow())+"] " + p_Text, Vec2i(START_POS_X+15, m_StartPos), p_Color);
+	output->setPosition(Vec2i(START_POS_X+15, m_StartPos - output->getSize().y*2));
 	LogTerminalFromConsole(("[CONSOLE]"+p_Text).c_str());
 	m_Output.emplace_back(output);
 	removeConsoleMessage();
@@ -56,8 +68,8 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 
 void Console::initConsoleCommandField()
 {
-	m_CommandField = ConsoleText::createText(">", Vec2i(START_POS_X, m_StartPos), { 255,255,255,255});
-	m_CommandField->setPosition(Vec2i(START_POS_X, m_StartPos - m_CommandField->getSize().y));
+	m_CommandField = ConsoleText::createText(">", Vec2i(START_POS_X+15, m_StartPos), { 255,255,255,255});
+	m_CommandField->setPosition(Vec2i(START_POS_X+15, m_StartPos - m_CommandField->getSize().y));
 }
 
 void Console::removeConsoleMessage()
@@ -130,7 +142,7 @@ void Console::CommandExec(std::string& cmd)
 	}
 	auto itr = std::find(m_Commands.begin(), m_Commands.end(), args.at(0));
 	if (itr == m_Commands.end()){ // seach for cmd (index 0 is the cmd)
-		LogConsole(LogError, "Command %s not found!", cmd.c_str());
+		LogConsole(LogError, "Command '%s' not found!", args.at(0).c_str());
 		return;
 	}
 	args.erase(args.begin()); // delete the cmd keep only the args

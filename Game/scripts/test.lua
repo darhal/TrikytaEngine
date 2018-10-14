@@ -82,6 +82,13 @@ function DetectFalls()
 	lastY = y
 end
 
+-- I MADE AN ERROR HERE!
+
+function onScriptStart()
+	outputConsole("Script restarted !!", "warning")
+end
+
+
 --Called when engine is already loaded!
 function OnEngineLoad()
 	--print("____________________________________________________________________")
@@ -92,7 +99,7 @@ function OnEngineLoad()
 	--createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
 	local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
 	map = Map.createMap("assets/example/maps/map2.tmx")
---	map = Map.createMap("assets/example/example.tmx")
+	--map = Map.createMap("assets/example/example.tmx")
 	outputConsole("Map is "..tostring(map), "Warning")
 	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
 	--local b = createSprite("assets/test.png", 464/2, 464/2, 50, 100)
@@ -146,6 +153,8 @@ function OnEngineLoad()
 end
 AddEventHandler("OnEngineLoad", OnEngineLoad)
 
+--OnEngineLoad()
+
 --Called On Engine Pre Init (YOU CANT USE TRIKYTA FUNCTIONS HERE!!)
 function OnPreInit()
 	--DO SMTHG
@@ -153,3 +162,4 @@ end
 --AddEventHandler("OnEnginePreInit", OnPreInit) -- NOT WORKING FOR THIS VERSION!
 
 --class Sprite *__cdecl Sprite::Create(const class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > &,struct Vec2<int>,struct Vec2<int>)
+onScriptStart()
