@@ -79,17 +79,17 @@ bool EngineInstance::Init()
 	}
 	TTF_Init();
 	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
-	LogTerminal("__________________________________________________________________________")
-	Console::InitConsole();
+	LogTerminal("__________________________________________________________________________");
 	UI::Manager::InitManager();
-	InputManager::initInputManager();
+	Console::InitConsole();
+	InputManager::initInputManager()->ActivateInput(false); // init and desactivate!
 	LogInfoConsole("Engine is ready...");
 	
 	const Physics2D::PhysicsEngineParams phyParams = {{ m_EngineConfig.PHYSICS_WORLD_GRAVITY_X, m_EngineConfig.PHYSICS_WORLD_GRAVITY_Y }, m_EngineConfig.PHYSICS_TIME_STEP,
 		m_EngineConfig.PHYSICS_VELOCITY_ITERATIONS, m_EngineConfig.PHYSICS_POSITION_ITERATIONS,  m_EngineConfig.PHYSICS_DEBUG};
 	this->InitPhysics(phyParams);
 	TimerManager::InitTimerManager(); // Init timer system!
-	SDL_StopTextInput();
+	
 	LuaEngine::LStateManager::GetLStateManager()->LoadScripts();
 	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
 	On_Engine_Init(); // CALL INIT

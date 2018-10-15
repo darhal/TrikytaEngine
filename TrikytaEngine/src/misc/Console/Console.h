@@ -18,7 +18,6 @@ enum class MESSAGE_TYPE {
 class Console
 {
 public:
-	typedef std::function<void(std::vector<std::string>)> CmdFunc;
 	static void InitConsole();
 	static Console* getConsole();
 	static class Font* getConsoleFont() {
@@ -34,8 +33,8 @@ public:
 	void Activate(bool);
 	bool IsActive() const;
 	int getStartYPos() { return m_StartPos; }
-	void ProcessConsole(SDL_Event&);
-	void CommandExec(std::string&);
+	class ConsoleCommandField* getCmdManager() { return m_CommandField; }
+	SDL_Rect getConsoleBoundries() { return m_ConsoleBoundries; }
 protected:
 	Console();
 private:
@@ -43,9 +42,7 @@ private:
 	static class Font* m_Font;
 	SDL_Rect m_ConsoleBoundries;
 	std::vector<class ConsoleText*> m_Output;
-	ConsoleText* m_CommandField;
+	class ConsoleCommandField* m_CommandField;
 	int m_StartPos;
 	bool m_isActive;
-	std::vector<std::string> m_Commands;
-	std::vector<CmdFunc> m_CmdFunctions;
 };

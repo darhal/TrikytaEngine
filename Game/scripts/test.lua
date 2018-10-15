@@ -151,9 +151,9 @@ function OnEngineLoad()
 	--AddEventHandler("OnMouseMove", OnMouseMove)
 	--AddEventHandler("OnEngineRender", OnRender1)
 end
-AddEventHandler("OnEngineLoad", OnEngineLoad)
+--AddEventHandler("OnEngineLoad", OnEngineLoad)
 
---OnEngineLoad()
+OnEngineLoad()
 
 --Called On Engine Pre Init (YOU CANT USE TRIKYTA FUNCTIONS HERE!!)
 function OnPreInit()

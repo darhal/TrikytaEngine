@@ -53,7 +53,7 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 				p_Event.motion.x, p_Event.motion.y
 			);
 		}
-		Console::getConsole()->ProcessConsole(p_Event);
+		//Console::getConsole()->getCmdManager()->PorcessEvents(p_Event);
 		UI::Manager::getEventManager()->processEvents(p_Event);
 	}
 }
