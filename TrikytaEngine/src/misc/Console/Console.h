@@ -41,6 +41,7 @@ private:
 	static Console* _Console;
 	static class Font* m_Font;
 	SDL_Rect m_ConsoleBoundries;
+	SDL_Rect m_ConsoleLineBoundries;
 	std::vector<class ConsoleText*> m_Output;
 	class ConsoleCommandField* m_CommandField;
 	int m_StartPos;

@@ -1,12 +1,12 @@
 #pragma once
-#include <string>
-#include "UIBase.h"
+#include "Base/UIEditBoxBase.h"
 #include "core/Common/Color.h"
+#include <string>
 
 namespace UI {
 	class Text;
 
-	class EditBox : public Base
+	class EditBox : public EditBoxBase
 	{
 	public:
 		static EditBox* createEditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, Vec2i p_Pos, Color p_Color) {
@@ -16,17 +16,15 @@ namespace UI {
 		EditBox(const std::string&, const std::string&, uint8, Vec2i, Color);
 
 		virtual void OnUIClick(Vec2i, bool) override;
-		virtual void OnUIFocus(bool) override;
+		//virtual void OnUIFocus(bool) override;
 		inline virtual Vec2i getPos() override;
 		inline virtual Vec2i getSize() override;
 		virtual void PorcessEvents(SDL_Event&) override;
+		virtual void render(float dt) override;
 
 		UI::Text* getText() {return m_InputText;}
-
-		void ActivateEditing(bool isActive);
 	private:
-		void UpdateText(std::string& p_Text);
+		void UpdateText();
 		UI::Text* m_InputText;
-		bool IsEditActive;
 	};
 }

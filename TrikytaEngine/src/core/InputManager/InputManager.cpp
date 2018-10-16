@@ -18,19 +18,15 @@ InputManager* InputManager::getInputManager()
 void InputManager::ActivateInput(bool isActive)
 {
 	if (isActive) {
-		if (activeCount == 0) {
+		if (activeCount == false) {
 			SDL_StartTextInput();
 		}
-		activeCount++;
+		activeCount = true;
 	}else {
-		activeCount--;
-		if (activeCount < 0) {
+		if (activeCount == true) {
 			SDL_StopTextInput();
-			activeCount = 0;
 		}
-	}
-	if (activeCount == 0) {
-		SDL_StopTextInput();
+		activeCount = false;
 	}
 }
 

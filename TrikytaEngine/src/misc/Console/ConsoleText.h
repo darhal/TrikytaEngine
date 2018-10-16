@@ -20,6 +20,7 @@ public:
 
 	void updateText(const std::string&);
 	void updateTextHelper();
+	void setColor(Color);
 protected:
 	ConsoleText(std::string, Vec2i, Color);
 	bool init(std::string, Vec2i, Color);

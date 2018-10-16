@@ -49,3 +49,13 @@ void ConsoleText::updateTextHelper()
 	m_DestinationDrawCoord = SDL_Rect{ p_Pos.x, p_Pos.y ,temp_w, temp_h };
 	SDL_FreeSurface(textSurface);
 }
+
+void ConsoleText::setColor(Color p_Color)
+{
+	m_Color = p_Color;
+	auto font = Console::getConsoleFont();
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font->getFont(), m_Text.c_str(), { m_Color.r,m_Color.g, m_Color.b, m_Color.a });
+	SDL_DestroyTexture(m_Texture);
+	m_Texture = SDL_CreateTextureFromSurface(ENGINE->getRenderer(), textSurface);
+	SDL_FreeSurface(textSurface);
+}

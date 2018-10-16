@@ -192,6 +192,7 @@
     <ClCompile Include="src\misc\Console\ConsoleCommandField.cpp" />
     <ClCompile Include="src\misc\Console\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
+    <ClCompile Include="src\UI\Base\UIEditBoxBase.cpp" />
     <ClCompile Include="src\UI\UIBase.cpp" />
     <ClCompile Include="src\UI\UIEditBox.cpp" />
     <ClCompile Include="src\UI\Events\UIEventHandler.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="src\misc\Console\ConsoleCommandField.h" />
     <ClInclude Include="src\misc\Console\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
+    <ClInclude Include="src\UI\Base\UIEditBoxBase.h" />
     <ClInclude Include="src\UI\UIBase.h" />
     <ClInclude Include="src\UI\UIEditBox.h" />
     <ClInclude Include="src\UI\Events\UIEventHandler.h" />

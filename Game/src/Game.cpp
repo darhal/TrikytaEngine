@@ -21,9 +21,9 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
-	/*editBox = UI::EditBox::createEditBox(">", "Engine_Assets/fonts/DroidSans.ttf", 18,
+	editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
-	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
+	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });
 
 	//for (int i = 0; i < 100; i++) {
 	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);

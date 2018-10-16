@@ -1,8 +1,8 @@
 #pragma once
-#include "UI/UIBase.h"
+#include "UI/Base/UIEditBoxBase.h"
 #include "ConsoleText.h"
 
-class ConsoleCommandField : public UI::Base, public ConsoleText
+class ConsoleCommandField : public UI::EditBoxBase, public ConsoleText
 {
 public:
 	typedef std::function<void(std::vector<std::string>)> CmdFunc;
@@ -16,7 +16,7 @@ public:
 	inline virtual Vec2i getPos() override;
 	inline virtual Vec2i getSize() override;
 
-	void render(float);
+	virtual void render(float) override;
 	void ProcessEventHelper(SDL_Event&);
 	void PorcessEvents(union SDL_Event&) override;
 	void CommandExec(std::string& cmd);

@@ -16,7 +16,7 @@ private:
 		activeCount(0), LastDeltaTime(0.f), IsShowCursor(true), mCursorDim(SDL_Rect{0,0,0,0})
 	{}
 	static InputManager* _InputManager;
-	int activeCount;
+	bool activeCount;
 	float LastDeltaTime;
 	bool IsShowCursor;
 	SDL_Rect mCursorDim;

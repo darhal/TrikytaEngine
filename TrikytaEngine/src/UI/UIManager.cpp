@@ -29,12 +29,33 @@ Manager::ObjectsVec& Manager::getUIContainer()
 	return getManager()->m_UIContainer;
 }
 
-void Manager::addElement(Base* p_UiObj)
+Manager::ObjectsVec& Manager::getUIRenderableContainer()
 {
-	Manager::getUIContainer().push_back(p_UiObj);
+	return getManager()->m_UIRenderableContainer;
 }
 
-void Manager::removeElement(Base*)
+void Manager::addElement(Base* p_UiObj, bool isRenderable)
 {
+	if (!isRenderable) {
+		Manager::getUIContainer().push_back(p_UiObj);
+	} else {
+		Manager::getUIRenderableContainer().push_back(p_UiObj);
+	}
+}
 
+void Manager::renderElements(float dt)
+{
+	for (auto& ui_elem : Manager::getUIRenderableContainer()) {
+		ui_elem->render(dt);
+	}
+}
+
+void Manager::removeElement(Base* p_UiObj, bool isRenderable)
+{
+	if (isRenderable) {
+		Manager::getUIContainer().remove(p_UiObj);
+	}
+	else {
+		Manager::getUIRenderableContainer().remove(p_UiObj);
+	}
 }

@@ -1,7 +1,10 @@
 #include "core/InputManager/InputManager.h"
 #include <LStateManager/LStateManager.h>
 #include "ConsoleCommandField.h"
+#include "core/Common/Color.h"
+#include "UI/UIManager.h"
 #include <sstream>
+
 
 ConsoleCommandField::ConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	: ConsoleText(p_Text, p_Pos, p_Color)
@@ -87,12 +90,6 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 	}
 }
 
-void ConsoleCommandField::render(float dt)
-{
-	InputManager::getInputManager()->DrawCursor(dt);
-	renderConsoleText();
-}
-
 void ConsoleCommandField::CommandExec(std::string& cmd)
 {
 	cmd.erase(cmd.begin()); // remove the '>'
@@ -117,10 +114,19 @@ void ConsoleCommandField::OnUIClick(Vec2i, bool)
 
 };
 
+void ConsoleCommandField::render(float dt)
+{
+	InputManager::getInputManager()->DrawCursor(dt);
+}
+
 void ConsoleCommandField::OnUIFocus(bool isFocus)
 {
-	InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
-	InputManager::getInputManager()->ActivateInput(isFocus);
+	UI::EditBoxBase::OnUIFocus(isFocus);
+	if (isFocus) {
+		setColor(Color{255,255,255,255});
+	} else {
+		setColor(Color{205,205,205,200});
+	}
 };
 
 Vec2i ConsoleCommandField::getPos()
@@ -132,7 +138,6 @@ Vec2i ConsoleCommandField::getSize()
 {
 	return ConsoleText::getSize();
 };
-
 
 ConsoleCommandField::~ConsoleCommandField()
 {

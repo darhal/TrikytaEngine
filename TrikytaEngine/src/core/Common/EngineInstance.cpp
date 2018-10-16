@@ -131,9 +131,9 @@ void EngineInstance::Render()
 		itr->render(dtf);
 	}
 	On_Engine_Render(dtf);
-	SDL_GL_SwapWindow(m_Window);
-	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf);
-	Console::getConsole()->Draw(dtf);
+	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
+	Console::getConsole()->Draw(dtf); // draw console
+	UI::Manager::renderElements(dtf); // render Ui Elements
 	SDL_RenderPresent(m_Renderer);
 	LastTick = std::chrono::system_clock::now();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
