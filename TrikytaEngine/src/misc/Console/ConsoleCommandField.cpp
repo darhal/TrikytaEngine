@@ -1,24 +1,12 @@
 #include "core/InputManager/InputManager.h"
-#include <LStateManager/LStateManager.h>
 #include "ConsoleCommandField.h"
 #include "core/Common/Color.h"
 #include "UI/UIManager.h"
 #include <sstream>
 
-
 ConsoleCommandField::ConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	: ConsoleText(p_Text, p_Pos, p_Color)
 {
-	// adding a command restart!
-	m_Commands.push_back("restart");
-	m_CmdFunctions.push_back
-	(
-		[](std::vector<std::string> args)
-		{
-			LogConsole(LogInfo, "Restarting script %s ...", args.at(0).c_str());
-			LuaEngine::LStateManager::GetLStateManager()->RestertScript(args.at(0));
-		}
-	);
 }
 
 void ConsoleCommandField::ProcessEventHelper(SDL_Event& e)
@@ -51,6 +39,12 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 		{
 			if (e.key.keysym.sym == SDLK_RETURN && m_Text.length() > 1)//Handle backspace
 			{
+				if (m_CmdHistoryIndex >= 8) {
+					m_CmdHistoryIndex = 0;
+				}
+				m_CmdHistroy[m_CmdHistoryIndex] = m_Text;
+				m_CmdHistoryIndex++;
+
 				CommandExec(m_Text);
 				m_Text = ">";
 				updateTextHelper();
@@ -63,12 +57,38 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
 			}
 			else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {//Handle copy
+				m_Text.erase(m_Text.begin());
 				SDL_SetClipboardText(m_Text.c_str());
+				m_Text = ">" + m_Text;
 			}
 			else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) { //Handle paste
-				m_Text = SDL_GetClipboardText();
+				m_Text = ">"+std::string(SDL_GetClipboardText());
 				updateTextHelper();
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+			}else if (e.key.keysym.sym == SDLK_UP) { //Handle paste
+				/*if (m_CmdHistoryIndex) {
+					if (m_CmdHistorySelector > m_CmdHistoryIndex-1)
+						m_CmdHistorySelector = 0;
+					else
+						m_CmdHistorySelector++;
+
+					m_Text = m_CmdHistroy[m_CmdHistorySelector];
+					updateTextHelper();
+					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+				}*/
+			}else if (e.key.keysym.sym == SDLK_DOWN) { //Handle paste
+				/*if (m_CmdHistoryIndex){
+					if (m_CmdHistorySelector < 0)
+						m_CmdHistorySelector = m_CmdHistoryIndex - 1;
+					else
+						m_CmdHistorySelector--;
+
+					if (m_CmdHistorySelector) {
+						m_Text = m_CmdHistroy[m_CmdHistorySelector];
+						updateTextHelper();
+						InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+					}
+				}*/
 			}
 		}
 		else if (e.type == SDL_TEXTINPUT) { //Special text input event
@@ -90,23 +110,33 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 	}
 }
 
-void ConsoleCommandField::CommandExec(std::string& cmd)
+void ConsoleCommandField::CommandExec(std::string& p_CmdAndArgs)
 {
-	cmd.erase(cmd.begin()); // remove the '>'
+	p_CmdAndArgs.erase(p_CmdAndArgs.begin()); // remove the '>'
 	std::vector<std::string> args;
 	std::string tempArg;
-	std::istringstream scmd(cmd);
+	std::istringstream scmd(p_CmdAndArgs);
 	while (getline(scmd, tempArg, ' ')) {
 		args.push_back(tempArg);
 	}
-	auto itr = std::find(m_Commands.begin(), m_Commands.end(), args.at(0));
-	if (itr == m_Commands.end()) { // seach for cmd (index 0 is the cmd)
-		LogConsole(LogError, "Command '%s' not found!", args.at(0).c_str());
+	auto cmd = args.at(0);
+
+	//auto itr = std::find(m_Commands.begin(), m_Commands.end(), args.at(0));
+	if (!m_CmdData.count(cmd)){ //(itr == m_Commands.end()) { // seach for cmd (index 0 is the cmd)
+		LogConsole(LogError, "Command '%s' not found!", cmd.c_str());
 		return;
 	}
 	args.erase(args.begin()); // delete the cmd keep only the args
-	auto index = std::distance(m_Commands.begin(), itr);
-	m_CmdFunctions.at(index)(args); // Function call!
+	m_CmdData[cmd].m_CmdFunction(args);
+
+	//auto index = std::distance(m_Commands.begin(), itr);
+	//m_CmdFunctions.at(index)(args); // Function call!
+}
+
+void ConsoleCommandField::AddCommandHandler(const std::string& p_Cmd, CmdFunc p_FuncHandlerconst)
+{
+	m_CmdData[p_Cmd].m_Command = p_Cmd;
+	m_CmdData[p_Cmd].m_CmdFunction = p_FuncHandlerconst;
 }
 
 void ConsoleCommandField::OnUIClick(Vec2i, bool)

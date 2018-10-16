@@ -41,6 +41,8 @@ class b2Joint;
 class b2World
 {
 public:
+	b2Draw* getDebugDraw();
+
 	/// Construct a world object.
 	/// @param gravity the world gravity vector.
 	b2World(const b2Vec2& gravity);

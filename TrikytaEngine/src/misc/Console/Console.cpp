@@ -2,9 +2,11 @@
 #include "core/Common/TrikytaEngine.h"
 #include "ConsoleCommandField.h"
 #include "core/Common/Utility.h"
+#include "ConsoleCommands.h"
 #include "ConsoleText.h"
 #include "misc/Font.h"
 #include "Console.h"
+
 
 Console* Console::_Console = nullptr;
 class Font* Console::m_Font = nullptr;
@@ -16,11 +18,18 @@ void Console::InitConsole()
 		_Console = new Console();
 	}
 	_Console->initConsoleCommandField();
+	ConsoleCommands ccmd;
+	ccmd.initCommands();
 }
 
 Console* Console::getConsole()
 {
 	return _Console;
+}
+
+void Console::AddCommandHandler(const std::string& cmd, std::function<void(const std::vector<std::string>&)> p_Func)
+{
+	Console::getConsole()->m_CommandField->AddCommandHandler(cmd, p_Func);
 }
 
 Console::Console() : m_isActive(false)

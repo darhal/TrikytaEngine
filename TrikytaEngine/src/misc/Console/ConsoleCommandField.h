@@ -1,11 +1,20 @@
 #pragma once
 #include "UI/Base/UIEditBoxBase.h"
 #include "ConsoleText.h"
+#include <map>
+
+typedef std::function<void(const std::vector<std::string>&)> CmdFunc;
+
+struct CommandData
+{
+	std::string m_Command;
+	CmdFunc m_CmdFunction;
+};
 
 class ConsoleCommandField : public UI::EditBoxBase, public ConsoleText
 {
 public:
-	typedef std::function<void(std::vector<std::string>)> CmdFunc;
+	
 	static ConsoleCommandField* createConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	{
 		return new ConsoleCommandField(p_Text, p_Pos, p_Color);
@@ -20,10 +29,15 @@ public:
 	void ProcessEventHelper(SDL_Event&);
 	void PorcessEvents(union SDL_Event&) override;
 	void CommandExec(std::string& cmd);
+	void AddCommandHandler(const std::string&, CmdFunc);
 	~ConsoleCommandField();
 protected:
 	ConsoleCommandField(std::string, Vec2i, Color);
 private:
-	std::vector<std::string> m_Commands;
-	std::vector<CmdFunc> m_CmdFunctions;
+	std::map<std::string, CommandData> m_CmdData;
+	std::string m_CmdHistroy[8];
+	int m_CmdHistoryIndex = 0;
+	int m_CmdHistorySelector = 0;
+	//std::vector<std::string> m_Commands;
+	//std::vector<CmdFunc> m_CmdFunctions;
 };

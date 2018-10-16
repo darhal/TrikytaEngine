@@ -50,13 +50,34 @@ PhysicsWorld::PhysicsWorld(const PhysicsEngineParams& p_Params) :
 void PhysicsWorld::update(float dt)
 {
 	m_World->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
-	m_World->DrawDebugData();
+	if (m_DebugDraw) 
+		m_World->DrawDebugData();
 }
 
 void PhysicsWorld::AddContactListener()
 {
 	if (m_PhyContactListener == nullptr) {
 		m_World->SetContactListener(PhysicsContactListener::GetPhysicsContactListener());
+	}
+}
+
+void PhysicsWorld::deleteDebugger()
+{
+	m_DebugDraw = false;
+}
+
+void PhysicsWorld::setDebugger()
+{
+	m_DebugDraw = true;
+	if (getDebugDraw() == nullptr) {
+		m_World->SetDebugDraw(&debugDrawInstance);
+		uint32 flags = 0;
+		flags += b2Draw::e_shapeBit;
+		/*flags += b2Draw::e_aabbBit;
+		flags += b2Draw::e_centerOfMassBit;
+		flags += b2Draw::e_jointBit;
+		flags += b2Draw::e_pairBit;*/
+		debugDrawInstance.SetFlags(flags);
 	}
 }
 

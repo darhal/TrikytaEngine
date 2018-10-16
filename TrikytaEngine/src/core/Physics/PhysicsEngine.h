@@ -41,6 +41,9 @@ namespace Physics2D {
 		inline b2World* getWorld() {return m_World;}
 		void update(float);
 
+		void deleteDebugger();
+		void setDebugger();
+
 		friend PhysicsEngine;
 	private:
 		b2GLDraw debugDrawInstance;

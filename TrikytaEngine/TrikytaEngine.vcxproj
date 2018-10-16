@@ -190,6 +190,7 @@
     <ClCompile Include="src\core\Utility\TimerManager.cpp" />
     <ClCompile Include="src\misc\Console\Console.cpp" />
     <ClCompile Include="src\misc\Console\ConsoleCommandField.cpp" />
+    <ClCompile Include="src\misc\Console\ConsoleCommands.cpp" />
     <ClCompile Include="src\misc\Console\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
     <ClCompile Include="src\UI\Base\UIEditBoxBase.cpp" />
@@ -337,6 +338,7 @@
     <ClInclude Include="src\core\Utility\TimerManager.h" />
     <ClInclude Include="src\misc\Console\Console.h" />
     <ClInclude Include="src\misc\Console\ConsoleCommandField.h" />
+    <ClInclude Include="src\misc\Console\ConsoleCommands.h" />
     <ClInclude Include="src\misc\Console\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
     <ClInclude Include="src\UI\Base\UIEditBoxBase.h" />

@@ -23,6 +23,7 @@ public:
 	static class Font* getConsoleFont() {
 		return m_Font;
 	};
+	static void AddCommandHandler(const std::string&, std::function<void(const std::vector<std::string>&)>);
 
 	void outputConsole(std::string, struct Color, bool = true);
 	void outputConsole(std::string, MESSAGE_TYPE=MESSAGE_TYPE::INFO);
