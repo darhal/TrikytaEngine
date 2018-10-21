@@ -3,6 +3,8 @@
 #include "core/Common/Color.h"
 #include <string>
 
+//TODO: Find a solution when you switch directly from an editbox to another (due to events treated one after the other)
+
 namespace UI {
 	class Text;
 
