@@ -11,6 +11,7 @@ void ConsoleCommands::initCommands()
 			"restart", // adding a command restart!
 			[](const std::vector<std::string>& args)
 			{
+				if (args.size() == 0) return;
 				LogConsole(LogInfo, "Restarting script %s ...", args.at(0).c_str());
 				LuaEngine::LStateManager::GetLStateManager()->RestertScript(args.at(0));
 			}
@@ -19,6 +20,7 @@ void ConsoleCommands::initCommands()
 			"physics_debug", // adding a command restart!
 			[](const std::vector<std::string>& args)
 			{
+				if (args.size() == 0) return;
 				if (args.at(0) == "true") {
 					Physics2D::PhysicsEngine::GetPhysicsWorld()->setDebugger();
 					LogConsole(LogInfo, "Physics debugger enabled!");

@@ -123,13 +123,12 @@ void ConsoleCommandField::CommandExec(std::string& p_CmdAndArgs)
 	}
 	auto cmd = args.at(0);
 
-	//auto itr = std::find(m_Commands.begin(), m_Commands.end(), args.at(0));
-	if (!m_CmdData.count(cmd)){ //(itr == m_Commands.end()) { // seach for cmd (index 0 is the cmd)
+	if (!m_CmdData.count(cmd)){ // seach for cmd (index 0 is the cmd)
 		LogConsole(LogError, "Command '%s' not found!", cmd.c_str());
 		return;
 	}
 	args.erase(args.begin()); // delete the cmd keep only the args
-	m_CmdData[cmd].m_CmdFunction(args);
+	m_CmdData[cmd].m_CmdFunction(args); //TODO: Find a solution for functions that take args but user enter cmd without args e.g : restart 
 
 	//auto index = std::distance(m_Commands.begin(), itr);
 	//m_CmdFunctions.at(index)(args); // Function call!
