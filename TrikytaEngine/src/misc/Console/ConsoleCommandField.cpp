@@ -7,6 +7,8 @@
 ConsoleCommandField::ConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	: ConsoleText(p_Text, p_Pos, p_Color)
 {
+	//m_CmdHistroy.reserve(8);
+	m_CmdHistorySelector = -1;
 }
 
 void ConsoleCommandField::ProcessEventHelper(SDL_Event& e)
@@ -39,24 +41,23 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 		{
 			if (e.key.keysym.sym == SDLK_RETURN && m_Text.length() > 1)//Handle backspace
 			{
-				if (m_CmdHistoryIndex >= 8) {
-					m_CmdHistoryIndex = 0;
+				if (m_CmdHistroy.size() >= 8) { // max size
+					m_CmdHistroy.pop_back();
 				}
-				m_CmdHistroy[m_CmdHistoryIndex] = m_Text;
-				m_CmdHistoryIndex++;
-
+				if (std::find(m_CmdHistroy.begin(), m_CmdHistroy.end(), m_Text) == m_CmdHistroy.end()) {// if already not there
+					m_CmdHistroy.emplace_front(m_Text); //add it
+				}
 				CommandExec(m_Text);
 				m_Text = ">";
+				m_CmdHistorySelector = -1;
 				updateTextHelper();
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
-			}
-			else if (e.key.keysym.sym == SDLK_BACKSPACE && m_Text.length() > 1)//Handle backspace
-			{
+			}else if (e.key.keysym.sym == SDLK_BACKSPACE && m_Text.length() > 1) { //Handle backspace
 				m_Text.pop_back();
 				updateTextHelper();
+				m_CmdHistorySelector = -1;
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
-			}
-			else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {//Handle copy
+			}else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) { //Handle copy
 				m_Text.erase(m_Text.begin());
 				SDL_SetClipboardText(m_Text.c_str());
 				m_Text = ">" + m_Text;
@@ -66,29 +67,30 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				updateTextHelper();
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
 			}else if (e.key.keysym.sym == SDLK_UP) { //Handle paste
-				/*if (m_CmdHistoryIndex) {
-					if (m_CmdHistorySelector > m_CmdHistoryIndex-1)
-						m_CmdHistorySelector = 0;
-					else
-						m_CmdHistorySelector++;
-
-					m_Text = m_CmdHistroy[m_CmdHistorySelector];
+				if (m_CmdHistroy.size()) {
+					m_CmdHistorySelector++;
+					if ((unsigned)m_CmdHistorySelector > m_CmdHistroy.size() - 1) {
+						m_CmdHistorySelector = m_CmdHistroy.size() - 1;
+						return;
+					}
+					m_Text = m_CmdHistroy.at(m_CmdHistorySelector);
 					updateTextHelper();
 					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
-				}*/
+				}
 			}else if (e.key.keysym.sym == SDLK_DOWN) { //Handle paste
-				/*if (m_CmdHistoryIndex){
-					if (m_CmdHistorySelector < 0)
-						m_CmdHistorySelector = m_CmdHistoryIndex - 1;
-					else
-						m_CmdHistorySelector--;
-
-					if (m_CmdHistorySelector) {
-						m_Text = m_CmdHistroy[m_CmdHistorySelector];
+				if (m_CmdHistroy.size()){
+					m_CmdHistorySelector--;
+					if (m_CmdHistorySelector < 0) {
+						m_CmdHistorySelector = -1;
+						m_Text = ">";
 						updateTextHelper();
 						InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+						return;
 					}
-				}*/
+					m_Text = m_CmdHistroy.at(m_CmdHistorySelector);
+					updateTextHelper();
+					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+				}
 			}
 		}
 		else if (e.type == SDL_TEXTINPUT) { //Special text input event
