@@ -84,7 +84,7 @@ public:
 		typename std::enable_if<EventType == ON_ENGINE_RENDER, bool>::type = true>
 		void addEventHandler(Func&& func)
 	{
-		m_OnEnginePreInitCallbacks.push_back(RenderFuncType(std::forward<Func>(func)));
+		m_OnEngineRenderCallbacks.push_back(RenderFuncType(std::forward<Func>(func)));
 	}
 
 	void HandleSDLEvents(SDL_Event&, class EngineInstance*);
