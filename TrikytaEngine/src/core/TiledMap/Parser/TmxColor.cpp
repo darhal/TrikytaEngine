@@ -25,7 +25,10 @@
 //
 // Author: Guillaume Bertholon
 //-----------------------------------------------------------------------------
+#ifdef _MSC_VER
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
+#endif
+
 #include "TmxColor.h"
 #include <cstdio>
 #include <cstdlib>

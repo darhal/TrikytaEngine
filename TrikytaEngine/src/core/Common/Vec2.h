@@ -1,11 +1,11 @@
 #pragma once
-#include <math.h>
+#include <cmath>
 #define FLT_EPSILON      1.192092896e-07F        // smallest such that 1.0+FLT_EPSILON != 1.0
 
 /// This function is used to ensure that a floating point number is not a NaN or infinity.
 inline bool _IsValid(float x)
 {
-	return isfinite(x);
+	return std::isfinite(x);
 }
 
 #define	Sqrt(x)	sqrtf(x)

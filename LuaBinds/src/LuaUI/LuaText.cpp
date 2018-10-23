@@ -4,6 +4,7 @@
 #include "LuaText.h"
 #include <core/Objects/ObjectHandler.h>
 #include "LuaCore/ErrorManager.h"
+#include <algorithm>
 
 
 using namespace UI;

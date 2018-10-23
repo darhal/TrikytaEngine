@@ -3,6 +3,7 @@
 #include "core/Common/Color.h"
 #include "UI/UIManager.h"
 #include <sstream>
+#include <algorithm>
 
 ConsoleCommandField::ConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	: ConsoleText(p_Text, p_Pos, p_Color)

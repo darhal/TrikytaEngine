@@ -2,6 +2,7 @@
 #include "TimerManager.h"
 #include <LuaMisc/LuaTimer.h>
 #include "core/Common/defines.h"
+#include <chrono>
 
 Timer::Timer(std::function<void()> p_Func, int p_Time, int p_CallTime):
 	m_FuncToCall(p_Func), 

@@ -1,7 +1,7 @@
 #ifndef DEBUGDRAW_H
 #define DEBUGDRAW_H
 
-#include "../Core/Box2d.h"
+#include <PhysicsEngine/Core/Box2D.h>
 #include <utils/SDL2_gfxPrimitives.h>
 
 class b2GLDraw : public b2Draw

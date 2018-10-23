@@ -1,5 +1,6 @@
 #include "TimerManager.h"
 #include "core/Common/defines.h"
+#include <algorithm>
 
 TimerManager* TimerManager::_MANAGER_ = nullptr;
 int TimerManager::m_TimerNum = 0;

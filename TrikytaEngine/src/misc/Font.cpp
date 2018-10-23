@@ -18,8 +18,7 @@ Font* Font::createOrGetFont(std::string p_FontPath, uint8 p_Size)
 Font::Font(std::string p_FontPath, uint8 p_Size):
 	m_FontPath(p_FontPath), m_Size(p_Size), m_NumberOfUse(1)
 {
-	
-	m_Font = TTF_OpenFont(m_FontPath.c_str(), p_Size);
+	m_Font = TTF_OpenFont((m_FontPath).c_str(), p_Size);
 }
 
 void Font::Destory()
@@ -28,14 +27,20 @@ void Font::Destory()
 	//Log("Number of use of font %s with size %d is == %d", this->m_FontPath.c_str(), this->m_Size, this->m_NumberOfUse);
 	if (m_NumberOfUse <= 0) {
 		//Log("deleting font %s with size %d!", this->m_FontPath.c_str(), this->m_Size);
-		Font::~Font();
+		//Font::~Font();
 	}
 }
 
 Font::~Font()
 {
-	TTF_CloseFont(m_Font);
-	m_Font_Map[m_FontPath] = nullptr;
+	this->m_NumberOfUse--;
+	//Log("Number of use of font %s with size %d is == %d", this->m_FontPath.c_str(), this->m_Size, this->m_NumberOfUse);
+	if (m_NumberOfUse <= 0) {
+		//Log("deleting font %s with size %d!", this->m_FontPath.c_str(), this->m_Size);
+		//Font::~Font();
+		TTF_CloseFont(m_Font);
+		m_Font_Map[m_FontPath] = nullptr;
+	}
 }
 
 TTF_Font* Font::getFont() const

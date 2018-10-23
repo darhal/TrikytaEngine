@@ -20,7 +20,9 @@ must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source
 distribution.
 */
+#ifdef _MSC_VER
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
+#endif
 
 #ifndef TINYXML2_INCLUDED
 #define TINYXML2_INCLUDED
@@ -42,6 +44,9 @@ distribution.
 #   include <cstring>
 #endif
 #include <stdint.h>
+
+#include <string.h>
+#include <stdlib.h>
 
 /*
    TODO: intern strings instead of allocation.
@@ -113,6 +118,10 @@ static const int TIXML2_PATCH_VERSION = 0;
 // attack that can result from ill, malicious, or even correctly formed XML,
 // so there needs to be a limit in place.
 static const int TINYXML2_MAX_ELEMENT_DEPTH = 100;
+
+#ifdef __GNUC__
+char* strdup (const char* s);
+#endif
 
 namespace tinyxml2
 {

@@ -2,6 +2,7 @@
 #include <core/Common/defines.h>
 #include <vector>
 #include <functional>
+#include <core/Physics/PhysicsEngine.h>
 
 class EventManager
 {

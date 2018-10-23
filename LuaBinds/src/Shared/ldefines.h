@@ -1,5 +1,6 @@
 #pragma once
-#include <Core/Common/defines.h>
+#include <core/Common/defines.h>
+#include <algorithm>
 
 #define SCRIPT_META_PATH    "scripts/meta.txt"
 #define SCRIPTS_PATH		"scripts/"

@@ -104,6 +104,7 @@
 #if defined(_MSC_VER) || defined(__MWERKS__) || defined(__BORLANDC__)
 #ifdef _MSC_VER
 #pragma warning(disable: 4103)
+#pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
 #endif
 #ifdef __BORLANDC__
 #pragma nopackwarning

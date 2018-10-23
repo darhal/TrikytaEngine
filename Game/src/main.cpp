@@ -1,6 +1,6 @@
 ﻿#include <core/Common/TrikytaEngine.h>
 #include <cstdio>
-#include <windows.h>
+//#include <windows.h>
 #include <LStateManager/LStateManager.h>
 #include <core/Common/defines.h>
 

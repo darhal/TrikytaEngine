@@ -2,6 +2,8 @@
 #include "Vec2.h"
 #include <string>
 
+enum class MESSAGE_TYPE;
+
 class Utility
 {
 public:
@@ -17,5 +19,5 @@ public:
 	static int ToRadian(int x);
 	static int ToDegree(int x);
 
-	static void LogVaradicConsole(enum class MESSAGE_TYPE, const char* format, ...);
+	static void LogVaradicConsole(MESSAGE_TYPE, const char* format, ...);
 };

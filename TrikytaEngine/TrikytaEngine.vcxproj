@@ -368,12 +368,6 @@
     <ProjectReference Include="..\PhysicsEngine\PhysicsEngine.vcxproj">
       <Project>{d512840f-244e-40c4-87c6-e3876f66446e}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\TinyXML\TinyXML.vcxproj">
-      <Project>{89658b20-665b-4a95-8246-ae8d38527517}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\zlib\zlib.vcxproj">
-      <Project>{52a3be35-dfc3-4e95-84a6-428206788ee7}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

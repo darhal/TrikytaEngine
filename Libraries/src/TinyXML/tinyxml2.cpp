@@ -116,6 +116,21 @@ static const unsigned char TIXML_UTF_LEAD_0 = 0xefU;
 static const unsigned char TIXML_UTF_LEAD_1 = 0xbbU;
 static const unsigned char TIXML_UTF_LEAD_2 = 0xbfU;
 
+#ifdef __GNUC__
+static char* strdup (const char* s) noexcept
+{
+  size_t slen = strlen(s);
+  char* result = (char*)malloc(slen + 1);
+  if(result == NULL)
+  {
+    return NULL;
+  }
+
+  memcpy(result, s, slen+1);
+  return result;
+};
+#endif
+
 namespace tinyxml2
 {
 

@@ -6,7 +6,10 @@
 #include "Utility.h"
 #include "core/Common/defines.h"
 
+#ifdef _MSC_VER
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
+#endif
+
 
 std::string Utility::getDateNow()
 {

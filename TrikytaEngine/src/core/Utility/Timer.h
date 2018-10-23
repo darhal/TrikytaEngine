@@ -27,7 +27,12 @@ private:
 	int m_CallTime;
 	int m_LuaFunc = -1;
 	float m_TimeLeft;
+#ifdef __GNUC__
+	std::chrono::system_clock::time_point  mStart_Time;
+#endif
+#ifdef _MSC_VER
 	std::chrono::steady_clock::time_point  mStart_Time;
+#endif
 	std::function<void()> m_FuncToCall = NULL;
 	//std::thread m_TimerThread;
 };
