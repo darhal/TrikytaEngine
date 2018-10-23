@@ -2,7 +2,10 @@
 #include <cstdarg>
 #include "Utility.h"
 #include "misc/Console/Console.h"
+
+#ifdef _MSC_VER
 #pragma warning(disable:4996) // DISABLE STUPID VS ERRORS
+#endif
 
 
 #ifdef __DEBUG__
