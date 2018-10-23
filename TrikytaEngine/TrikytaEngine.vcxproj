@@ -72,14 +72,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(ProjectDir)\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <LibraryPath>$(SolutionDir)Game\bin\x86\SDL\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)PhysicsEngine\;$(SolutionDir)TrikytaEngine\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PhysicsEngine\;$(ProjectDir)\libs\includes\;$(SolutionDir)Libraries\src\TinyXML;$(SolutionDir)Libraries\src\zlib;$(SolutionDir)LuaBinds\src;$(SolutionDir)LuaBinds\lua\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)Binary\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -103,7 +103,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,7 +123,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)TrikytaEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
