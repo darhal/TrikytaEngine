@@ -357,6 +357,7 @@
     <None Include="libs\includes\SDL\SDL_config.h.cmake" />
     <None Include="libs\includes\SDL\SDL_config.h.in" />
     <None Include="libs\includes\SDL\SDL_config_macosx.h.orig" />
+    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\Libraries.vcxproj">
