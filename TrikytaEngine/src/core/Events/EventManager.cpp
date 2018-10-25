@@ -21,6 +21,9 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 	while (SDL_PollEvent(&p_Event) != 0) {
 		if (p_Event.type == SDL_QUIT) { p_Engine->setEngineState(false); p_Engine->On_Engine_Quit(); };
 		if (p_Event.type == SDL_KEYDOWN || p_Event.type == SDL_KEYUP) {
+			if (p_Event.type == SDL_KEYDOWN && p_Event.key.keysym.sym == SDLK_DOLLAR) {
+				Console::getConsole()->Activate(!Console::getConsole()->IsActive());
+			}
 			for (auto inputCallbackFunc : m_InputCallbacks) { 
 				inputCallbackFunc(p_Event.key.keysym.sym, p_Event.type);
 			}

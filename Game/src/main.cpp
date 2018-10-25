@@ -1,8 +1,10 @@
 ﻿#include <core/Common/TrikytaEngine.h>
 #include <cstdio>
-//#include <windows.h>
 #include <LStateManager/LStateManager.h>
 #include <core/Common/defines.h>
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
 
 #ifndef __DEBUG__
 

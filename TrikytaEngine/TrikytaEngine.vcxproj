@@ -200,9 +200,12 @@
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
+    <ClCompile Include="src\utils\SDL2_framerate.cpp" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
     <ClCompile Include="src\utils\SDL2_imageFilter.c" />
+    <ClCompile Include="src\utils\SDL2_imageFilter.cpp" />
     <ClCompile Include="src\utils\SDL2_rotozoom.c" />
+    <ClCompile Include="src\utils\SDL2_rotozoom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Camera\Camera.h" />
@@ -371,6 +374,5 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

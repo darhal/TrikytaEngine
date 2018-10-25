@@ -11,7 +11,7 @@ local RunAnimation
 local IdleAnimation
 local lastY
 function OnKeyboardInput(key, state)
-	if state == 768 then
+	--[[if state == 768 then
 		if (key == 1073741903) then -- Right
 			vx, vy = getLinearVelocity(cbody)
 			setLinearVelocity(cbody, 30, vy)
@@ -38,7 +38,7 @@ function OnKeyboardInput(key, state)
 		--setAnimationVisible(RunAnimation, false)
 		--x, y = getAnimationPosition(RunAnimation)
 		--setAnimationPosition(IdleAnimation, x, y)
-	end
+	end--]]
 end
 
 --[[
@@ -98,9 +98,9 @@ function OnEngineLoad()
 	--flipSpriteVertical(ground, false)
 	--createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
 	local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
-	map = Map.createMap("assets/example/maps/map2.tmx")
+	--map = Map.createMap("assets/example/maps/map2.tmx")
 	--map = Map.createMap("assets/example/example.tmx")
-	outputConsole("Map is "..tostring(map), "Warning")
+	--outputConsole("Map is "..tostring(map), "Warning")
 	--local b = Sprite.createSprite("assets/test.png", Vec2i(464, 464), Vec2i(50, 100))
 	--local b = createSprite("assets/test.png", 464/2, 464/2, 50, 100)
 	--flipSpriteVertical(ba, true)
@@ -113,8 +113,8 @@ function OnEngineLoad()
 	setZOrder(b, -1)
 	local d = createSprite("assets/test.png", 464, 464, -50, 100)
 	setZOrder(d, 1)--]]
-	txt1 = createText("HP: 100", "Engine_Assets/fonts/DroidSans.ttf", 16, 500, math.random(50),  0,255,0);
-	RunAnimation = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, 50, 100, 0.02)
+	--txt1 = createText("HP: 100", "Engine_Assets/fonts/DroidSans.ttf", 16, WINDOW_WIDTH/2, math.random(50),  0,255,0);
+	--[[RunAnimation = createAnimation("assets/anim_pack.png", "assets/anim_pack.a",256/2, 217/2, WINDOW_WIDTH/2, 100, 0.02)
 	IdleAnimation = createAnimation("assets/Idle/idle.png", "assets/Idle/idle.a",256/2, 217/2, 250, 100, 0.02)
 	setAnimationVisible(IdleAnimation, false)
 	--setAnimationVisible(RunAnimation, false)
@@ -122,7 +122,7 @@ function OnEngineLoad()
 	attachDrawableTo(txt1, RunAnimation, 0.5, -1)
 	cbody = physicalizeWithOffsetV2(RunAnimation, {mass=0.2, friction=1,restitution=0.0,sensor=false}, {type="Dynamic", shape="Circle"}, 0.35, 0.013)
 	setAngularDamping(cbody, 1000)
-	setTimer(DetectFalls, 1000, 0)
+	setTimer(DetectFalls, 1000, 0)--]]
 	
 	
 	--[[spritecount = 0

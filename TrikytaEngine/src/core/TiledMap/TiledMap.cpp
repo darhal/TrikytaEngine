@@ -49,6 +49,12 @@ bool TiledMap::init()
 	m_Position = Vec2i(0,0);
 	TiledMap::LoadTilesets();
 	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
+	auto gRenderer = ENGINE->getRenderer();
+	m_MapDst = { 0, 0, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight() };
+	m_MapSrc = { m_Position.x, m_Position.y, int(1024 * 1.6), int(768 * 1.2)}; //TODO: fix these hardcoded values!
+	m_LastPositionTranslated = Vec2i(0, 0);
+	m_MapTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
+	//SDL_QueryTexture(m_MapTexture, NULL, NULL, &m_MapDst.w, &m_MapDst.h);
 	TiledMap::LoadLayers();
 	return true;
 }
@@ -57,6 +63,7 @@ void TiledMap::render(float dt)
 {
 	if (!isReady) { return; }
 	auto r = ENGINE->getRenderer();
+	SDL_SetRenderTarget(r, m_MapTexture);
 	for (auto& itr : *m_LayerData) {
 		if (itr.tiledLayerData->isAnimated) {
 			itr.tiledLayerData->LastDeltaTime = itr.tiledLayerData->LastDeltaTime + dt; 
@@ -73,6 +80,10 @@ void TiledMap::render(float dt)
 			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
 		}
 	}
+	SDL_SetRenderTarget(r, NULL);
+	SDL_SetTextureBlendMode(m_MapTexture, SDL_BLENDMODE_BLEND);
+	SDL_RenderCopy(r, m_MapTexture, &m_MapSrc, NULL);
+	//LogTerminal("Draw coord (x=%d, y=%d, w=%d, h=%d) // Dest Coord (%d, %d)", m_MapSrc.x, m_MapSrc.y, m_MapSrc.w, m_MapSrc.h, m_MapDst.w, m_MapDst.h);
 }
 
 bool TiledMap::LoadTilesets()
@@ -108,9 +119,11 @@ void TiledMap::LoadLayers()
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
 					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]);
 					tileData->setPosition(Vec2i(x, y), this);
+					tileData->IsPhy = false;
 					if (TilesetData->m_TileObjects[Gid].size() > 0) {
 						tileData->PhyBodys = new std::vector<Physics2D::PhysicsBody*>;
 						tileData->PhyBodys->reserve(TilesetData->m_TileObjects[Gid].size());
+						tileData->IsPhy = true;
 						for (auto& itr : TilesetData->m_TileObjects[Gid]) {
 							auto tileBody = Physics2D::PhysicsBody::CreateBody
 							(
@@ -120,6 +133,8 @@ void TiledMap::LoadLayers()
 								itr->m_ObjectCoord
 							);
 							tileData->PhyBodys->push_back(tileBody);
+							m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
+							tileData->bodyOffsetPos = itr->m_ObjectPos;
 						}
 					}
 					m_LayerData->emplace_back(LayerIndex, tileData);
@@ -131,6 +146,52 @@ void TiledMap::LoadLayers()
 	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)
 }
 
+void TiledMap::setPosition(Vec2i pos)
+{
+	if (Utility::IsInBox(Vec2i(pos.x, pos.y), Vec2i(0,0), Vec2i(m_MapDst.w, m_MapDst.h))) {
+		m_Position = pos;
+		m_MapSrc.x = pos.x;
+		m_MapSrc.y = pos.y;
+		for (auto& phyObj : m_allMapBodies) {
+			//auto current_rect = itr.tiledLayerData->DestDraw;
+			//itr.tiledLayerData->DestDraw->x = current_rect->x+pos.x;
+			//itr.tiledLayerData->DestDraw->y = current_rect->y+pos.y;
+			Vec2f old_transform = phyObj->GetTransform().p;
+			phyObj->SetTransform
+			(
+				Vec2f(old_transform.x-float(pos.x-m_LastPositionTranslated.x), old_transform.y-float(pos.y - m_LastPositionTranslated.y))
+				,0.f
+			);
+		}
+		m_LastPositionTranslated = pos;
+	}
+}
+
+void TiledMap::translateMap(Vec2i pos)
+{
+	if (Utility::IsInBox(Vec2i(m_MapSrc.x - pos.x, m_MapSrc.y - pos.y), Vec2i(0, 0), Vec2i(m_MapDst.w, m_MapDst.h))) {
+		m_Position += pos;
+		m_MapSrc.x -= pos.x;
+		m_MapSrc.y -= pos.y;
+		for (auto& itr : *m_LayerData) {
+			//auto current_rect = itr.tiledLayerData->DestDraw;
+			//itr.tiledLayerData->DestDraw->x = current_rect->x+pos.x;
+			//itr.tiledLayerData->DestDraw->y = current_rect->y+pos.y;
+			if (itr.tiledLayerData->IsPhy) { //TODO: causes no physical behaviour!
+				for (auto& phyObj : *(itr.tiledLayerData->PhyBodys)) {
+					Vec2f old_transform = phyObj->GetTransform().p;
+					phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
+				}
+			}
+		}
+		//m_LastPositionTranslated = pos;
+	}
+}
+
+Vec2i TiledMap::getPosition()
+{
+	return m_Position;
+}
 
 
 

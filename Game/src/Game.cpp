@@ -12,7 +12,10 @@
 #include <UI/UIText.h>
 #include <misc/Console/Console.h>
 #include <UI/UIEditBox.h>
-UI::EditBox* editBox;
+#include <core/Camera/Camera.h>
+
+//UI::EditBox* editBox;
+Camera* cam;
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -21,6 +24,12 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
+	cam = Camera::CreateCamera();
+	map = TiledMap::Create("assets/example/maps/map2.tmx");//"assets/example/maps/map.tmx");
+	cam->addObjectToCamera(map);
+	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(650, 75), 0.03f);
+	body = anim->Physicalize(Physics2D::BodyParams{1.f, 0.2f}, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+	body->SetAngularDamping(1000.f);
 	//editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 	//	Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
 	//editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });
@@ -92,8 +101,15 @@ void Game::On_Engine_Init()
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
 
+
 void Game::On_Engine_Render(float dt)
 {
+	/*int x = (int)body->GetPosition().x ;
+	int y = (int)body->GetPosition().y ;
+	Vec2i tempPos = Vec2i(ENGINE->GetScreenWidth()/2, ENGINE->GetScreenHeight()/2) - Vec2i(x,y);
+
+	cam->setCameraPosition(Vec2i(clampi(tempPos.x, 0, ENGINE->GetScreenWidth()),
+		clampi(tempPos.y, 0, ENGINE->GetScreenHeight())));*/
 	/*if (obj->getPosition().x > obj->getSize().x + this->GetScreenWeight()) {
 		obj->setPositionX(-(obj->getSize().x));
 	}
@@ -114,38 +130,44 @@ void Game::On_Engine_Render(float dt)
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
-	/*if (p_KeyState == SDL_KEYDOWN) {
+	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
-			anim->setPosition(Vec2i(anim->getPosition().x + 10, anim->getPosition().y + 0));
-			anim->Flip(FLIPTYPE::NONE);
-			//text->updateText("HELLO THERE YOU WANT A COFFEE ?");
-			//text->setColor(Color(255, 0, 0, 255));
-			//text->Rotate(45);
-			Console::getConsole()->outputConsole("This is another output !");
+			body->SetLinearVelocity(Vec2f(15.f, 0.f));
+			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
+			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
+			cam->setCameraPosition(Vec2i(x, y));*/
+			cam->moveCamera(Vec2i(5, 0));
 		}
 		else if (p_Key == SDLK_LEFT) {
-			anim->setPosition(Vec2i(anim->getPosition().x - 10, anim->getPosition().y + 0));
-			anim->Flip(FLIPTYPE::HORIZONTAL);
-			//text->updateText("Yes please!");
-			//text->setColor(Color(0, 0, 255, 255));
-			Console::getConsole()->outputConsole("This is another output :D");
+			body->SetLinearVelocity(Vec2f(-15.f, 0.f));
+			/*//cam->moveCamera(Vec2i(-5, 0));
+			int x = (int)body->GetWorldCenter().x - anim->getSize().x;
+			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
+			cam->setCameraPosition(Vec2i(x, y));*/
+			cam->moveCamera(Vec2i(-5, 0));
+		}
+		else if (p_Key == SDLK_UP) {
+			body->SetLinearVelocity(Vec2f(0.f, -15.f));
+			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
+			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
+			cam->setCameraPosition(Vec2i(x, y));
+			LogTerminal(" %d, %d ", x, y);*/
+			cam->moveCamera(Vec2i(0, 5));
+		}else if (p_Key == SDLK_DOWN) {
+			//cam->moveCamera(Vec2i(0, -5));
+			body->SetLinearVelocity(Vec2f(0.f, 15.f));
+			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
+			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
+			cam->setCameraPosition(Vec2i(x, y));
+			LogTerminal(" %d, %d ", x, y);*/
+			cam->moveCamera(Vec2i(0, -5));
 		}
 		else if (p_Key == SDLK_c) {
-			if (!f) {
-				FREE(map);
-				f = true;
-			}
-			//text->updateText("Sure here you go mate!");
-			//text->setColor(Color(0, 255, 0, 255));
-			Console::getConsole()->outputConsole("Maybe the last output :P");
-		}
-	}*/
-	if (p_Key == SDLK_DOLLAR) {
-		if (p_KeyState == SDL_KEYDOWN) {
-			Console::getConsole()->Activate(!Console::getConsole()->IsActive());
+			
 		}
 	}
-/*	if (p_Key == SDLK_a && p_KeyState == SDL_KEYDOWN)
+
+	/*if (p_Key == SDLK_a && p_KeyState == SDL_KEYDOWN)
 	{
 		
 		editBox->ActivateEditing(true);

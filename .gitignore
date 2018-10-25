@@ -57,3 +57,6 @@ Game/bin/x64/SDL/LICENSE.tiff.txt
 Game/bin/x64/SDL/LICENSE.png.txt
 Game/bin/x64/SDL/LICENSE.jpeg.txt
 
+#Packages:
+packages/
+packages.*

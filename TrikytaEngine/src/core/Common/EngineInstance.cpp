@@ -99,6 +99,7 @@ bool EngineInstance::Init()
 	
 	auto rect = SDL_Rect{0,0,(int)m_EngineConfig.WINDOW_WIDTH,(int)m_EngineConfig.WINDOW_HEIGHT};
 	SDL_RenderSetViewport(m_Renderer, &rect);
+	SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 	return true;
 }
 
@@ -132,8 +133,8 @@ void EngineInstance::Render()
 	}
 	On_Engine_Render(dtf);
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
-	Console::getConsole()->Draw(dtf); // draw console
 	UI::Manager::renderElements(dtf); // render Ui Elements
+	Console::getConsole()->Draw(dtf); // draw console
 	SDL_RenderPresent(m_Renderer);
 	LastTick = std::chrono::system_clock::now();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);

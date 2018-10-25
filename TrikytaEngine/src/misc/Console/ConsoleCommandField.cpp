@@ -36,6 +36,7 @@ void ConsoleCommandField::ProcessEventHelper(SDL_Event& e)
 
 void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 {
+	static unsigned int lastTimeStamp = 0; // This is to pervent double SDL_TEXTINPUT Detection in linux systems
 	ConsoleCommandField::ProcessEventHelper(e);
 	if (isFocus()) {
 		if (e.type == SDL_KEYDOWN)
@@ -94,12 +95,13 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				}
 			}
 		}
-		else if (e.type == SDL_TEXTINPUT) { //Special text input event
+		else if (e.type == SDL_TEXTINPUT && lastTimeStamp != e.text.timestamp) { //Special text input event
 			 //Not copy or pasting
 			if (!((e.text.text[0] == 'c' || e.text.text[0] == 'C') && (e.text.text[0] == 'v' || e.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL))
 			{
 				if (e.text.text[0] != '$') {
 					m_Text += e.text.text;
+					lastTimeStamp = e.text.timestamp;
 					updateTextHelper();
 					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
 				}

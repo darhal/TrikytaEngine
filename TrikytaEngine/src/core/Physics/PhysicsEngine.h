@@ -87,7 +87,7 @@ namespace Physics2D {
 		/// Contacts are not created until the next time step.
 		/// @param def the fixture definition.
 		/// @warning This function is locked during callbacks.
-		Fixture* CreateFixture(const FixtureDef* def) { m_Body->CreateFixture(def); }
+		Fixture* CreateFixture(const FixtureDef* def) { return m_Body->CreateFixture(def); }
 
 		/// Creates a fixture from a shape and attach it to this body.
 		/// This is a convenience function. Use b2FixtureDef if you need to set parameters
@@ -96,7 +96,7 @@ namespace Physics2D {
 		/// @param shape the shape to be cloned.
 		/// @param density the shape density (set to zero for static bodies).
 		/// @warning This function is locked during callbacks.
-		Fixture* CreateFixture(const Shape* shape, float32 density) { m_Body->CreateFixture(shape, density); }
+		Fixture* CreateFixture(const Shape* shape, float32 density) { return m_Body->CreateFixture(shape, density); }
 
 		/// Destroy a fixture. This removes the fixture from the broad-phase and
 		/// destroys all contacts associated with this fixture. This will
@@ -146,7 +146,7 @@ namespace Physics2D {
 
 		/// Get the angular velocity.
 		/// @return the angular velocity in radians/second.
-		float32 GetAngularVelocity() const { m_Body->GetAngularVelocity(); };
+		float32 GetAngularVelocity() const { return m_Body->GetAngularVelocity(); };
 
 		/// Apply a force at a world point. If the force is not
 		/// applied at the center of mass, it will generate a torque and
@@ -187,11 +187,11 @@ namespace Physics2D {
 
 		/// Get the total mass of the body.
 		/// @return the mass, usually in kilograms (kg).
-		float32 GetMass() const { m_Body->GetMass(); }
+		float32 GetMass() const { return m_Body->GetMass(); }
 
 		/// Get the rotational inertia of the body about the local origin.
 		/// @return the rotational inertia, usually in kg-m^2.
-		float32 GetInertia() const { m_Body->GetInertia(); }
+		float32 GetInertia() const { return m_Body->GetInertia(); }
 
 		/// Get the mass data of the body.
 		/// @return a struct containing the mass, inertia and center of the body.
@@ -212,12 +212,12 @@ namespace Physics2D {
 		/// Get the world coordinates of a point given the local coordinates.
 		/// @param localPoint a point on the body measured relative the the body's origin.
 		/// @return the same point expressed in world coordinates.
-		Vec2f GetWorldPoint(const Vec2f& localPoint) const { m_Body->GetWorldPoint(localPoint); }
+		Vec2f GetWorldPoint(const Vec2f& localPoint) const { return m_Body->GetWorldPoint(localPoint); }
 
 		/// Get the world coordinates of a vector given the local coordinates.
 		/// @param localVector a vector fixed in the body.
 		/// @return the same vector expressed in world coordinates.
-		Vec2f GetWorldVector(const Vec2f& localVector) const { m_Body->GetWorldVector(localVector); }
+		Vec2f GetWorldVector(const Vec2f& localVector) const { return m_Body->GetWorldVector(localVector); }
 
 		/// Gets a local point relative to the body's origin given a world point.
 		/// @param a point in world coordinates.
@@ -240,7 +240,7 @@ namespace Physics2D {
 		Vec2f GetLinearVelocityFromLocalPoint(const Vec2f& localPoint) const { return m_Body->GetLinearVelocityFromLocalPoint(localPoint); }
 
 		/// Get the linear damping of the body.
-		float32 GetLinearDamping() const { m_Body->GetLinearDamping(); }
+		float32 GetLinearDamping() const { return m_Body->GetLinearDamping(); }
 
 		/// Set the linear damping of the body.
 		void SetLinearDamping(float32 linearDamping) { m_Body->SetLinearDamping(linearDamping); }

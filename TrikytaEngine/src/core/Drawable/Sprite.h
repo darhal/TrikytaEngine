@@ -7,7 +7,6 @@
 class Sprite : public Drawable
 {
 protected:
-
 	Sprite(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position) :
 		Drawable(p_Position, p_Size), m_Filename(p_Filename)
 	{
@@ -39,4 +38,5 @@ public:
 	inline std::string getFileName() const { return m_Filename; }
 protected:
 	std::string m_Filename;
+private:
 };

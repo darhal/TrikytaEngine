@@ -36,8 +36,8 @@ Console::Console() : m_isActive(false)
 {
 	m_StartPos = (int)ENGINE->GetScreenHeight() / 6;
 	m_Output.reserve(MAX_CONSOLE_OUPUT);
-	m_ConsoleBoundries = SDL_Rect{ (int)START_POS_X, 0, (int)(ENGINE->GetScreenWeight() - START_POS_X * 2), m_StartPos };
-	m_ConsoleLineBoundries = SDL_Rect{ (int)START_POS_X-1, -1, (int)(ENGINE->GetScreenWeight() - START_POS_X * 2)+2, m_StartPos+2 };
+	m_ConsoleBoundries = SDL_Rect{ (int)START_POS_X, 0, (int)(ENGINE->GetScreenWidth() - START_POS_X * 2), m_StartPos };
+	m_ConsoleLineBoundries = SDL_Rect{ (int)START_POS_X-1, -1, (int)(ENGINE->GetScreenWidth() - START_POS_X * 2)+2, m_StartPos+2 };
 }
 
 void Console::outputConsole(std::string p_Text, MESSAGE_TYPE p_Type)
@@ -81,7 +81,8 @@ void Console::removeConsoleMessage()
 void Console::Draw(float dt)
 {
 	if (!m_isActive) return;
-	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 185);
+	SDL_SetRenderDrawBlendMode(ENGINE->getRenderer(), SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
 	SDL_RenderFillRect(ENGINE->getRenderer(), &m_ConsoleBoundries);
 	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_ConsoleBoundries);
 	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_ConsoleLineBoundries);

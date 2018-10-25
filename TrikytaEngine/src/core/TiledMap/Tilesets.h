@@ -66,13 +66,14 @@ struct TileData
 	struct SDL_Rect* SourceDraw;
 	struct SDL_Rect* DestDraw;
 	struct SDL_Texture* Tex;
-	bool IsPhy;
 	int GID;
 	bool isAnimated;
 	std::vector<TileData*> m_FramesVec;
 	unsigned int m_CurrentFrame; 
 	float LastDeltaTime;
 	std::vector<Physics2D::PhysicsBody*>* PhyBodys = nullptr;
+	bool IsPhy;
+	Vec2f bodyOffsetPos;
 	void setPosition(Vec2i pos, class TiledMap* p_Map) {
 		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
 		DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;

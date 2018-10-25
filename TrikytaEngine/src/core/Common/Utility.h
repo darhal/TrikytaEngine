@@ -19,5 +19,12 @@ public:
 	static int ToRadian(int x);
 	static int ToDegree(int x);
 
+	template<typename T>
+	static bool IsInBox(Vec2<T> pos, Vec2<T> minPos, Vec2<T> maxPos)
+	{
+		return (pos.x >= minPos.x && pos.y >= minPos.y) && (pos.x <= maxPos.x && pos.y <= maxPos.y);
+	}
+
+
 	static void LogVaradicConsole(MESSAGE_TYPE, const char* format, ...);
 };

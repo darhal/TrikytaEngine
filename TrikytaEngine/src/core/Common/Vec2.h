@@ -14,6 +14,7 @@ inline bool _IsValid(float x)
 template<typename T>
 struct Vec2
 {
+private:
 public:
 	T x;
 	T y;
@@ -103,6 +104,8 @@ public:
 		y /= s;
 		return *this;
 	}
+	/// Set this vector to some specified coordinates.
+	void Set(T x_, T y_) { x = x_; y = y_; }
 
 	inline T getX() const { return this->x; };
 	inline T getY() const { return this->y; };

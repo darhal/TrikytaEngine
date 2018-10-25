@@ -26,7 +26,10 @@ public:
 	virtual void render(float);
 	Tmx::Map* getMap() { return m_Map; }
 	~TiledMap();
+	void setPosition(Vec2i);
+	void translateMap(Vec2i);
 
+	Vec2i getPosition() override;
 	bool isReady;
 protected:
 	TiledMap(Tmx::Map*, std::string&);
@@ -35,6 +38,11 @@ private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
+	SDL_Texture* m_MapTexture;
+	SDL_Rect m_MapDst;
+	SDL_Rect m_MapSrc;
+	Vec2i m_LastPositionTranslated;
+	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData>* m_LayerData;
 private:

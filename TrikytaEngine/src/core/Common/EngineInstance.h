@@ -42,7 +42,7 @@ public:
 
 	inline void setEngineState(bool p_State) { m_EngineState = p_State; }
 
-	const unsigned int GetScreenWeight() const { return m_EngineConfig.WINDOW_WIDTH; }
+	const unsigned int GetScreenWidth() const { return m_EngineConfig.WINDOW_WIDTH; }
 	const unsigned int GetScreenHeight() const { return m_EngineConfig.WINDOW_HEIGHT; }
 
 private:
