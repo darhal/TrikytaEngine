@@ -28,8 +28,9 @@ TiledMap* TiledMap::Create(std::string p_Filename)
 	return new TiledMap(map, p_Filename);
 }
 
-TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath)
+TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath), m_Group(m_Map)
 {
+	
 	TiledMap::init();
 }
 
@@ -96,7 +97,6 @@ bool TiledMap::LoadTilesets()
 		m_MapTilesets->emplace_back(this, i);
 		//Log("[TILEDMAPS] Tilesets ID: %d || Tileset name : %s", i, m_Map->GetTileset(i)->GetName().c_str())
 	}
-	auto groups = ObjectGroup(m_Map);
 	return true;
 }
 
@@ -141,6 +141,9 @@ void TiledMap::LoadLayers()
 				}
 			}
 		}
+	}
+	if (m_Group.getBodies().size() > 0) {
+		m_allMapBodies.insert(m_allMapBodies.end(), m_Group.getBodies().begin(), m_Group.getBodies().end());
 	}
 	isReady = true;
 	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)

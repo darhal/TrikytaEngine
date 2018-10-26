@@ -76,13 +76,14 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 				polyBufferPoints.emplace_back(point.x, point.y);
 			}
 			polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-			auto body2 = Physics2D::PhysicsBody::CreateBody
+			auto body = Physics2D::PhysicsBody::CreateBody
 			(
 				Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::STATIC,
 				Physics2D::BodyShape::POLYGON, Physics2D::BodyParams{ 1.f,0.1f },
 				Vec2f{ (float)p_Object->GetX(), (float)p_Object->GetY() },
 				polyBufferPoints
 			);
+			m_Bodies.emplace_back(body);
 		}
 		/// Process Polylines!
 		const Tmx::Polyline *polyline = p_Object->GetPolyline();
@@ -96,27 +97,29 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 				polyBufferPoints.emplace_back(point.x, point.y);
 			}
 			polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
-			auto body2 = Physics2D::PhysicsBody::CreateBody
+			auto body = Physics2D::PhysicsBody::CreateBody
 			(
 				Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::STATIC,
 				Physics2D::BodyShape::POLYGON, Physics2D::BodyParams{ 1.f,0.1f },
 				Vec2f{ (float)p_Object->GetX(), (float)p_Object->GetY() },
 				polyBufferPoints
 			);
+			m_Bodies.emplace_back(body);
 		}
 	}else {
 		///PROCESS CIRCLES AND BOXES
-		auto body2 = Physics2D::PhysicsBody::CreateBody
+		auto body = Physics2D::PhysicsBody::CreateBody
 		(
 			Physics2D::PhysicsEngine::GetPhysicsWorld(), Physics2D::BodyType::STATIC,
 			Physics2D::BodyShape::BOX, Physics2D::BodyParams{ 1.f,0.1f },
 			Vec2f{ (float)p_Object->GetX() + p_Object->GetWidth() / PTM, (float)p_Object->GetY() + p_Object->GetHeight() / PTM },
 			std::vector<Vec2f>{Vec2f(p_Object->GetWidth() / PTM, p_Object->GetHeight() / PTM)}
 		);
+		m_Bodies.emplace_back(body);
 	}
 }
 
 ObjectGroup::~ObjectGroup()
 {
-
+	//TODO: should this free the bodies here ?
 }

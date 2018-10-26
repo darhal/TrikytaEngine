@@ -2,6 +2,7 @@
 #include <map>
 #include <core/Objects/Object.h>
 #include "core/Common/defines.h"
+#include "core/TiledMap/ObjectGroup.h"
 
 namespace Tmx {
 	class Map;
@@ -43,6 +44,7 @@ private:
 	SDL_Rect m_MapSrc;
 	Vec2i m_LastPositionTranslated;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
+	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData>* m_LayerData;
 private:

@@ -13,13 +13,6 @@ Camera* Camera::CreateCamera()
 Camera::Camera():m_CamPos(0,0), m_CamSize(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight())
 {
 	using namespace Physics2D;
-	/*m_CameraBody = PhysicsBody::CreateBody
-	(
-		PhysicsEngine::GetPhysicsWorld(), BodyType::STATIC,
-		BodyShape::BOX, BodyParams{ 1, 1, 0.f, true },
-		Vec2f{ (float)m_CamPos.x, (float)m_CamPos.y},
-		std::vector<Vec2f>{Vec2f((float)m_CamSize.x-50, (float)m_CamSize.y-50)}
-	);*/
 }
 
 void Camera::FollowObject()
@@ -58,3 +51,12 @@ void Camera::setCameraPosition(Vec2i p_Pos)
 	}
 	//m_CameraBody->SetTransform(Vec2f((float)m_CamPos.x, (float)m_CamPos.y), 0.f);
 }
+
+/*	m_CameraBody = PhysicsBody::CreateBody
+	(
+		PhysicsEngine::GetPhysicsWorld(), BodyType::STATIC,
+		BodyShape::BOX, BodyParams{ 1, 1, 0.f, true },
+		Vec2f{ (float)m_CamPos.x, (float)m_CamPos.y},
+		std::vector<Vec2f>{Vec2f((float)m_CamSize.x-50, (float)m_CamSize.y-50)}
+	);
+*/
