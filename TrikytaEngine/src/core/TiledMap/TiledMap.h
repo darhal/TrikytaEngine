@@ -31,6 +31,7 @@ public:
 	void translateMap(Vec2i);
 
 	Vec2i getPosition() override;
+	inline Vec2i getSize() { return Vec2i(m_MapDst.w, m_MapDst.h); }
 	bool isReady;
 protected:
 	TiledMap(Tmx::Map*, std::string&);
@@ -42,7 +43,6 @@ private:
 	SDL_Texture* m_MapTexture;
 	SDL_Rect m_MapDst;
 	SDL_Rect m_MapSrc;
-	Vec2i m_LastPositionTranslated;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!

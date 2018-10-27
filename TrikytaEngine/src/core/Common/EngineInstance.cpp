@@ -97,8 +97,6 @@ bool EngineInstance::Init()
 	LogInfoConsole("Engine is active and rendering!");
 	m_EngineState = true;
 	
-	auto rect = SDL_Rect{0,0,(int)m_EngineConfig.WINDOW_WIDTH,(int)m_EngineConfig.WINDOW_HEIGHT};
-	SDL_RenderSetViewport(m_Renderer, &rect);
 	SDL_SetRenderDrawBlendMode(m_Renderer, SDL_BLENDMODE_BLEND);
 	return true;
 }
@@ -117,7 +115,7 @@ void EngineInstance::EngineLogic()
 		EventManager::GetEventManager()->HandleSDLEvents(Event, this);
 		Render();
 		TimerManager::Update();
-		SDL_Delay(m_EngineConfig.ACCELERATION_RATE); // 1ms
+		SDL_Delay(m_EngineConfig.ACCELERATION_RATE);
 	}
 }
 

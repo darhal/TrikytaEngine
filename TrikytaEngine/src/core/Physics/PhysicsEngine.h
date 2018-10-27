@@ -19,9 +19,23 @@ namespace Physics2D {
 
 	enum class BodyType {STATIC, DYNAMIC, KINEMATIC};
 	enum class BodyShape {BOX, CIRCLE, POLYGON, CHAIN, EDGE};
+
 	// Struct contain Physics Propreties {float mass,float friction,float restitution, bool isSensor}
-	struct BodyParams { float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool isSensor = false; };
-	struct PhysicsEngineParams { Vec2f gravity{ 0, 10.f }; float timeStep = 1 / 60.f; int velocityIterations = 8; int positionIterations = 3; bool debugDraw = true; };
+	struct BodyParams 
+	{ 
+		BodyParams(float pmass = 1.0, float pfriction = 1.0, float prestitution = 0.0f, bool pisSensor = false)
+			: mass(pmass), friction(pmass), restitution(prestitution), isSensor(pisSensor)
+		{}
+		float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool isSensor = false; 
+	};
+
+	struct PhysicsEngineParams 
+	{ 
+		PhysicsEngineParams(Vec2f pgravity={ 0, 10.f }, float ptimeStep = 1 / 60.f, int pvelocityIterations = 8, int ppositionIterations = 3, bool pdebugDraw = true)
+			: gravity(pgravity), timeStep(ptimeStep), velocityIterations(pvelocityIterations), positionIterations(ppositionIterations), debugDraw(pdebugDraw)
+		{}
+		Vec2f gravity{ 0, 10.f }; float timeStep = 1 / 60.f; int velocityIterations = 8; int positionIterations = 3; bool debugDraw = true; 
+	};
 
 	class PhysicsWorld;
 

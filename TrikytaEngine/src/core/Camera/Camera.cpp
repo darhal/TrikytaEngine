@@ -12,7 +12,7 @@ Camera* Camera::CreateCamera()
 
 Camera::Camera():m_CamPos(0,0), m_CamSize(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight())
 {
-	using namespace Physics2D;
+	//m_rect = SDL_Rect{ 0,0,(int)ENGINE->GetScreenWidth(),(int)ENGINE->GetScreenHeight() };
 }
 
 void Camera::FollowObject()
@@ -32,14 +32,15 @@ Camera::~Camera()
 
 void Camera::moveCamera(Vec2i p_Offset)
 {
-	//Camera::setCameraPosition(p_Offset);
+	/*m_rect.x += p_Offset.x;
+	m_rect.y += p_Offset.y;
+	SDL_RenderSetViewport(ENGINE->getRenderer(), &m_rect);*/
 	m_CamPos += p_Offset;
 	for (auto& obj : m_CameraAttachedObjects)
 	{
 		p_Offset.x = -p_Offset.x;
 		obj->translateMap(p_Offset);
 	}
-	//m_CameraBody->SetTransform(Vec2f((float)m_CamPos.x, (float)m_CamPos.y), 0.f);
 }
 
 void Camera::setCameraPosition(Vec2i p_Pos)

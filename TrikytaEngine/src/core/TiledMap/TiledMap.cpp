@@ -52,10 +52,8 @@ bool TiledMap::init()
 	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
 	auto gRenderer = ENGINE->getRenderer();
 	m_MapDst = { 0, 0, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight() };
-	m_MapSrc = { m_Position.x, m_Position.y, int(1024 * 1.6), int(768 * 1.2)}; //TODO: fix these hardcoded values!
-	m_LastPositionTranslated = Vec2i(0, 0);
+	m_MapSrc = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()}; //TODO: fix these hardcoded values!
 	m_MapTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
-	//SDL_QueryTexture(m_MapTexture, NULL, NULL, &m_MapDst.w, &m_MapDst.h);
 	TiledMap::LoadLayers();
 	return true;
 }
@@ -133,9 +131,9 @@ void TiledMap::LoadLayers()
 								itr->m_ObjectCoord
 							);
 							tileData->PhyBodys->push_back(tileBody);
-							m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
 							tileData->bodyOffsetPos = itr->m_ObjectPos;
 						}
+						m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
 					}
 					m_LayerData->emplace_back(LayerIndex, tileData);
 				}
@@ -143,7 +141,11 @@ void TiledMap::LoadLayers()
 		}
 	}
 	if (m_Group.getBodies().size() > 0) {
-		m_allMapBodies.insert(m_allMapBodies.end(), m_Group.getBodies().begin(), m_Group.getBodies().end());
+		if (m_allMapBodies.size() > 0) {
+			m_allMapBodies.insert(m_allMapBodies.end(), m_Group.getBodies().begin(), m_Group.getBodies().end());
+		}else {
+			m_allMapBodies = m_Group.getBodies();
+		}
 	}
 	isReady = true;
 	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)
@@ -151,22 +153,20 @@ void TiledMap::LoadLayers()
 
 void TiledMap::setPosition(Vec2i pos)
 {
+	static Vec2i LastPositionTranslated = Vec2i(0, 0);
 	if (Utility::IsInBox(Vec2i(pos.x, pos.y), Vec2i(0,0), Vec2i(m_MapDst.w, m_MapDst.h))) {
 		m_Position = pos;
 		m_MapSrc.x = pos.x;
 		m_MapSrc.y = pos.y;
 		for (auto& phyObj : m_allMapBodies) {
-			//auto current_rect = itr.tiledLayerData->DestDraw;
-			//itr.tiledLayerData->DestDraw->x = current_rect->x+pos.x;
-			//itr.tiledLayerData->DestDraw->y = current_rect->y+pos.y;
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
 			(
-				Vec2f(old_transform.x-float(pos.x-m_LastPositionTranslated.x), old_transform.y-float(pos.y - m_LastPositionTranslated.y))
+				Vec2f(old_transform.x-float(pos.x- LastPositionTranslated.x), old_transform.y-float(pos.y - LastPositionTranslated.y))
 				,0.f
 			);
 		}
-		m_LastPositionTranslated = pos;
+		LastPositionTranslated = pos;
 	}
 }
 
@@ -176,18 +176,13 @@ void TiledMap::translateMap(Vec2i pos)
 		m_Position += pos;
 		m_MapSrc.x -= pos.x;
 		m_MapSrc.y -= pos.y;
-		for (auto& itr : *m_LayerData) {
+		for (auto& phyObj : m_allMapBodies) {
 			//auto current_rect = itr.tiledLayerData->DestDraw;
 			//itr.tiledLayerData->DestDraw->x = current_rect->x+pos.x;
 			//itr.tiledLayerData->DestDraw->y = current_rect->y+pos.y;
-			if (itr.tiledLayerData->IsPhy) { //TODO: causes no physical behaviour!
-				for (auto& phyObj : *(itr.tiledLayerData->PhyBodys)) {
-					Vec2f old_transform = phyObj->GetTransform().p;
-					phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
-				}
-			}
+			Vec2f old_transform = phyObj->GetTransform().p;
+			phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
 		}
-		//m_LastPositionTranslated = pos;
 	}
 }
 

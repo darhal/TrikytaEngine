@@ -18,11 +18,14 @@ public:
 	void moveCamera(Vec2i);
 	Camera();
 	~Camera();
+
+	inline Vec2i getCameraPosition() { return m_CamPos; }
+	inline Vec2i getCameraSize() { return m_CamSize; }
 private:
 	Vec2i m_CamPos;
 	Vec2i m_CamSize;
 	std::vector<class TiledMap*> m_CameraAttachedObjects;
-	//Physics2D::PhysicsBody* m_CameraBody;
+	//SDL_Rect m_rect;
 };
 
 

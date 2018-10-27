@@ -25,7 +25,7 @@ void Game::On_Engine_Pre_Init()
 void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
-	map = TiledMap::Create("assets/example/maps/map2.tmx");//"assets/example/maps/map.tmx");
+	map = TiledMap::Create("assets/example/maps/map3.tmx");//"assets/example/maps/map.tmx");
 	cam->addObjectToCamera(map);
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2, ENGINE->GetScreenHeight() / 2), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{1.f, 0.2f}, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
@@ -105,9 +105,32 @@ void Game::On_Engine_Init()
 void Game::On_Engine_Render(float dt)
 {
 	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
-	Vec2i tempPos = Vec2i(ENGINE->GetScreenWidth() / 2, ENGINE->GetScreenHeight() / 2) - pos;
+	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
+	pos = anim->getPosition();
+	Vec2i tempPos = pos - cam->getCameraPosition();*/
 
-	cam->setCameraPosition(Vec2i(-tempPos.x,-tempPos.y));*/
+	//Center the camera over the dot
+	/*auto camera = Vec2i((anim->getPosition().x + anim->getSize().x / 2) - ENGINE->GetScreenWidth() / 2, (anim->getPosition().y + anim->getSize().y / 2) - ENGINE->GetScreenHeight() / 2);
+	//Keep the camera in bounds
+	if (camera.x < 0)
+	{
+		camera.x = 0;
+	}
+	if (camera.y < 0)
+	{
+		camera.y = 0;
+	}
+	if (camera.x > map->getSize().x - cam->getCameraSize().x)
+	{
+		camera.x = map->getSize().x - cam->getCameraSize().x;
+	}
+	if (camera.y > map->getSize().y - cam->getCameraSize().y)
+	{
+		camera.y = map->getSize().y - cam->getCameraSize().y;
+	}
+	anim->setPosition(camera);
+	cam->setCameraPosition(camera);*/
+
 	/*if (obj->getPosition().x > obj->getSize().x + this->GetScreenWeight()) {
 		obj->setPositionX(-(obj->getSize().x));
 	}
@@ -133,7 +156,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));*/
-			cam->moveCamera(Vec2i(5, 0));
+			cam->moveCamera(Vec2i(10, 0));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_LEFT) {
@@ -142,7 +165,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));*/
-			cam->moveCamera(Vec2i(-5, 0));
+			cam->moveCamera(Vec2i(-10, 0));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_UP) {
@@ -151,7 +174,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));
 			LogTerminal(" %d, %d ", x, y);*/
-			cam->moveCamera(Vec2i(0, 5));
+			cam->moveCamera(Vec2i(0, 10));
 			//body->SetAwake(true);
 		}else if (p_Key == SDLK_DOWN) {
 			//cam->moveCamera(Vec2i(0, -5));
@@ -160,7 +183,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));
 			LogTerminal(" %d, %d ", x, y);*/
-			cam->moveCamera(Vec2i(0, -5));
+			cam->moveCamera(Vec2i(0, -10));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_c) {
