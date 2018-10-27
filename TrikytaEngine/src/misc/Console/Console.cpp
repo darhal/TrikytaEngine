@@ -92,6 +92,7 @@ void Console::Draw(float dt)
 	for (auto msg : m_Output) {
 		msg->renderConsoleText();
 	}
+	SDL_SetRenderDrawBlendMode(ENGINE->getRenderer(), SDL_BLENDMODE_NONE);
 }
 
 void Console::Activate(bool p_isActive)

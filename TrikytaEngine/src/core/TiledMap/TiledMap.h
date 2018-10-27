@@ -25,6 +25,7 @@ public:
 
 	bool init();
 	virtual void render(float);
+	void renderAnimations(float);
 	Tmx::Map* getMap() { return m_Map; }
 	~TiledMap();
 	void setPosition(Vec2i);
@@ -44,12 +45,14 @@ private:
 	SDL_Rect m_MapDst;
 	SDL_Rect m_MapSrc;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
+	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData>* m_LayerData;
 private:
 	bool LoadTilesets();
 	void LoadLayers();
+	void LoadMapIntoTexture();
 	friend class Tilesets;
 	friend class ObjectGroup;
 	friend struct TileData;

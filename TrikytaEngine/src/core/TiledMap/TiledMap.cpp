@@ -58,30 +58,31 @@ bool TiledMap::init()
 	return true;
 }
 
+void TiledMap::renderAnimations(float dt)
+{
+	auto r = ENGINE->getRenderer();
+	for (auto& itr : m_cachedAnimatiedTiles) {
+		itr->tiledLayerData->LastDeltaTime = itr->tiledLayerData->LastDeltaTime + dt;
+		if (itr->tiledLayerData->LastDeltaTime > 0.1f) {
+			itr->tiledLayerData->m_CurrentFrame++;
+			if (itr->tiledLayerData->m_CurrentFrame >= itr->tiledLayerData->m_FramesVec.size()) {
+				itr->tiledLayerData->m_CurrentFrame = 0;
+			}
+			itr->tiledLayerData->LastDeltaTime = 0;
+		}
+		SDL_RenderCopy(r, itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->Tex,
+			itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->SourceDraw, itr->tiledLayerData->DestDraw);
+	}
+}
+
 void TiledMap::render(float dt) 
 {
 	if (!isReady) { return; }
 	auto r = ENGINE->getRenderer();
-	SDL_SetRenderTarget(r, m_MapTexture);
-	for (auto& itr : *m_LayerData) {
-		if (itr.tiledLayerData->isAnimated) {
-			itr.tiledLayerData->LastDeltaTime = itr.tiledLayerData->LastDeltaTime + dt; 
-			if (itr.tiledLayerData->LastDeltaTime > 0.1f) {
-				itr.tiledLayerData->m_CurrentFrame++;
-				if (itr.tiledLayerData->m_CurrentFrame >= itr.tiledLayerData->m_FramesVec.size()) {
-					itr.tiledLayerData->m_CurrentFrame = 0;
-				}
-				itr.tiledLayerData->LastDeltaTime = 0;
-			}
-			SDL_RenderCopy(r, itr.tiledLayerData->m_FramesVec.at(itr.tiledLayerData->m_CurrentFrame)->Tex, 
-				itr.tiledLayerData->m_FramesVec.at(itr.tiledLayerData->m_CurrentFrame)->SourceDraw, itr.tiledLayerData->DestDraw);
-		}else{
-			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
-		}
-	}
-	SDL_SetRenderTarget(r, NULL);
+	renderAnimations(dt);
 	SDL_SetTextureBlendMode(m_MapTexture, SDL_BLENDMODE_BLEND);
 	SDL_RenderCopy(r, m_MapTexture, &m_MapSrc, NULL);
+	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 	//LogTerminal("Draw coord (x=%d, y=%d, w=%d, h=%d) // Dest Coord (%d, %d)", m_MapSrc.x, m_MapSrc.y, m_MapSrc.w, m_MapSrc.h, m_MapDst.w, m_MapDst.h);
 }
 
@@ -93,7 +94,6 @@ bool TiledMap::LoadTilesets()
 	for (int i = 0; i < m_Map->GetNumTilesets(); ++i)
 	{
 		m_MapTilesets->emplace_back(this, i);
-		//Log("[TILEDMAPS] Tilesets ID: %d || Tileset name : %s", i, m_Map->GetTileset(i)->GetName().c_str())
 	}
 	return true;
 }
@@ -102,8 +102,6 @@ void TiledMap::LoadLayers()
 {
 	int ind = 0;
 	m_LayerData = new std::vector<LayerData>; 
-	//std::map<int, std::vector<std::pair<int, unsigned int>>*> cachedLayerData;
-	//std::map<int, TileData*> mapLayerData;
 	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex) {
 		const Tmx::TileLayer* tileLayer = m_Map->GetTileLayer(LayerIndex);
 		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight());
@@ -148,7 +146,23 @@ void TiledMap::LoadLayers()
 		}
 	}
 	isReady = true;
+	LoadMapIntoTexture();
 	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)
+}
+
+void TiledMap::LoadMapIntoTexture()
+{
+	auto r = ENGINE->getRenderer();
+	SDL_SetRenderTarget(r, m_MapTexture);
+	for (auto& itr : *m_LayerData) {
+		if (itr.tiledLayerData->isAnimated) {
+			m_cachedAnimatiedTiles.emplace_back(&itr);
+		}
+		else {
+			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+		}
+	}
+	SDL_SetRenderTarget(r, NULL);
 }
 
 void TiledMap::setPosition(Vec2i pos)
@@ -158,6 +172,11 @@ void TiledMap::setPosition(Vec2i pos)
 		m_Position = pos;
 		m_MapSrc.x = pos.x;
 		m_MapSrc.y = pos.y;
+		for (auto& itr : m_cachedAnimatiedTiles) {
+			auto current_rect = itr->tiledLayerData->DestDraw;
+			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x - LastPositionTranslated.x;
+			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y - LastPositionTranslated.y;
+		}
 		for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
@@ -176,10 +195,12 @@ void TiledMap::translateMap(Vec2i pos)
 		m_Position += pos;
 		m_MapSrc.x -= pos.x;
 		m_MapSrc.y -= pos.y;
+		for (auto& itr : m_cachedAnimatiedTiles) {
+			auto current_rect = itr->tiledLayerData->DestDraw;
+			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x;
+			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y;
+		}
 		for (auto& phyObj : m_allMapBodies) {
-			//auto current_rect = itr.tiledLayerData->DestDraw;
-			//itr.tiledLayerData->DestDraw->x = current_rect->x+pos.x;
-			//itr.tiledLayerData->DestDraw->y = current_rect->y+pos.y;
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
 		}

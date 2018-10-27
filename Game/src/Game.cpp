@@ -104,6 +104,8 @@ void Game::On_Engine_Init()
 
 void Game::On_Engine_Render(float dt)
 {
+	// Offset the player quad by the camera position 
+	Vec2i PlayerDrawPos = (anim->getPosition() - cam->getCameraPosition());
 	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
 	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
 	pos = anim->getPosition();
