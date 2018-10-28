@@ -18,7 +18,6 @@ b2GLDraw::~b2GLDraw()
 
 void b2GLDraw::DrawPolygon(const b2Vec2 *vertices, int32 vertexCount, const b2Color &color)
 {
-	//Log("Corners : ");
 	auto renderer = ENGINE->getRenderer();
 	for (int i = 0; i < vertexCount - 1; i++)
 	{

@@ -30,7 +30,7 @@ public:
 	~TiledMap();
 	void setPosition(Vec2i);
 	void translateMap(Vec2i);
-
+	void setCamera(/*class Camera**/);
 	Vec2i getPosition() override;
 	inline Vec2i getSize() { return Vec2i(m_MapDst.w, m_MapDst.h); }
 	bool isReady;

@@ -26,7 +26,7 @@ void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map3.tmx");//"assets/example/maps/map.tmx");
-	//cam->addObjectToCamera(map);
+	cam->addObjectToCamera(map);
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2 - ENGINE->GetScreenWidth() / 3, ENGINE->GetScreenHeight() / 2), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{1.f, 0.2f}, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	body->SetAngularDamping(1000.f);

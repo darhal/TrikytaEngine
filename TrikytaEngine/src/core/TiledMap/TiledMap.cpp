@@ -7,6 +7,7 @@
 #include "ObjectGroup.h"
 #include <SDL/SDL.h>
 #include "core/Physics/PhysicsEngine.h"
+#include "core/Camera/Camera.h"
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
@@ -162,6 +163,7 @@ void TiledMap::LoadMapIntoTexture()
 			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
 		}
 	}
+	setCamera();
 	SDL_SetRenderTarget(r, NULL);
 }
 
@@ -177,15 +179,47 @@ void TiledMap::setPosition(Vec2i pos)
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
 			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
 		}
-		for (auto& phyObj : m_allMapBodies) {
+		/*for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
 			(
 				Vec2f(old_transform.x-float(pos.x - LastPositionTranslated.x), old_transform.y-float(pos.y - LastPositionTranslated.y))
 				,0.f
 			);
-		}
+		}*/
 		LastPositionTranslated = pos;
+	}
+}
+
+void TiledMap::setCamera(/*Camera* cam*/)
+{
+	auto r = ENGINE->getRenderer();
+	for (auto& phyObj : m_allMapBodies) {
+		const b2Transform& xf = phyObj->GetTransform();
+		for (b2Fixture* f = phyObj->GetFixtureList(); f; f = f->GetNext())
+		{
+			b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
+			int32 vertexCount = poly->m_count;
+			b2Assert(vertexCount <= b2_maxPolygonVertices);
+			b2Vec2 vertices[b2_maxPolygonVertices];
+
+			for (int32 i = 0; i < vertexCount; ++i)
+			{
+				vertices[i] = b2Mul(xf, poly->m_vertices[i]);
+			}
+			for (int i = 0; i < vertexCount - 1; i++)
+			{
+				auto vec1 = b2Vec2(vertices[i].x, vertices[i].y);
+				auto vec2 = b2Vec2(vertices[i + 1].x, vertices[i + 1].y);
+				lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y, 0, 0, 0, 125);
+			}
+			int i = vertexCount - 1;
+			auto vec1 = b2Vec2(vertices[i].x, vertices[i].y);
+			auto vec2 = b2Vec2(vertices[0].x, vertices[0].y);
+			lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y, 0, 0, 0, 125);
+
+			SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0xFF);
+		}
 	}
 }
 
@@ -200,10 +234,10 @@ void TiledMap::translateMap(Vec2i pos)
 			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x;
 			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y;
 		}
-		for (auto& phyObj : m_allMapBodies) {
+		/*for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
-		}
+		}*/
 	}
 }
 
