@@ -174,14 +174,14 @@ void TiledMap::setPosition(Vec2i pos)
 		m_MapSrc.y = pos.y;
 		for (auto& itr : m_cachedAnimatiedTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
-			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x - LastPositionTranslated.x;
-			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y - LastPositionTranslated.y;
+			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
+			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
 		}
 		for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
 			(
-				Vec2f(old_transform.x-float(pos.x- LastPositionTranslated.x), old_transform.y-float(pos.y - LastPositionTranslated.y))
+				Vec2f(old_transform.x-float(pos.x - LastPositionTranslated.x), old_transform.y-float(pos.y - LastPositionTranslated.y))
 				,0.f
 			);
 		}

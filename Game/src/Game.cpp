@@ -26,8 +26,8 @@ void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map3.tmx");//"assets/example/maps/map.tmx");
-	cam->addObjectToCamera(map);
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2, ENGINE->GetScreenHeight() / 2), 0.03f);
+	//cam->addObjectToCamera(map);
+	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2 - ENGINE->GetScreenWidth() / 3, ENGINE->GetScreenHeight() / 2), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{1.f, 0.2f}, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	body->SetAngularDamping(1000.f);
 	//editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
@@ -105,7 +105,8 @@ void Game::On_Engine_Init()
 void Game::On_Engine_Render(float dt)
 {
 	// Offset the player quad by the camera position 
-	Vec2i PlayerDrawPos = (anim->getPosition() - cam->getCameraPosition());
+	//Vec2i PlayerDrawPos = (anim->getPosition() - cam->getCameraPosition());
+	//cam->setCameraPosition(anim->getPosition());
 	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
 	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
 	pos = anim->getPosition();

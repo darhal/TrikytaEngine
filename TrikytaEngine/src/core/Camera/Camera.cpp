@@ -20,20 +20,20 @@ void Camera::FollowObject()
 
 }
 
+Camera::~Camera()
+{
+}
+
 void Camera::addObjectToCamera(TiledMap* map)
 {
 	m_CameraAttachedObjects.emplace_back(map);
 }
 
-Camera::~Camera()
-{
-}
-
 
 void Camera::moveCamera(Vec2i p_Offset)
 {
-	/*m_rect.x += p_Offset.x;
-	m_rect.y += p_Offset.y;
+	/*m_rect.x -= p_Offset.x;
+	m_rect.y -= p_Offset.y;
 	SDL_RenderSetViewport(ENGINE->getRenderer(), &m_rect);*/
 	m_CamPos += p_Offset;
 	for (auto& obj : m_CameraAttachedObjects)
