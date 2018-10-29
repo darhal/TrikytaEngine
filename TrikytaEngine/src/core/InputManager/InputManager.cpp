@@ -50,6 +50,11 @@ void InputManager::DrawCursor(float dt)
 	}
 }
 
+bool InputManager::isActive()
+{
+	return activeCount;
+}
+
 void InputManager::setCurosrPosition(const Vec2i& pos,const Vec2i& size)
 {
 	mCursorDim = SDL_Rect{pos.x + size.x, pos.y + 2, 1, size.y - 3};

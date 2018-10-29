@@ -54,7 +54,6 @@ void Manager::renderElements(float dt)
 void Manager::removeElement(Base* p_UiObj, bool isRenderable)
 {
 	if (isRenderable) {
-		
 		Manager::getUIRenderableContainer().remove(p_UiObj);
 	}
 	else {

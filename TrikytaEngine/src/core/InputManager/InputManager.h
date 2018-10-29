@@ -10,6 +10,7 @@ public:
 
 	void ActivateInput(bool);
 	void DrawCursor(float);
+	bool isActive();
 	void setCurosrPosition(const Vec2i&, const Vec2i&);
 private:
 	InputManager():

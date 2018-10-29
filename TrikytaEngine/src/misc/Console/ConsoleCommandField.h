@@ -16,7 +16,6 @@ struct CommandData
 class ConsoleCommandField : public UI::EditBoxBase, public ConsoleText
 {
 public:
-	
 	static ConsoleCommandField* createConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
 	{
 		return new ConsoleCommandField(p_Text, p_Pos, p_Color);
