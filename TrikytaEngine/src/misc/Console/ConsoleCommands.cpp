@@ -3,6 +3,7 @@
 #include "ConsoleCommands.h"
 #include "Console.h"
 #include "core/Physics/PhysicsEngine.h"
+#include <numeric>
 
 void ConsoleCommands::initCommands()
 {
@@ -17,7 +18,7 @@ void ConsoleCommands::initCommands()
 			}
 		},
 		{
-			"physics_debug", // adding a command restart!
+			"physics_debug",
 			[](const std::vector<std::string>& args)
 			{
 				if (args.size() == 0) return;
@@ -30,7 +31,18 @@ void ConsoleCommands::initCommands()
 				}
 			}
 		},
-		
+		{
+			"run",
+			[](const std::vector<std::string>& args)
+			{
+				if (args.size() == 0) return;
+				std::string code;
+				//code = std::accumulate(args.begin(), args.end(), code);
+				for (auto const& s : args) { code += s + " "; }
+				LogConsole(LogInfo, "Running Code...");
+				LuaEngine::LStateManager::GetLStateManager()->LoadCode(code);
+			}
+		},
 	};
 
 	for (auto& itr : m_ArgFunc) {

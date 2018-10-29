@@ -31,12 +31,12 @@ void Game::On_Engine_Init()
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
 	body->SetAngularDamping(1000.f);
-	auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
+	/*auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
 	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });
 	auto editBox2 = UI::EditBox::createEditBox("ENTER 2", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()+250), Color{ 255,255,255, 255 });
-	editBox2->getText()->setBackgroundColor(Color{ 0,0,0,255 });
+	editBox2->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
 
 	//for (int i = 0; i < 100; i++) {
 	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
@@ -109,8 +109,21 @@ void Game::On_Engine_Init()
 void Game::On_Engine_Render(float dt)
 {
 	// Offset the player quad by the camera position 
+	bool b = true;
 	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
-	cam->setCameraPosition(pos);
+	/*if (!(pos.x >= 0 && pos.x <= map->getSize().x)) {
+		//anim->setAffectedByCamera(false);
+		anim->updateRenderPositionFromCamera(Vec2i(cam->getCameraPosition().x / 2, 0));
+		b = false;
+	}
+	if (!(pos.y >= 0 && pos.y <= map->getSize().y)) {
+		//anim->setAffectedByCamera(false);
+		anim->updateRenderPositionFromCamera(Vec2i(0, cam->getCameraPosition().y / 2));
+		b = false;
+	} */
+	if (b)
+		cam->setCameraPosition(pos);
+
 	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
 	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
 	pos = anim->getPosition();
@@ -159,7 +172,8 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
 	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
-			body->SetLinearVelocity(Vec2f(35.f, body->GetLinearVelocity().y));
+			body->SetLinearVelocity(Vec2f(50.f, body->GetLinearVelocity().y));
+			anim->Flip(FLIPTYPE::NONE);
 			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));*/
@@ -167,7 +181,8 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_LEFT) {
-			body->SetLinearVelocity(Vec2f(-35.f, body->GetLinearVelocity().y));
+			body->SetLinearVelocity(Vec2f(-50.f, body->GetLinearVelocity().y));
+			anim->Flip(FLIPTYPE::HORIZONTAL);
 			/*//cam->moveCamera(Vec2i(-5, 0));
 			int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
@@ -197,16 +212,6 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			
 		}
 	}
-
-	/*if (p_Key == SDLK_a && p_KeyState == SDL_KEYDOWN)
-	{
-		
-		editBox->ActivateEditing(true);
-	}
-	if (p_Key == SDLK_z && p_KeyState == SDL_KEYDOWN)
-	{
-		editBox->ActivateEditing(false);
-	}*/
 };
 
 void Game::On_Engine_Quit() 

@@ -37,7 +37,6 @@ public:
 	}
 
 	Vec2i getPosition() override;
-	bool isReady;
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:
@@ -48,7 +47,7 @@ private:
 	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
-	std::vector<LayerData>* m_LayerData;
+	std::vector<LayerData> m_LayerData;
 private:
 	bool LoadTilesets();
 	void LoadLayers();

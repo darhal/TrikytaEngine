@@ -17,7 +17,8 @@ namespace LuaEngine {
 		::ENGINE_CONFIG LLoadConfig(::lua_State* L);
 		std::shared_ptr<std::vector<std::string>> LoadScriptList();
 		void LoadingTrikytaEnv();
-		void RestertScript(std::string);
+		void RestertScript(const std::string&);
+		void LoadCode(const std::string&);
 	private:
 		LStateManager();
 		static LStateManager* _Lua_Engine;

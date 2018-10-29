@@ -164,7 +164,7 @@ void LStateManager::LoadScripts()
 	
 }
 
-void LStateManager::RestertScript(std::string p_ScriptName)
+void LStateManager::RestertScript(const std::string& p_ScriptName)
 {
 	int status = luaL_loadfile(_LUA_STATE_, (SCRIPTS_PATH + p_ScriptName).c_str());
 	LogConsole(MESSAGE_TYPE::INFO, "Compiling script : %s", p_ScriptName.c_str())
@@ -173,6 +173,15 @@ void LStateManager::RestertScript(std::string p_ScriptName)
 		return;
 	}
 	LogConsole(MESSAGE_TYPE::INFO, "%s restarted successfully", p_ScriptName.c_str())
+}
+
+void LStateManager::LoadCode(const std::string& p_Code)
+{
+	if ((luaL_loadstring(_LUA_STATE_, p_Code.c_str()) || lua_pcall(_LUA_STATE_, 0, LUA_MULTRET, 0))) {
+		LogConsole(MESSAGE_TYPE::ERROR, "Running code failed: %s", lua_tostring(_LUA_STATE_, -1));
+		return;
+	}
+	LogConsole(MESSAGE_TYPE::INFO, "Code successfully executed!");
 }
 
 void LStateManager::LoadingTrikytaEnv()

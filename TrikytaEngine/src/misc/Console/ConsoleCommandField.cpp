@@ -65,7 +65,9 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				m_Text = ">" + m_Text;
 			}
 			else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) { //Handle paste
-				m_Text = ">"+std::string(SDL_GetClipboardText());
+				auto cachedText = m_Text;
+				cachedText.erase(cachedText.begin());
+				m_Text = ">"+ cachedText +std::string(SDL_GetClipboardText());
 				updateTextHelper();
 				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
 			}else if (e.key.keysym.sym == SDLK_UP) { //Handle paste

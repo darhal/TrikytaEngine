@@ -9,6 +9,7 @@
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Camera/Camera.h"
 
+bool CameraUpdate = false;
 //TODO: correct the debug drawing that it stuck at one thing!
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
@@ -39,17 +40,15 @@ TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_
 
 TiledMap::~TiledMap()
 {
-	for (auto& itr : *m_LayerData) {
+	for (auto& itr : m_LayerData) {
 		FREE(itr.tiledLayerData);
 	}
-	FREE(m_LayerData);
 	FREE(m_MapTilesets);
 	FREE(m_Map);
 }
 
 bool TiledMap::init() 
 {
-	isReady = false;
 	m_Position = Vec2i(0,0);
 	m_Size = Vec2i(m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
 	TiledMap::LoadTilesets();
@@ -79,13 +78,16 @@ void TiledMap::renderAnimations(float dt)
 	}
 }
 
-void TiledMap::render(float dt) 
+void TiledMap::render(float dt)
 {
-	if (!isReady) { return; }
 	auto r = ENGINE->getRenderer();
 	renderAnimations(dt);
 	SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
-	SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+	if (CameraUpdate) {
+		SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+	}else {
+		SDL_RenderCopyEx(r, m_Texture, NULL, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+	}
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
 
@@ -103,16 +105,13 @@ bool TiledMap::LoadTilesets()
 
 void TiledMap::LoadLayers()
 {
-	int ind = 0;
-	m_LayerData = new std::vector<LayerData>; 
 	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex) {
 		const Tmx::TileLayer* tileLayer = m_Map->GetTileLayer(LayerIndex);
 		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight());
 		for (int y = 0; y < tileLayer->GetHeight(); ++y) {
 			for (int x = 0; x < tileLayer->GetWidth(); ++x) {
 				if (tileLayer->GetTileTilesetIndex(x, y) != -1) {
-					m_LayerData->reserve(m_LayerData->size() + 1);
-					ind++;
+					m_LayerData.reserve(m_LayerData.size() + 1);
 					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
 					Uint32 Gid = tileLayer->GetTileGid(x, y);
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
@@ -134,30 +133,33 @@ void TiledMap::LoadLayers()
 							tileData->PhyBodys->push_back(tileBody);
 							tileData->bodyOffsetPos = itr->m_ObjectPos;
 						}
+						m_allMapBodies.reserve(m_allMapBodies.size()+tileData->PhyBodys->size());
 						m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
 					}
-					m_LayerData->emplace_back(LayerIndex, tileData);
+					m_LayerData.emplace_back(LayerIndex, tileData);
 				}
 			}
 		}
 	}
 	if (m_Group.getBodies().size() > 0) {
 		if (m_allMapBodies.size() > 0) {
-			m_allMapBodies.insert(m_allMapBodies.end(), m_Group.getBodies().begin(), m_Group.getBodies().end());
+			//TODO: fix that IT CRASH
+			m_allMapBodies.reserve(m_allMapBodies.size() + m_Group.getBodies().size());
+			auto tempVec = m_Group.getBodies();
+			m_allMapBodies.insert(m_allMapBodies.end(), tempVec.begin(), tempVec.end());
 		}else {
 			m_allMapBodies = m_Group.getBodies();
 		}
 	}
-	isReady = true;
 	LoadMapIntoTexture();
-	Log("[TILEDMAPS] Gonna be %d Calls in render!", ind)
+	Log("[TILEDMAPS] Map loaded sucesfully and ready to be rendered !");
 }
 
 void TiledMap::LoadMapIntoTexture()
 {
 	auto r = ENGINE->getRenderer();
 	SDL_SetRenderTarget(r, m_Texture);
-	for (auto& itr : *m_LayerData) {
+	for (auto& itr : m_LayerData) {
 		if (itr.tiledLayerData->isAnimated) {
 			m_cachedAnimatiedTiles.emplace_back(&itr);
 		}
@@ -172,11 +174,11 @@ void TiledMap::LoadMapIntoTexture()
 void TiledMap::setPosition(Vec2i pos)
 {
 	static Vec2i LastPositionTranslated = Vec2i(0, 0);
-	//if (Utility::IsInBox(Vec2i(pos.x, pos.y), Vec2i(0,0), Vec2i(m_DestinationDrawCoord.w, m_DestinationDrawCoord.h))) {
-		if (pos.x >= 0 && pos.x <= m_Size.x) {
+	if (CameraUpdate) {
+		if (pos.x >= 0 && pos.x <= m_Size.x-m_DestinationDrawCoord.w) {
 			m_SourceDrawCoord.x = pos.x; // remove negative sign for the real source here source is used as Dest!
 		}
-		if (pos.y >= 0 && pos.y <= m_Size.y) {
+		if (pos.y >= 0 && pos.y <= m_Size.y- m_DestinationDrawCoord.h) {
 			m_SourceDrawCoord.y = pos.y; // remove negative sign for the real source here source is used as Dest!
 		}
 		for (auto& itr : m_cachedAnimatiedTiles) {
@@ -184,8 +186,6 @@ void TiledMap::setPosition(Vec2i pos)
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
 			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
 		}
-		//m_DestinationDrawCoord.x = m_Position.x;
-		//m_DestinationDrawCoord.y = m_Position.y;
 		/*for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
@@ -194,16 +194,18 @@ void TiledMap::setPosition(Vec2i pos)
 				,0.f
 			);
 		}*/
-	//}
-	/*else {
+	}
+	else {
 		m_DestinationDrawCoord.x = -pos.x; // remove negative sign for the real source here source is used as Dest!
 		m_DestinationDrawCoord.y = -pos.y;
+		m_DestinationDrawCoord.w = m_Size.x;
+		m_DestinationDrawCoord.h = m_Size.y;
 		for (auto& itr : m_cachedAnimatiedTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
-			itr->tiledLayerData->DestDraw->x = current_rect->x - (-pos.x - LastPositionTranslated.x);
-			itr->tiledLayerData->DestDraw->y = current_rect->y - (-pos.y - LastPositionTranslated.y);
+			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
+			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
 		}
-	}*/
+	}
 	LastPositionTranslated = pos;
 }
 

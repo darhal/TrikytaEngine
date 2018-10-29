@@ -34,7 +34,7 @@ void InputManager::DrawCursor(float dt)
 {
 	if (!activeCount) { return; };
 	LastDeltaTime = LastDeltaTime + dt;
-	if (LastDeltaTime > 0.2f) {
+	if (LastDeltaTime > 0.3f) {
 		if (IsShowCursor) {
 			IsShowCursor = false;
 		}
