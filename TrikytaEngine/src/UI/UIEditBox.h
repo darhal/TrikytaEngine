@@ -18,7 +18,6 @@ namespace UI {
 		EditBox(const std::string&, const std::string&, uint8, Vec2i, Color);
 
 		virtual void OnUIClick(Vec2i, bool) override;
-		//virtual void OnUIFocus(bool) override;
 		inline virtual Vec2i getPos() override;
 		inline virtual Vec2i getSize() override;
 		virtual void PorcessEvents(SDL_Event&) override;

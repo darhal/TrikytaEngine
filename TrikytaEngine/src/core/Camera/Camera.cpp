@@ -2,7 +2,6 @@
 #include "core/Common/TrikytaEngine.h"
 #include "core/TiledMap/TiledMap.h"
 #include "core/Physics/PhysicsEngine.h"
-//http://lazyfoo.net/tutorials/SDL/30_scrolling/index.php
 
 Camera* Camera::CreateCamera()
 {
@@ -30,7 +29,6 @@ void Camera::addObjectToCamera(Drawable* p_drawable)
 	p_drawable->setAffectedByCamera(true);
 }
 
-
 void Camera::moveCamera(Vec2i p_Offset)
 {
 	m_CamPos += p_Offset;
@@ -48,14 +46,4 @@ void Camera::setCameraPosition(Vec2i p_Pos)
 	{
 		obj->updateRenderPositionFromCamera(m_CamPos);
 	}
-	//m_CameraBody->SetTransform(Vec2f((float)m_CamPos.x, (float)m_CamPos.y), 0.f);
 }
-
-/*	m_CameraBody = PhysicsBody::CreateBody
-	(
-		PhysicsEngine::GetPhysicsWorld(), BodyType::STATIC,
-		BodyShape::BOX, BodyParams{ 1, 1, 0.f, true },
-		Vec2f{ (float)m_CamPos.x, (float)m_CamPos.y},
-		std::vector<Vec2f>{Vec2f((float)m_CamSize.x-50, (float)m_CamSize.y-50)}
-	);
-*/

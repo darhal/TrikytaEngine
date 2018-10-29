@@ -1,5 +1,6 @@
 #pragma once
 #include "UI/Base/UIEditBoxBase.h"
+#include "core/Common/Vec2.h"
 #include "ConsoleText.h"
 #include <map>
 #include <deque>
@@ -22,7 +23,7 @@ public:
 	}
 
 	virtual void OnUIClick(Vec2i, bool) override;
-	virtual void OnUIFocus(bool) override;
+	virtual void OnUIFocus(bool, Vec2i) override;
 	inline virtual Vec2i getPos() override;
 	inline virtual Vec2i getSize() override;
 

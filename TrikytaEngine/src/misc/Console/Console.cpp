@@ -98,6 +98,7 @@ void Console::Draw(float dt)
 void Console::Activate(bool p_isActive)
 {
 	m_isActive = p_isActive;
+	m_CommandField->setVisible(m_isActive);
 }
 
 bool Console::IsActive() const

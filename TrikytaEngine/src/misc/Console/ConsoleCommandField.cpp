@@ -21,13 +21,13 @@ void ConsoleCommandField::ProcessEventHelper(SDL_Event& e)
 		if (UI::Base::IsInBox(mc, Vec2i(console_rect.x, console_rect.y), maxPos))
 		{
 			if (!m_IsFocus && e.type == SDL_MOUSEBUTTONDOWN) {
-				OnUIFocus(!m_IsFocus);
+				OnUIFocus(!m_IsFocus, mc);
 			}
 			m_IsFocus = true;
 			OnUIClick(mc - getPos(), e.type == SDL_MOUSEBUTTONDOWN ? true : false);
 		}else {
 			if (m_IsFocus && e.type == SDL_MOUSEBUTTONDOWN) {
-				OnUIFocus(!m_IsFocus);
+				OnUIFocus(!m_IsFocus, mc);
 			}
 			m_IsFocus = false;
 		}
@@ -153,9 +153,9 @@ void ConsoleCommandField::render(float dt)
 	InputManager::getInputManager()->DrawCursor(dt);
 }
 
-void ConsoleCommandField::OnUIFocus(bool isFocus)
+void ConsoleCommandField::OnUIFocus(bool isFocus, Vec2i mouseClick)
 {
-	UI::EditBoxBase::OnUIFocus(isFocus);
+	UI::EditBoxBase::OnUIFocus(isFocus, mouseClick);
 	if (isFocus) {
 		setColor(Color{255,255,255,255});
 	} else {
