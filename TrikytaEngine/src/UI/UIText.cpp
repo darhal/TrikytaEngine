@@ -45,7 +45,7 @@ bool Text::init()
 	TTF_SizeText(m_Font->getFont(), m_Text.c_str(), &temp_w, &temp_h);
 	setSize(Vec2i(temp_w, temp_h));
 	m_SourceDrawCoord = {0,0,temp_w,temp_h};
-	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
+	SetRotationCenter(Vec2i(m_Size.x / 2, m_Size.y / 2));
 
 	SDL_FreeSurface(textSurface);
 	return true;
@@ -79,14 +79,14 @@ void Text::updateTextHelper()
 	TTF_SizeText(m_Font->getFont(), m_Text.c_str(), &temp_w, &temp_h);
 	setSize(Vec2i(temp_w*m_Scale, temp_h*m_Scale));
 	m_SourceDrawCoord = { 0,0,temp_w*m_Scale,temp_h*m_Scale };
-	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
+	SetRotationCenter(Vec2i(m_Size.x / 2, m_Size.y / 2));
 }
 
 void Text::setScale(uint8 p_Scale)
 {
 	m_Scale = p_Scale;
-	setSize(Vec2i((int)(m_Size->x*p_Scale), (int)(m_Size->y*p_Scale)));
-	m_SourceDrawCoord = { 0,0,(m_Size->x*p_Scale), (int)(m_Size->y*p_Scale)};
+	setSize(Vec2i((int)(m_Size.x*p_Scale), (int)(m_Size.y*p_Scale)));
+	m_SourceDrawCoord = { 0,0,(m_Size.x*p_Scale), (int)(m_Size.y*p_Scale)};
 }
 
 void Text::setColor(Color p_Color)

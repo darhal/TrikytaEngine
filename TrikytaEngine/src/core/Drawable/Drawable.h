@@ -10,6 +10,8 @@ enum class FLIPTYPE {
 	NONE = SDL_RendererFlip::SDL_FLIP_NONE
 };
 
+class Camera;
+
 class Drawable : public Object
 {
 public:
@@ -50,21 +52,30 @@ public:
 	}
 
 	// SIZE POS FUNCTIONS
-	inline void setSize(const Vec2i& p_Size) { *m_Size = p_Size; updateSize(); }
-	inline void setPosition(const Vec2i& p_Position) { *m_Position = p_Position; updatePosition(); }
-	inline void setPositionX(int x) { m_Position->x = x; updatePosition(); }
-	inline void setPositionY(int y) { m_Position->y = y; updatePosition(); }
-	inline void followPosition(Vec2i* v) { FREE(m_Position); m_Position = v; }
-	inline Vec2i* getVecPosPtr() {return m_Position;}
-	virtual Vec2i& getSize() const { return *m_Size; }
-	virtual Vec2i& getPosition() const { return *m_Position; }
-	virtual Vec2i getPosition() override { return *m_Position; }
+	inline void setSize(const Vec2i& p_Size) { m_Size = p_Size; updateRenderSize(); }
+	inline void setPosition(const Vec2i& p_Position) { m_Position = p_Position; if (!m_IsCamera) updateRenderPosition(m_Position); }
+	inline void setPositionX(int x) { m_Position.x = x; if (!m_IsCamera) updateRenderPosition(m_Position); }
+	inline void setPositionY(int y) { m_Position.y = y; if (!m_IsCamera) updateRenderPosition(m_Position); }
+	inline Vec2i* getVecPosPtr() {return &m_Position;}
+	virtual Vec2i getSize() const { return m_Size; }
+	virtual Vec2i getPosition() override { return m_Position; }
 
-	//ATTCH FUNCTION:
+	inline virtual void updateRenderPositionFromCamera(Vec2i p_pos)
+	{
+		updateRenderPosition(getPosition() - p_pos);
+	}
+
+	inline void updateRenderSource(Vec2i p_src) {
+		m_SourceDrawCoord.x = p_src.x;
+		m_SourceDrawCoord.y = p_src.y;
+	}
+
+	//ATTACH FUNCTION:
 	virtual void attachTo(Drawable*, Vec2f);
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
 
-
+	void setAffectedByCamera(bool p_bool) { m_IsCamera = p_bool; }
+	bool isAffectedByCamera() const { return m_IsCamera; }
 	void render(float);
 
 	class Physics2D::PhysicsBody* Physicalize(struct Physics2D::BodyParams p_BodyParam, enum class Physics2D::BodyType, enum class Physics2D::BodyShape, Vec2f = Vec2f(0.0f, 0.0f));
@@ -72,21 +83,22 @@ public:
 protected:
 	Drawable(Vec2i m_Pos = Vec2i(0, 0), Vec2i p_Size = Vec2i(0, 0), bool p_RegisterInHandler=true);
 
-	inline void updatePosition() {
-		m_DestinationDrawCoord.x = m_Position->x;
-		m_DestinationDrawCoord.y = m_Position->y;
+	inline void updateRenderPosition(Vec2i p_pos)
+	{
+		m_DestinationDrawCoord.x = p_pos.x;
+		m_DestinationDrawCoord.y = p_pos.y;
 	}
 
-	inline void updateSize() {
-		m_DestinationDrawCoord.w = m_Size->x;
-		m_DestinationDrawCoord.h = m_Size->y;
+	inline void updateRenderSize() {
+		m_DestinationDrawCoord.w = m_Size.x;
+		m_DestinationDrawCoord.h = m_Size.y;
 	}
 
 	double m_Angle;
 	SDL_Point m_RotationCenter;
 	SDL_RendererFlip m_Flip;
-	Vec2i* m_Size;
-	Vec2i* m_Position;
+	Vec2i m_Size;
+	Vec2i m_Position;
 	SDL_Texture* m_Texture;
 	Vec2i m_NormalSize; // The size of the sprite to draw!
 	Vec2i m_DrawCoord;
@@ -94,6 +106,7 @@ protected:
 	SDL_Rect m_SourceDrawCoord;
 	Vec2i m_ToFollowPos;
 	Vec2i m_Offset;
+	bool m_IsCamera;
 	int m_ZOrder;
 
 	class Physics2D::PhysicsBody* m_Body = nullptr;

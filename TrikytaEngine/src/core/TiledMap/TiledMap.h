@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include <core/Objects/Object.h>
+#include <core/Drawable/Drawable.h>
 #include "core/Common/defines.h"
 #include "core/TiledMap/ObjectGroup.h"
 
@@ -18,32 +18,32 @@ struct LayerData
 	struct TileData* tiledLayerData;
 };
 
-class TiledMap: public Object
+class TiledMap: public Drawable
 {
 public:
 	static TiledMap* Create(std::string);
 
 	bool init();
-	virtual void render(float);
+	virtual void render(float) override;
 	void renderAnimations(float);
 	Tmx::Map* getMap() { return m_Map; }
 	~TiledMap();
 	void setPosition(Vec2i);
 	void translateMap(Vec2i);
-	void setCamera(/*class Camera**/);
+	void AddPhysicsDebugDrawToMapTexture();
+	inline virtual void updateRenderPositionFromCamera(Vec2i p_pos) override
+	{
+		setPosition(p_pos);
+	}
+
 	Vec2i getPosition() override;
-	inline Vec2i getSize() { return Vec2i(m_MapDst.w, m_MapDst.h); }
 	bool isReady;
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:
-	Vec2i m_Position;
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
-	SDL_Texture* m_MapTexture;
-	SDL_Rect m_MapDst;
-	SDL_Rect m_MapSrc;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;

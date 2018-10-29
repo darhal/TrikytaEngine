@@ -20,11 +20,11 @@ bool Sprite::init()
 	SDL_QueryTexture(m_Texture, NULL, NULL, &m_NormalSize.x, &m_NormalSize.y);
 	SDL_FreeSurface(TempSurface);
 
-	if (m_Size == nullptr)
-		*m_Size = m_NormalSize;
+	if (m_Size == Vec2i(0,0))
+		m_Size = m_NormalSize;
 
 	setNormalSize(m_NormalSize);
-	SetRotationCenter(Vec2i(m_Size->x / 2, m_Size->y / 2));
+	SetRotationCenter(Vec2i(m_Size.x / 2, m_Size.y / 2));
 	return true;
 }
 

@@ -13,7 +13,7 @@ public:
 	static Camera* CreateCamera();
 	void FollowObject();
 
-	void addObjectToCamera(class TiledMap*);
+	void addObjectToCamera(class Drawable*);
 	void setCameraPosition(Vec2i);
 	void moveCamera(Vec2i);
 	Camera();
@@ -24,7 +24,7 @@ public:
 private:
 	Vec2i m_CamPos;
 	Vec2i m_CamSize;
-	std::vector<class TiledMap*> m_CameraAttachedObjects;
+	std::vector<class Drawable*> m_CameraAttachedObjects;
 	//SDL_Rect m_rect;
 };
 

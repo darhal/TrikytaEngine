@@ -24,22 +24,20 @@ Camera::~Camera()
 {
 }
 
-void Camera::addObjectToCamera(TiledMap* map)
+void Camera::addObjectToCamera(Drawable* p_drawable)
 {
-	m_CameraAttachedObjects.emplace_back(map);
+	m_CameraAttachedObjects.emplace_back(p_drawable);
+	p_drawable->setAffectedByCamera(true);
 }
 
 
 void Camera::moveCamera(Vec2i p_Offset)
 {
-	/*m_rect.x -= p_Offset.x;
-	m_rect.y -= p_Offset.y;
-	SDL_RenderSetViewport(ENGINE->getRenderer(), &m_rect);*/
 	m_CamPos += p_Offset;
 	for (auto& obj : m_CameraAttachedObjects)
 	{
 		p_Offset.x = -p_Offset.x;
-		obj->translateMap(p_Offset);
+		//obj->translateMap(p_Offset);
 	}
 }
 
@@ -48,7 +46,7 @@ void Camera::setCameraPosition(Vec2i p_Pos)
 	m_CamPos = p_Pos;
 	for (auto& obj : m_CameraAttachedObjects)
 	{
-		obj->setPosition(p_Pos);
+		obj->updateRenderPositionFromCamera(m_CamPos);
 	}
 	//m_CameraBody->SetTransform(Vec2f((float)m_CamPos.x, (float)m_CamPos.y), 0.f);
 }

@@ -9,6 +9,8 @@
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Camera/Camera.h"
 
+//TODO: correct the debug drawing that it stuck at one thing!
+
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
 TiledMap* TiledMap::Create(std::string p_Filename) 
@@ -49,12 +51,13 @@ bool TiledMap::init()
 {
 	isReady = false;
 	m_Position = Vec2i(0,0);
+	m_Size = Vec2i(m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
 	TiledMap::LoadTilesets();
 	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
 	auto gRenderer = ENGINE->getRenderer();
-	m_MapDst = { 0, 0, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight() };
-	m_MapSrc = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()}; //TODO: fix these hardcoded values!
-	m_MapTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
+	m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
+	m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: fix these hardcoded values! // 
+	m_Texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
 	TiledMap::LoadLayers();
 	return true;
 }
@@ -81,10 +84,9 @@ void TiledMap::render(float dt)
 	if (!isReady) { return; }
 	auto r = ENGINE->getRenderer();
 	renderAnimations(dt);
-	SDL_SetTextureBlendMode(m_MapTexture, SDL_BLENDMODE_BLEND);
-	SDL_RenderCopy(r, m_MapTexture, &m_MapSrc, NULL);
+	SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
+	SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
-	//LogTerminal("Draw coord (x=%d, y=%d, w=%d, h=%d) // Dest Coord (%d, %d)", m_MapSrc.x, m_MapSrc.y, m_MapSrc.w, m_MapSrc.h, m_MapDst.w, m_MapDst.h);
 }
 
 bool TiledMap::LoadTilesets()
@@ -154,7 +156,7 @@ void TiledMap::LoadLayers()
 void TiledMap::LoadMapIntoTexture()
 {
 	auto r = ENGINE->getRenderer();
-	SDL_SetRenderTarget(r, m_MapTexture);
+	SDL_SetRenderTarget(r, m_Texture);
 	for (auto& itr : *m_LayerData) {
 		if (itr.tiledLayerData->isAnimated) {
 			m_cachedAnimatiedTiles.emplace_back(&itr);
@@ -163,22 +165,27 @@ void TiledMap::LoadMapIntoTexture()
 			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
 		}
 	}
-	setCamera();
+	//AddPhysicsDebugDrawToMapTexture();
 	SDL_SetRenderTarget(r, NULL);
 }
 
 void TiledMap::setPosition(Vec2i pos)
 {
 	static Vec2i LastPositionTranslated = Vec2i(0, 0);
-	if (Utility::IsInBox(Vec2i(pos.x, pos.y), Vec2i(0,0), Vec2i(m_MapDst.w, m_MapDst.h))) {
-		m_Position = pos;
-		m_MapSrc.x = pos.x;
-		m_MapSrc.y = pos.y;
+	//if (Utility::IsInBox(Vec2i(pos.x, pos.y), Vec2i(0,0), Vec2i(m_DestinationDrawCoord.w, m_DestinationDrawCoord.h))) {
+		if (pos.x >= 0 && pos.x <= m_Size.x) {
+			m_SourceDrawCoord.x = pos.x; // remove negative sign for the real source here source is used as Dest!
+		}
+		if (pos.y >= 0 && pos.y <= m_Size.y) {
+			m_SourceDrawCoord.y = pos.y; // remove negative sign for the real source here source is used as Dest!
+		}
 		for (auto& itr : m_cachedAnimatiedTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
 			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
 		}
+		//m_DestinationDrawCoord.x = m_Position.x;
+		//m_DestinationDrawCoord.y = m_Position.y;
 		/*for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
 			phyObj->SetTransform
@@ -187,11 +194,43 @@ void TiledMap::setPosition(Vec2i pos)
 				,0.f
 			);
 		}*/
-		LastPositionTranslated = pos;
+	//}
+	/*else {
+		m_DestinationDrawCoord.x = -pos.x; // remove negative sign for the real source here source is used as Dest!
+		m_DestinationDrawCoord.y = -pos.y;
+		for (auto& itr : m_cachedAnimatiedTiles) {
+			auto current_rect = itr->tiledLayerData->DestDraw;
+			itr->tiledLayerData->DestDraw->x = current_rect->x - (-pos.x - LastPositionTranslated.x);
+			itr->tiledLayerData->DestDraw->y = current_rect->y - (-pos.y - LastPositionTranslated.y);
+		}
+	}*/
+	LastPositionTranslated = pos;
+}
+
+void TiledMap::translateMap(Vec2i pos)
+{
+	if (Utility::IsInBox(Vec2i(m_SourceDrawCoord.x - pos.x, m_SourceDrawCoord.y - pos.y), Vec2i(0, 0), Vec2i(m_DestinationDrawCoord.w, m_DestinationDrawCoord.h))) {
+		m_Position += pos;
+		m_SourceDrawCoord.x -= pos.x;
+		m_SourceDrawCoord.y -= pos.y;
+		for (auto& itr : m_cachedAnimatiedTiles) {
+			auto current_rect = itr->tiledLayerData->DestDraw;
+			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x;
+			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y;
+		}
+		/*for (auto& phyObj : m_allMapBodies) {
+			Vec2f old_transform = phyObj->GetTransform().p;
+			phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
+		}*/
 	}
 }
 
-void TiledMap::setCamera(/*Camera* cam*/)
+Vec2i TiledMap::getPosition()
+{
+	return m_Position;
+}
+
+void TiledMap::AddPhysicsDebugDrawToMapTexture()
 {
 	auto r = ENGINE->getRenderer();
 	for (auto& phyObj : m_allMapBodies) {
@@ -222,30 +261,6 @@ void TiledMap::setCamera(/*Camera* cam*/)
 		}
 	}
 }
-
-void TiledMap::translateMap(Vec2i pos)
-{
-	if (Utility::IsInBox(Vec2i(m_MapSrc.x - pos.x, m_MapSrc.y - pos.y), Vec2i(0, 0), Vec2i(m_MapDst.w, m_MapDst.h))) {
-		m_Position += pos;
-		m_MapSrc.x -= pos.x;
-		m_MapSrc.y -= pos.y;
-		for (auto& itr : m_cachedAnimatiedTiles) {
-			auto current_rect = itr->tiledLayerData->DestDraw;
-			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x;
-			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y;
-		}
-		/*for (auto& phyObj : m_allMapBodies) {
-			Vec2f old_transform = phyObj->GetTransform().p;
-			phyObj->SetTransform(old_transform + Vec2f((float)(pos.x), (float)(pos.y)), 0.f);
-		}*/
-	}
-}
-
-Vec2i TiledMap::getPosition()
-{
-	return m_Position;
-}
-
 
 
 

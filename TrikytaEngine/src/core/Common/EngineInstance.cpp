@@ -124,18 +124,18 @@ void EngineInstance::Render()
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
 	std::chrono::duration<float> dt = (TimeNow - LastTick);
 	float dtf = dt.count();
+	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
+	On_Engine_Render(dtf);
 	SDL_RenderClear(m_Renderer);
 	for (auto& itr : *(ObjectHandler::GetObjectHandler()))
 	{
 		itr->render(dtf);
 	}
-	On_Engine_Render(dtf);
-	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
 	UI::Manager::renderElements(dtf); // render Ui Elements
 	Console::getConsole()->Draw(dtf); // draw console
+	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
 	SDL_RenderPresent(m_Renderer);
 	LastTick = std::chrono::system_clock::now();
-	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 }
 
 

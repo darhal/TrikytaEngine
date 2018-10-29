@@ -27,8 +27,9 @@ void Game::On_Engine_Init()
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map3.tmx");//"assets/example/maps/map.tmx");
 	cam->addObjectToCamera(map);
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2 - ENGINE->GetScreenWidth() / 3, ENGINE->GetScreenHeight() / 2), 0.03f);
-	body = anim->Physicalize(Physics2D::BodyParams{1.f, 0.2f}, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2, ENGINE->GetScreenHeight() / 2), 0.03f);
+	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+	cam->addObjectToCamera(anim);
 	body->SetAngularDamping(1000.f);
 	//editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 	//	Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
@@ -105,8 +106,8 @@ void Game::On_Engine_Init()
 void Game::On_Engine_Render(float dt)
 {
 	// Offset the player quad by the camera position 
-	//Vec2i PlayerDrawPos = (anim->getPosition() - cam->getCameraPosition());
-	//cam->setCameraPosition(anim->getPosition());
+	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
+	cam->setCameraPosition(pos);
 	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
 	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
 	pos = anim->getPosition();
@@ -155,38 +156,38 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
 	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
-			body->SetLinearVelocity(Vec2f(20.f, body->GetLinearVelocity().y));
+			body->SetLinearVelocity(Vec2f(35.f, body->GetLinearVelocity().y));
 			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));*/
-			cam->moveCamera(Vec2i(10, 0));
+			//cam->moveCamera(Vec2i(10, 0));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_LEFT) {
-			body->SetLinearVelocity(Vec2f(-20.f, body->GetLinearVelocity().y));
+			body->SetLinearVelocity(Vec2f(-35.f, body->GetLinearVelocity().y));
 			/*//cam->moveCamera(Vec2i(-5, 0));
 			int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));*/
-			cam->moveCamera(Vec2i(-10, 0));
+			//cam->moveCamera(Vec2i(-10, 0));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_UP) {
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y-20.f));
+			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y-35.f));
 			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));
 			LogTerminal(" %d, %d ", x, y);*/
-			cam->moveCamera(Vec2i(0, 10));
+			//cam->moveCamera(Vec2i(0, 10));
 			//body->SetAwake(true);
 		}else if (p_Key == SDLK_DOWN) {
 			//cam->moveCamera(Vec2i(0, -5));
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y+20.f));
+			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y+35.f));
 			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
 			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
 			cam->setCameraPosition(Vec2i(x, y));
 			LogTerminal(" %d, %d ", x, y);*/
-			cam->moveCamera(Vec2i(0, -10));
+			//cam->moveCamera(Vec2i(0, -10));
 			//body->SetAwake(true);
 		}
 		else if (p_Key == SDLK_c) {
