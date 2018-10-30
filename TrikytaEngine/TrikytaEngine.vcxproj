@@ -159,6 +159,8 @@
     <ClCompile Include="src\core\InputManager\InputManager.cpp" />
     <ClCompile Include="src\core\Objects\Object.cpp" />
     <ClCompile Include="src\core\Objects\ObjectHandler.cpp" />
+    <ClCompile Include="src\core\Physics\Fixture.cpp" />
+    <ClCompile Include="src\core\Physics\Joints.cpp" />
     <ClCompile Include="src\core\Physics\PhysicsContactListener.cpp" />
     <ClCompile Include="src\core\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\core\TiledMap\ObjectGroup.cpp" />
@@ -203,6 +205,7 @@
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_framerate.cpp" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
+    <ClCompile Include="src\utils\SDL2_gfxPrimitives.cpp" />
     <ClCompile Include="src\utils\SDL2_imageFilter.c" />
     <ClCompile Include="src\utils\SDL2_imageFilter.cpp" />
     <ClCompile Include="src\utils\SDL2_rotozoom.c" />
@@ -308,6 +311,8 @@
     <ClInclude Include="src\core\Objects\IObject.h" />
     <ClInclude Include="src\core\Objects\Object.h" />
     <ClInclude Include="src\core\Objects\ObjectHandler.h" />
+    <ClInclude Include="src\core\Physics\Fixture.h" />
+    <ClInclude Include="src\core\Physics\Joints.h" />
     <ClInclude Include="src\core\Physics\PhysicsContactListener.h" />
     <ClInclude Include="src\core\Physics\PhysicsEngine.h" />
     <ClInclude Include="src\core\TiledMap\ObjectGroup.h" />

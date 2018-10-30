@@ -40,7 +40,7 @@ int Drawable::getZOrder() const
 	return m_ZOrder;
 }
 
-void Drawable::render(float dt)
+void Drawable::render(float /*dt*/)
 {
 	if (m_Parent != nullptr) {
 		int px = (int)m_Parent->getPosition().x;

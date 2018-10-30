@@ -258,7 +258,6 @@ void TiledMap::AddPhysicsDebugDrawToMapTexture()
 			auto vec1 = b2Vec2(vertices[i].x, vertices[i].y);
 			auto vec2 = b2Vec2(vertices[0].x, vertices[0].y);
 			lineRGBA(ENGINE->getRenderer(), (Sint16)vec1.x, (Sint16)vec1.y, (Sint16)vec2.x, (Sint16)vec2.y, 0, 0, 0, 125);
-
 			SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0xFF);
 		}
 	}

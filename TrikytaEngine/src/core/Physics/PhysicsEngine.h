@@ -5,6 +5,7 @@
 #include <PhysicsEngine/DebugDraw/b2GLDraw.h>
 #include "core/Common/defines.h"
 #include "core/Common/Vec2.h"
+#include "core/Physics/Fixture.h"
 
 class PhysicsContactListener;
 
@@ -14,7 +15,7 @@ namespace Physics2D {
 	typedef b2ContactEdge ContactEdge;
 	typedef b2JointEdge JointEdge;
 	typedef b2Shape Shape;
-	typedef b2FixtureDef FixtureDef;
+	//typedef b2FixtureDef FixtureDef;
 	typedef b2BodyDef BodyDef;
 
 	enum class BodyType {STATIC, DYNAMIC, KINEMATIC};
@@ -23,8 +24,8 @@ namespace Physics2D {
 	// Struct contain Physics Propreties {float mass,float friction,float restitution, bool isSensor}
 	struct BodyParams 
 	{ 
-		BodyParams(float pmass = 1.0, float pfriction = 1.0, float prestitution = 0.0f, bool pisSensor = false)
-			: mass(pmass), friction(pmass), restitution(prestitution), isSensor(pisSensor)
+		BodyParams(float pmass = 1.0, float pfriction = 0.2, float prestitution = 0.0f, bool pisSensor = false)
+			: mass(pmass), friction(pfriction), restitution(prestitution), isSensor(pisSensor)
 		{}
 		float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool isSensor = false; 
 	};
@@ -47,7 +48,7 @@ namespace Physics2D {
 		friend class PhysicsBody;
 	};
 
-	class PhysicsWorld : PhysicsEngine, b2World {
+	class PhysicsWorld : public PhysicsEngine, public b2World {
 	protected:
 		PhysicsWorld(const PhysicsEngineParams&);
 	public:
@@ -331,7 +332,7 @@ namespace Physics2D {
 		void SetActive(bool flag) { return m_Body->SetActive(flag); }
 
 		/// Get the active state of the body.
-		bool IsActive() const { m_Body->IsActive(); }
+		bool IsActive() const { return m_Body->IsActive(); }
 
 		/// Set this body to have fixed rotation. This causes the mass
 		/// to be reset.

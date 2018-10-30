@@ -47,7 +47,7 @@ PhysicsWorld::PhysicsWorld(const PhysicsEngineParams& p_Params) :
 	}
 }
 
-void PhysicsWorld::update(float dt)
+void PhysicsWorld::update(float /*dt*/)
 {
 	m_World->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
 	if (m_DebugDraw) 
@@ -87,7 +87,7 @@ void PhysicsWorld::setDebugger()
 PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions)
 {
 	BodyDef BodyDef;
-	FixtureDef fixtureDef;
+	b2FixtureDef fixtureDef;
 	BodyDef.position.Set(p_Position.x, p_Position.y);
 	if (p_BodyType == BodyType::STATIC) {
 		BodyDef.type = b2_staticBody;
@@ -146,3 +146,4 @@ PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType,
 	Body->CreateFixture(&fixtureDef);
 	return new PhysicsBody(Body, p_BodyType, p_Shape, p_BodyParams);
 }
+

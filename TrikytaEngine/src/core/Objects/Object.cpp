@@ -35,7 +35,7 @@ void Object::setRender(bool isVisible)
 	}
 }
 
-void Object::render(float dt)
+void Object::render(float /*dt*/)
 {
 }
 

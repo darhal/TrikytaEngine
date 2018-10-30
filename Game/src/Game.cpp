@@ -13,6 +13,7 @@
 #include <misc/Console/Console.h>
 #include <UI/UIEditBox.h>
 #include <core/Camera/Camera.h>
+#include <core/Physics/Joints.h>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -106,7 +107,7 @@ void Game::On_Engine_Init()
 };
 
 
-void Game::On_Engine_Render(float dt)
+void Game::On_Engine_Render(float /*dt*/)
 {
 	// Offset the player quad by the camera position 
 	bool b = true;
