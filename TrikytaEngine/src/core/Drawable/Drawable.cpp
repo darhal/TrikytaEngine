@@ -40,13 +40,19 @@ int Drawable::getZOrder() const
 	return m_ZOrder;
 }
 
+void Drawable::ToggleRotationAttachement(bool isRotationAttached)
+{
+	m_IsRotationAttached = isRotationAttached;
+}
+
 void Drawable::render(float /*dt*/)
 {
 	if (m_Parent != nullptr) {
 		int px = (int)m_Parent->getPosition().x;
 		int py = (int)m_Parent->getPosition().y;
 		setPosition(Vec2i(px+m_Offset.x, py+m_Offset.y));
-		//m_Angle = m_Parent->GetRotation();
+		if (m_IsRotationAttached)
+			m_Angle = m_Parent->GetRotation();
 	}
 	/*if (m_Camera != nullptr) {
 		m_DestinationDrawCoord.x = m_Position.x - m_Camera->getCameraPosition().x;
@@ -65,6 +71,7 @@ void Drawable::attachTo(Drawable* obj, Vec2f p_Offset)
 	//followPosition(obj->getVecPosPtr());
 	m_Offset = Vec2i((int)(p_Offset.x*m_Size.x), (int)(p_Offset.y*m_Size.y));
 	SetRotationCenter(Vec2i(m_Size.x / 2, m_Size.y / 2));
+	m_IsRotationAttached = true;
 }
 
 void Drawable::attachTo(Physics2D::PhysicsBody* p_Phyobj, Vec2f p_Offset)
@@ -76,6 +83,7 @@ void Drawable::attachTo(Physics2D::PhysicsBody* p_Phyobj, Vec2f p_Offset)
 	}
 	m_Offset = Vec2i((int)(p_Offset.x*m_Size.x), (int)(p_Offset.y*m_Size.y));
 	SetRotationCenter(Vec2i(m_Size.x / 2, m_Size.y / 2));
+	m_IsRotationAttached = true;
 }
 
 Physics2D::PhysicsBody* Drawable::Physicalize(Physics2D::BodyParams p_BodyParam,Physics2D::BodyType p_Type, Physics2D::BodyShape p_BodyShape=Physics2D::BodyShape::BOX, Vec2f p_Offset)

@@ -31,11 +31,12 @@ void Game::On_Engine_Init()
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/2, 217/2), Vec2i(ENGINE->GetScreenWidth() / 2, ENGINE->GetScreenHeight() / 2), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
+	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 	/*auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
-	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });
-	auto editBox2 = UI::EditBox::createEditBox("ENTER 2", "Engine_Assets/fonts/DroidSans.ttf", 18,
+	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
+	/*auto editBox2 = UI::EditBox::createEditBox("ENTER 2", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()+250), Color{ 255,255,255, 255 });
 	editBox2->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
 
@@ -217,6 +218,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 
 void Game::On_Engine_Quit() 
 { 
+	EngineInstance::On_Engine_Quit();
 	Log("Leaving game! "); 
 };
 

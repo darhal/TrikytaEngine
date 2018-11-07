@@ -33,7 +33,7 @@ public:
 	virtual void On_Engine_Pre_Init() {}
 	virtual void On_Engine_Init() {}
 	virtual void On_Engine_Render(float) {}
-	virtual void On_Engine_Quit() {}
+	virtual void On_Engine_Quit();
 
 	inline SDL_Window* getWindow() { return m_Window; }
 	inline SDL_Renderer* getRenderer() { return m_Renderer; }
@@ -44,7 +44,7 @@ public:
 
 	const int GetScreenWidth() const { return (int)m_EngineConfig.WINDOW_WIDTH; }
 	const int GetScreenHeight() const { return (int)m_EngineConfig.WINDOW_HEIGHT; }
-
+	const SDL_RendererInfo& getRenderInfo() { return m_RenderInfo; }
 private:
 	struct ENGINE_CONFIG& m_EngineConfig;
 	bool m_EngineState;
@@ -52,5 +52,6 @@ private:
 	SDL_Window* m_Window;
 	SDL_Renderer* m_Renderer;
 	SDL_Surface* m_PrimarySurface;
+	SDL_RendererInfo m_RenderInfo;
 	std::chrono::time_point<std::chrono::system_clock> LastTick;
 };

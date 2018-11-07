@@ -73,6 +73,7 @@ public:
 	//ATTACH FUNCTION:
 	virtual void attachTo(Drawable*, Vec2f);
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
+	void ToggleRotationAttachement(bool);
 
 	void setAffectedByCamera(bool p_bool) { m_IsCamera = p_bool; }
 	bool isAffectedByCamera() const { return m_IsCamera; }
@@ -107,6 +108,7 @@ protected:
 	Vec2i m_ToFollowPos;
 	Vec2i m_Offset;
 	bool m_IsCamera;
+	bool m_IsRotationAttached;
 	int m_ZOrder;
 
 	class Physics2D::PhysicsBody* m_Body = nullptr;

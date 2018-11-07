@@ -71,7 +71,8 @@ bool EngineInstance::Init()
 		LogTerminal("Unable to create renderer");
 		return false;
 	}
-
+	SDL_GetRendererInfo(m_Renderer, &m_RenderInfo);
+	LogTerminal("Max texture size is (%d, %d) Name is %s", m_RenderInfo.max_texture_width, m_RenderInfo.max_texture_height, m_RenderInfo.name)
 	// Initialize image loading for PNGs
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
 		LogTerminal("Unable to init SDL_image: %s", IMG_GetError());
@@ -138,7 +139,11 @@ void EngineInstance::Render()
 	LastTick = std::chrono::system_clock::now();
 }
 
-
+void EngineInstance::On_Engine_Quit()
+{
+	IMG_Quit();
+	TTF_Quit();
+}
 
 /*EngineInstance EngineInstance::g_Engine; <- put this on top
 EngineInstance* EngineInstance::GetEngineInstance()
