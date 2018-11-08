@@ -22,7 +22,7 @@ OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 DEPS = $(OBJECTS:.o=.d)
 
 # flags #
-COMPILE_FLAGS = -std=c++14 -Wall -Wextra -g
+COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 INCLUDES = -I $(SRC_PATH)/TrikytaEngine/libs/includes/ -I $(SRC_PATH)/TrikytaEngine/src/ -I $(SRC_PATH)/PhysicsEngine/ -I $(SRC_PATH)/PhysicsEngine/PhysicsEngine/Core/ -I $(SRC_PATH)/Libraries/src/ -I $(SRC_PATH)/Libraries/src/TinyXML -I $(SRC_PATH)/Libraries/src/zlib -I $(SRC_PATH)/LuaBinds/src/ -I $(SRC_PATH)/LuaBinds/lua/include/ -I $(SRC_PATH)/Game/src/
 # Space-separated pkg-config libraries used by this project
 LIBS = `sdl2-config --libs --cflags` -LLinuxLibs/ -lSDL2 -LLinuxLibs/ -lSDL2_image -LLinuxLibs/ -lSDL2_ttf -LLinuxLibs/ -llua -LLinuxLibs/ -lz -lm
