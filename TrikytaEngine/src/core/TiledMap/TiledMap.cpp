@@ -18,8 +18,7 @@ TiledMap* TiledMap::Create(std::string p_Filename)
 {
 	Tmx::Map* map = new Tmx::Map();
 	map->ParseFile(p_Filename);
-	if (map->HasError())
-	{
+	if (map->HasError()){
 		Log("ERROR: Loading Tiled Map failed with code: %d\n", map->GetErrorCode());
 		Log("ERROR: Loading Tiled Map failed with code text: %s\n", map->GetErrorText().c_str());
 		delete map; // delete and return null ptr!
@@ -51,12 +50,35 @@ bool TiledMap::init()
 {
 	m_Position = Vec2i(0,0);
 	m_Size = Vec2i(m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
+	
 	TiledMap::LoadTilesets();
 	//auto LoadThread = new std::thread(&TiledMap::LoadLayers, this);
 	auto gRenderer = ENGINE->getRenderer();
 	m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
-	m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: fix these hardcoded values! // 
-	m_Texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
+	m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: Change this to camera size
+
+	//MAP DIVISION ALGORITHM (SMTHG WRONG HERE!)
+	Vec2i maxGridSize = Vec2i(800, 800); //Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
+	Vec2i map_size = Vec2i(m_Size);
+	LogTerminal("Max size = (W: %d, H: %d)", m_Size.x, m_Size.y);
+	while (map_size.x > maxGridSize.x || map_size.y > maxGridSize.y) {
+		// Size overflow we gonna use an algorithm to cut the map into grids! (on old GPUs)
+		if (map_size.x - maxGridSize.x <= 0) { // if it last one to cut then move to y
+			map_size.x = m_Size.x; // reset to begining !
+			map_size.y = map_size.y - maxGridSize.y; // update the y size
+		}
+		Vec2i texture_size = Vec2i
+		(
+			(map_size.x - maxGridSize.x > 0) ? map_size.x-maxGridSize.x : map_size.x,
+			(map_size.y - maxGridSize.y > 0) ? map_size.y - maxGridSize.y : map_size.y
+		);
+		map_size.x = texture_size.x; // update x
+		//auto map_grid_texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, texture_size.x, texture_size.y);
+		//m_MapGrids.emplace_back(map_grid_texture);
+		LogTerminal("(W: %d, H: %d)", texture_size.x, texture_size.y);
+	}
+
+	m_Texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Size.x, m_Size.y);
 	TiledMap::LoadLayers();
 	return true;
 }
@@ -66,7 +88,7 @@ void TiledMap::renderAnimations(float dt)
 	auto r = ENGINE->getRenderer();
 	for (auto& itr : m_cachedAnimatiedTiles) {
 		itr->tiledLayerData->LastDeltaTime = itr->tiledLayerData->LastDeltaTime + dt;
-		if (itr->tiledLayerData->LastDeltaTime > 0.1f) {
+		if (itr->tiledLayerData->LastDeltaTime > 0.3f) {
 			itr->tiledLayerData->m_CurrentFrame++;
 			if (itr->tiledLayerData->m_CurrentFrame >= itr->tiledLayerData->m_FramesVec.size()) {
 				itr->tiledLayerData->m_CurrentFrame = 0;
@@ -162,8 +184,7 @@ void TiledMap::LoadMapIntoTexture()
 	for (auto& itr : m_LayerData) {
 		if (itr.tiledLayerData->isAnimated) {
 			m_cachedAnimatiedTiles.emplace_back(&itr);
-		}
-		else {
+		}else{
 			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
 		}
 	}

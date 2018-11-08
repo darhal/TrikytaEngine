@@ -48,6 +48,7 @@ private:
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData> m_LayerData;
+	std::vector<SDL_Texture*> m_MapGrids;
 private:
 	bool LoadTilesets();
 	void LoadLayers();
