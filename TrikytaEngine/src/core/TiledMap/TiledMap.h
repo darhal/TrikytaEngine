@@ -53,6 +53,7 @@ private:
 	bool LoadTilesets();
 	void LoadLayers();
 	void LoadMapIntoTexture();
+	void DivideMap(Vec2i&);
 	friend class Tilesets;
 	friend class ObjectGroup;
 	friend struct TileData;

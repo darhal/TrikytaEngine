@@ -20,9 +20,13 @@ public:
 	T y;
 
 	/*
-	*Default constructor!
+	*Default constructor! init to 0!
 	*/
-	Vec2(){};
+	Vec2()
+	{
+		x = (T)0;
+		y = (T)0;
+	};
 
 	/*
 	*/

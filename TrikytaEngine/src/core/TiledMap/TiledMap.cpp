@@ -57,30 +57,47 @@ bool TiledMap::init()
 	m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
 	m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: Change this to camera size
 
-	//MAP DIVISION ALGORITHM (SMTHG WRONG HERE!)
-	Vec2i maxGridSize = Vec2i(800, 800); //Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
-	Vec2i map_size = Vec2i(m_Size);
 	LogTerminal("Max size = (W: %d, H: %d)", m_Size.x, m_Size.y);
-	while (map_size.x > maxGridSize.x || map_size.y > maxGridSize.y) {
-		// Size overflow we gonna use an algorithm to cut the map into grids! (on old GPUs)
-		if (map_size.x - maxGridSize.x <= 0) { // if it last one to cut then move to y
-			map_size.x = m_Size.x; // reset to begining !
-			map_size.y = map_size.y - maxGridSize.y; // update the y size
-		}
-		Vec2i texture_size = Vec2i
-		(
-			(map_size.x - maxGridSize.x > 0) ? map_size.x-maxGridSize.x : map_size.x,
-			(map_size.y - maxGridSize.y > 0) ? map_size.y - maxGridSize.y : map_size.y
-		);
-		map_size.x = texture_size.x; // update x
-		//auto map_grid_texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, texture_size.x, texture_size.y);
-		//m_MapGrids.emplace_back(map_grid_texture);
-		LogTerminal("(W: %d, H: %d)", texture_size.x, texture_size.y);
+
+	Vec2i maxGridSize = Vec2i(16384 / 2, 16384 / 2); //Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
+	if (m_Size.x > maxGridSize.x || m_Size.y > maxGridSize.y) {
+		TiledMap::DivideMap(maxGridSize);//MAP DIVISION ALGORITHM 
 	}
 
 	m_Texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Size.x, m_Size.y);
 	TiledMap::LoadLayers();
 	return true;
+}
+
+void TiledMap::DivideMap(Vec2i& maxGridSize)
+{
+	Vec2i map_size = Vec2i(m_Size);
+	Vec2i accumlator = Vec2i(0, 0);
+	Vec2i texture_size = Vec2i(0, 0);
+	Vec2i pos = Vec2i(0, 0);
+	while ((accumlator.x < m_Size.x || accumlator.y < m_Size.y)) {
+		// Size overflow we gonna use an algorithm to cut the map into grids! (on old GPUs)
+		if (map_size.x <= 0) { // if it last one to cut then move to y
+			accumlator.y += texture_size.y;
+			pos.y += texture_size.y;
+			pos.x = 0;
+			if (accumlator.y >= m_Size.y) {
+				break;
+			}
+			map_size.x = m_Size.x; // reset to begining !
+			accumlator.x = m_Size.x;
+			map_size.y = map_size.y - maxGridSize.y; // update the y size
+		}
+		texture_size.x = (map_size.x - maxGridSize.x > 0) ? maxGridSize.x : map_size.x;
+		texture_size.y = (map_size.y - maxGridSize.y > 0) ? maxGridSize.y : map_size.y;
+		map_size.x -= texture_size.x; // update x
+		//TODO: Create a struct to store map parts!
+		//auto map_grid_texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, texture_size.x, texture_size.y);
+		//m_MapGrids.emplace_back(map_grid_texture, Vec2i(texture_size), Vec2i(pos));
+		//LogTerminal("POS : (W: %d, H: %d) | Size(%d, %d)", pos.x, pos.y, texture_size.x, texture_size.y);
+		pos.x += texture_size.x;
+	}
+	//LogTerminal("Stoped at! : (W: %d, H: %d)", map_size.x, map_size.y);
 }
 
 void TiledMap::renderAnimations(float dt)
