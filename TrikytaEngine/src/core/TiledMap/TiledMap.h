@@ -18,6 +18,15 @@ struct LayerData
 	struct TileData* tiledLayerData;
 };
 
+struct  MapPart
+{
+	MapPart(SDL_Texture* p_Texture, SDL_Rect p_Coords) 
+		: m_Texture(p_Texture), m_Coords(p_Coords)
+	{}
+	SDL_Texture* m_Texture;
+	SDL_Rect m_Coords;
+};
+
 class TiledMap: public Drawable
 {
 public:
@@ -48,7 +57,7 @@ private:
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData> m_LayerData;
-	std::vector<SDL_Texture*> m_MapGrids;
+	std::vector<MapPart> m_MapGrids;
 private:
 	bool LoadTilesets();
 	void LoadLayers();

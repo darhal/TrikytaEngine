@@ -91,10 +91,10 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 			Tile_SizeY
 		};
 		SDL_Rect* m_DestinationDrawCoord = new SDL_Rect{
-			map_x*(p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x,
-			map_y*p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster,
-			Tile_SizeX,
-			Tile_SizeY
+			int((map_x*(p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x)),
+			int((map_y*p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster)),
+			int(Tile_SizeX),
+			int(Tile_SizeY)
 		};
 		_id++;
 		m_Tiles[gid] = new TileData(gid, m_SourceDrawCoord, m_DestinationDrawCoord, m_ImageTexture, false, false);
