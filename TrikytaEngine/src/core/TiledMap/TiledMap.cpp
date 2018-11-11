@@ -50,18 +50,24 @@ bool TiledMap::init()
 {
 	m_Position = Vec2i(0,0);
 	m_Size = Vec2i(m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
-	
-	m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
-	m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: Change this to camera size
-
+	Vec2i maxGridSize = Vec2i(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight());//Vec2i(16384 / 2, 16384 / 2); //Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
+	if (CameraUpdate) {// working but have to draw on other textures too
+		m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
+		m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: Change this to camera size
+	}else { // shows nothing
+		m_DestinationDrawCoord = { m_Position.x, m_Position.y, maxGridSize.x, maxGridSize.y };
+		m_SourceDrawCoord = { 0, 0, maxGridSize.x, maxGridSize.y }; //TODO: Change this to camera size
+	}
 	LogTerminal("Max size = (W: %d, H: %d)", m_Size.x, m_Size.y);
 
-	Vec2i maxGridSize = Vec2i(16384 / 4, 16384 / 4); //Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
 	if (m_Size.x > maxGridSize.x || m_Size.y > maxGridSize.y) {
 		TiledMap::DivideMap(maxGridSize);//MAP DIVISION ALGORITHM 
 	}
 	//TODO FIX TEXTURE SIZE!
-	m_Texture = m_MapGrids.at(0).m_Texture;//SDL_CreateTexture(ENGINE->getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Size.x, m_Size.y);
+	if (m_MapGrids.size() > 0)
+		m_Texture = m_MapGrids.at(0).m_Texture;
+	else
+		m_Texture = SDL_CreateTexture(ENGINE->getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Size.x, m_Size.y);
 	TiledMap::LoadTilesets();
 	TiledMap::LoadLayers();
 	return true;
@@ -91,6 +97,7 @@ void TiledMap::DivideMap(Vec2i& maxGridSize)
 		texture_size.y = (map_size.y - maxGridSize.y > 0) ? maxGridSize.y : map_size.y;
 		map_size.x -= texture_size.x; // update x
 		auto map_grid_texture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, texture_size.x, texture_size.y);
+		//LogTerminal("Pos division (%d, %d)", pos.x, pos.y);
 		m_MapGrids.emplace_back(map_grid_texture, SDL_Rect{pos.x, pos.y, texture_size.x, texture_size.y});
 		pos.x += texture_size.x;
 	}
@@ -113,16 +120,31 @@ void TiledMap::renderAnimations(float dt)
 			itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->SourceDraw, itr->tiledLayerData->DestDraw);
 	}
 }
-
+bool lol = false;
 void TiledMap::render(float dt)
 {
 	auto r = ENGINE->getRenderer();
 	renderAnimations(dt);
-	SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
-	if (CameraUpdate) {
-		SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
-	}else {
-		SDL_RenderCopyEx(r, m_Texture, NULL, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+	if (m_MapGrids.size() > 0) {
+		for (const auto& texture_data : m_MapGrids) {
+			SDL_SetTextureBlendMode(texture_data.m_Texture, SDL_BLENDMODE_BLEND);
+			m_DestinationDrawCoord = texture_data.m_Coords;
+			m_SourceDrawCoord.w = texture_data.m_Coords.w;
+			m_SourceDrawCoord.h = texture_data.m_Coords.h;
+			if (!lol) {
+				//LogTerminal("Pos (%d, %d)", m_DestinationDrawCoord.x, m_DestinationDrawCoord.y);
+			}
+			SDL_RenderCopyEx(r, texture_data.m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+		}
+		lol = true;
+	}else{
+		SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
+		if (CameraUpdate) {
+			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+		}
+		else {
+			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
+		}
 	}
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
@@ -194,17 +216,35 @@ void TiledMap::LoadLayers()
 void TiledMap::LoadMapIntoTexture()
 {
 	auto r = ENGINE->getRenderer();
-	SDL_SetRenderTarget(r, m_Texture);
-	for (auto& itr : m_LayerData) {
-		if (itr.tiledLayerData->isAnimated) {
-			m_cachedAnimatiedTiles.emplace_back(&itr);
-		}else{
-			Vec2f mapFactor = Vec2f(float(m_MapGrids.at(0).m_Coords.w) / float(m_Size.x), float(m_MapGrids.at(0).m_Coords.h) / float(m_Size.y));
-			itr.tiledLayerData->DestDraw->w = int(floor(itr.tiledLayerData->DestDraw->w * mapFactor.x)+1);
-			itr.tiledLayerData->DestDraw->h = int(floor(itr.tiledLayerData->DestDraw->h * mapFactor.y)+1);
-			itr.tiledLayerData->DestDraw->x = int(floor(itr.tiledLayerData->DestDraw->x * mapFactor.x)+1);
-			itr.tiledLayerData->DestDraw->y = int(floor(itr.tiledLayerData->DestDraw->y * mapFactor.y)+1);
-			SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+	if (m_MapGrids.size() > 0) {
+		for (auto& texture_data : m_MapGrids) { //TODO: fix this to only draw when its inside
+			SDL_SetRenderTarget(r, texture_data.m_Texture);
+			/*if (m_MapGrids.size() > 0)
+				Vec2f mapFactor = Vec2f(float(m_MapGrids.at(0).m_Coords.w) / float(m_Size.x), float(m_MapGrids.at(0).m_Coords.h) / float(m_Size.y));
+			else
+				Vec2f mapFactor = Vec2f(1.f, 1.f);*/
+			for (auto& itr : m_LayerData) {
+				if (itr.tiledLayerData->isAnimated) {
+					m_cachedAnimatiedTiles.emplace_back(&itr);
+				}
+				else {
+					/*itr.tiledLayerData->DestDraw->w = int(floor(itr.tiledLayerData->DestDraw->w * mapFactor.x));
+					itr.tiledLayerData->DestDraw->h = int(floor(itr.tiledLayerData->DestDraw->h * mapFactor.y));
+					itr.tiledLayerData->DestDraw->x = int(floor(itr.tiledLayerData->DestDraw->x * mapFactor.x));
+					itr.tiledLayerData->DestDraw->y = int(floor(itr.tiledLayerData->DestDraw->y * mapFactor.y));*/
+					SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+				}
+			}
+		}
+	}else{
+		SDL_SetRenderTarget(r, m_Texture);
+		for (auto& itr : m_LayerData) {
+			if (itr.tiledLayerData->isAnimated) {
+				m_cachedAnimatiedTiles.emplace_back(&itr);
+			}
+			else {
+				SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+			}
 		}
 	}
 	//AddPhysicsDebugDrawToMapTexture();
@@ -236,10 +276,15 @@ void TiledMap::setPosition(Vec2i pos)
 		}*/
 	}
 	else {
-		m_DestinationDrawCoord.x = -pos.x; // remove negative sign for the real source here source is used as Dest!
-		m_DestinationDrawCoord.y = -pos.y;
-		m_DestinationDrawCoord.w = m_Size.x;
-		m_DestinationDrawCoord.h = m_Size.y;
+		if (m_MapGrids.size() > 0) {
+			for (auto& texture_data : m_MapGrids) {
+				texture_data.m_Coords.x = -pos.x;
+				texture_data.m_Coords.y= -pos.y;
+			}
+		} else {
+			m_DestinationDrawCoord.x = -pos.x; // remove negative sign for the real source here source is used as Dest!
+			m_DestinationDrawCoord.y = -pos.y;
+		}
 		for (auto& itr : m_cachedAnimatiedTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);

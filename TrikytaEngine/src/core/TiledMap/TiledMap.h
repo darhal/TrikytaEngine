@@ -21,8 +21,10 @@ struct LayerData
 struct  MapPart
 {
 	MapPart(SDL_Texture* p_Texture, SDL_Rect p_Coords) 
-		: m_Texture(p_Texture), m_Coords(p_Coords)
-	{}
+		: m_Texture(p_Texture)
+	{
+		memcpy(&m_Coords, &p_Coords, sizeof(SDL_Rect));
+	}
 	SDL_Texture* m_Texture;
 	SDL_Rect m_Coords;
 };
