@@ -234,12 +234,12 @@ void TiledMap::LoadMapIntoTexture()
 						tempDestDraw.x -= min.x;
 						tempDestDraw.y -= min.y;
 						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, &tempDestDraw);
-					}else if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w, itr.tiledLayerData->DestDraw->h), min, max)) {
+					/*}else if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w, itr.tiledLayerData->DestDraw->h), min, max)) {
 						/*itr.tiledLayerData->SourceDraw->x = itr.tiledLayerData->SourceDraw->w - itr.tiledLayerData->DestDraw->x + texture_data.m_InitPos.x;
 						itr.tiledLayerData->SourceDraw->y = itr.tiledLayerData->SourceDraw->h - itr.tiledLayerData->DestDraw->y + texture_data.m_InitPos.y;
 						itr.tiledLayerData->DestDraw->x = 0;
 						itr.tiledLayerData->DestDraw->y = 0;
-						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);*/
+						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
 					}else if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w + itr.tiledLayerData->DestDraw->x, itr.tiledLayerData->DestDraw->h), min, max)) {
 						//itr.tiledLayerData->DestDraw->x -= min.x;
 						//itr.tiledLayerData->DestDraw->y -= min.y;
@@ -247,7 +247,7 @@ void TiledMap::LoadMapIntoTexture()
 					}else if (true && Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w, itr.tiledLayerData->DestDraw->h + itr.tiledLayerData->DestDraw->y), min, max)) {
 						//itr.tiledLayerData->DestDraw->x -= min.x;
 						//itr.tiledLayerData->DestDraw->y -= min.y;
-						//SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+						//SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);*/
 					}
 				}
 			}

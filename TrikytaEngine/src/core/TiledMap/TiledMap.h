@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <cstring>
 #include <core/Drawable/Drawable.h>
 #include "core/Common/defines.h"
 #include "core/TiledMap/ObjectGroup.h"
