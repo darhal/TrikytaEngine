@@ -60,18 +60,19 @@ bool TiledMap::init()
 		m_DestinationDrawCoord = { m_Position.x, m_Position.y, m_Size.x, m_Size.y };
 		m_SourceDrawCoord = { 0, 0, m_Size.x, m_Size.y }; //TODO: Change this to camera size
 	}
-	LogTerminal("Max size = (W: %d, H: %d)", m_Size.x, m_Size.y);
 
 	if (m_Size.x > maxGridSize.x || m_Size.y > maxGridSize.y) {
+		LogTerminal("Performing corpping on the map size = (W: %d, H: %d) maximum size (W:%d, H:%d)", m_Size.x, m_Size.y, ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
 		TiledMap::DivideMap(maxGridSize);//MAP DIVISION ALGORITHM 
 		m_DestinationDrawCoord = { m_Position.x, m_Position.y, maxGridSize.x, maxGridSize.y };
 		m_SourceDrawCoord = { 0, 0, maxGridSize.x, maxGridSize.y }; //TODO: Change this to camera size
 	}
 	//TODO FIX TEXTURE SIZE!
-	if (m_MapGrids.size() > 0)
+	if (m_MapGrids.size() > 0) {
 		m_Texture = m_MapGrids.at(0).m_Texture;
-	else
+	} else {
 		m_Texture = SDL_CreateTexture(ENGINE->getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_Size.x, m_Size.y);
+	}
 	TiledMap::LoadTilesets();
 	TiledMap::LoadLayers();
 	return true;
@@ -105,10 +106,6 @@ void TiledMap::DivideMap(Vec2i& maxGridSize)
 		///LogTerminal("Pos division (%d, %d)", m_MapGrids.back().m_Coords.x, m_MapGrids.back().m_Coords.y);
 		pos.x += texture_size.x;
 	}
-	/*for (MapPart& texture_data : m_MapGrids) {
-		LogTerminal("AAAAAA (%d, %d)", texture_data.m_Coords.x, texture_data.m_Coords.y);
-	}*/
-	//LogTerminal("Stoped at! : (W: %d, H: %d)", map_size.x, map_size.y);
 }
 
 void TiledMap::renderAnimations(float dt)
@@ -136,8 +133,8 @@ void TiledMap::render(float dt)
 		for (MapPart& texture_data : m_MapGrids) {
 			SDL_SetTextureBlendMode(texture_data.m_Texture, SDL_BLENDMODE_BLEND);
 			SDL_RenderCopyEx(r, texture_data.m_Texture, NULL, &texture_data.m_Coords, m_Angle, &m_RotationCenter, m_Flip);
-			SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
-			SDL_RenderDrawRect(ENGINE->getRenderer(), &texture_data.m_Coords);
+			//SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
+			//SDL_RenderDrawRect(ENGINE->getRenderer(), &texture_data.m_Coords);
 		}
 	}else{
 		SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
