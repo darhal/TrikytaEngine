@@ -76,7 +76,6 @@ void Animation::render(float dt)
 		m_CurrentAnimFrameID++;
 	}
 	Drawable::render(dt);
-	//SDL_RenderCopyEx(TrikytaEngine::getEngine()->getRenderer(), m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 }
 
 void Animation::loadSpirteFrames()

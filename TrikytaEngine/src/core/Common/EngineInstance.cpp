@@ -33,6 +33,8 @@ bool SetOpenGLAttributes()
 	return true;
 }*/
 
+constexpr int FRAMES_PER_SECOND = 75;
+
 bool EngineInstance::Init()
 {
 	On_Engine_Pre_Init();// CALL PREINIT
@@ -112,18 +114,33 @@ void EngineInstance::EngineLogic()
 {
 	SDL_Event Event;
 	LastTick = std::chrono::system_clock::now();
+	int frame = 0;
+	bool cap = true;
+	int startTicks = 0;
 	while (m_EngineState) {
+		startTicks = SDL_GetTicks();
+
 		EventManager::GetEventManager()->HandleSDLEvents(Event, this);
 		Render();
 		TimerManager::Update();
-		SDL_Delay(m_EngineConfig.ACCELERATION_RATE);
+
+		//Increment the frame counter
+		frame++;
+		//If we want to cap the frame rate
+		if ((cap == true) && ((SDL_GetTicks()-startTicks) < 1000 / FRAMES_PER_SECOND))
+		{
+			//Sleep the remaining frame time
+			SDL_Delay((1000 / FRAMES_PER_SECOND) - (SDL_GetTicks() - startTicks));
+		}else{
+			SDL_Delay(m_EngineConfig.ACCELERATION_RATE);
+		}
 	}
 }
 
 void EngineInstance::Render() 
 {
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
-	std::chrono::duration<float> dt = (TimeNow - LastTick);
+	std::chrono::duration<float> dt = (TimeNow.time_since_epoch() - LastTick.time_since_epoch());
 	float dtf = dt.count();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 	On_Engine_Render(dtf);
@@ -136,6 +153,7 @@ void EngineInstance::Render()
 	Console::getConsole()->Draw(dtf); // draw console
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
 	SDL_RenderPresent(m_Renderer);
+	//LogTerminal("DeltaTime : %f", 1/dtf);
 	LastTick = std::chrono::system_clock::now();
 }
 
@@ -143,6 +161,7 @@ void EngineInstance::On_Engine_Quit()
 {
 	IMG_Quit();
 	TTF_Quit();
+	SDL_Quit();
 }
 
 /*EngineInstance EngineInstance::g_Engine; <- put this on top
