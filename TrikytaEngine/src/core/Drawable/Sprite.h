@@ -18,15 +18,9 @@ protected:
 	{
 		init();
 	}
-
-	/*Sprite(std::string p_Filename, Vec2<int> p_Size) :
-		m_Filename(p_Filename), Drawable(Vec2i(0,0), p_Size)
-	{
-		init();
-	}*/
-
 public:
 	virtual ~Sprite();
+	Sprite() {} // default ctor
 	virtual bool init() override;
 
 	static Sprite* Create(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position)

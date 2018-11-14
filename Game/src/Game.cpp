@@ -14,6 +14,7 @@
 #include <UI/UIEditBox.h>
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
+#include <core/Utility/BasicSerialization.h>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -34,6 +35,9 @@ void Game::On_Engine_Init()
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
+	
+	//to_bytes(Animation, anim, bytecode);
+	//make_from_bytes<Animation>(bytecode, &test[2]);
 	/*auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
 		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
 	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/

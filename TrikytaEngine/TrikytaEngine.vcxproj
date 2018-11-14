@@ -105,6 +105,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,6 +127,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -343,6 +347,7 @@
     <ClInclude Include="src\core\TiledMap\Parser\TmxUtil.h" />
     <ClInclude Include="src\core\TiledMap\TiledMap.h" />
     <ClInclude Include="src\core\TiledMap\Tilesets.h" />
+    <ClInclude Include="src\core\Utility\BasicSerialization.h" />
     <ClInclude Include="src\core\Utility\Timer.h" />
     <ClInclude Include="src\core\Utility\TimerManager.h" />
     <ClInclude Include="src\misc\Console\Console.h" />

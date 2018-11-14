@@ -18,8 +18,8 @@ protected:
 	{
 		init();
 	}
-
 public:
+	Animation() {} // default ctor
 	virtual ~Animation();
 	virtual bool init() override;
 	virtual void render(float) override;
