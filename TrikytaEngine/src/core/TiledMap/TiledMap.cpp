@@ -133,6 +133,7 @@ void TiledMap::render(float dt)
 		for (MapPart& texture_data : m_MapGrids) {
 			SDL_SetTextureBlendMode(texture_data.m_Texture, SDL_BLENDMODE_BLEND);
 			SDL_RenderCopyEx(r, texture_data.m_Texture, NULL, &texture_data.m_Coords, m_Angle, &m_RotationCenter, m_Flip);
+			///Draw the debug corrping!
 			//SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
 			//SDL_RenderDrawRect(ENGINE->getRenderer(), &texture_data.m_Coords);
 		}
@@ -231,20 +232,6 @@ void TiledMap::LoadMapIntoTexture()
 						tempDestDraw.x -= min.x;
 						tempDestDraw.y -= min.y;
 						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, &tempDestDraw);
-					/*}else if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w, itr.tiledLayerData->DestDraw->h), min, max)) {
-						/*itr.tiledLayerData->SourceDraw->x = itr.tiledLayerData->SourceDraw->w - itr.tiledLayerData->DestDraw->x + texture_data.m_InitPos.x;
-						itr.tiledLayerData->SourceDraw->y = itr.tiledLayerData->SourceDraw->h - itr.tiledLayerData->DestDraw->y + texture_data.m_InitPos.y;
-						itr.tiledLayerData->DestDraw->x = 0;
-						itr.tiledLayerData->DestDraw->y = 0;
-						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
-					}else if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w + itr.tiledLayerData->DestDraw->x, itr.tiledLayerData->DestDraw->h), min, max)) {
-						//itr.tiledLayerData->DestDraw->x -= min.x;
-						//itr.tiledLayerData->DestDraw->y -= min.y;
-						//SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
-					}else if (true && Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->w, itr.tiledLayerData->DestDraw->h + itr.tiledLayerData->DestDraw->y), min, max)) {
-						//itr.tiledLayerData->DestDraw->x -= min.x;
-						//itr.tiledLayerData->DestDraw->y -= min.y;
-						//SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);*/
 					}
 				}
 			}
@@ -363,6 +350,14 @@ void TiledMap::AddPhysicsDebugDrawToMapTexture()
 	}
 }
 
+void TiledMap::setAffectedByCamera(Camera* cam) 
+{ 
+	Drawable::setAffectedByCamera(cam);
+	if (!isAffectedByCamera()) { return; }
+	for (auto objectsThatCanBeAffectedByCam : m_Group.getDrawables()) {
+		m_Camera->addObjectToCamera(objectsThatCanBeAffectedByCam);
+	}
+}
 
 
 

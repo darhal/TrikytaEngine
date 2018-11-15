@@ -49,7 +49,7 @@ public:
 	{
 		setPosition(p_pos);
 	}
-
+	virtual void setAffectedByCamera(Camera* cam) override;
 	Vec2i getPosition() override;
 protected:
 	TiledMap(Tmx::Map*, std::string&);

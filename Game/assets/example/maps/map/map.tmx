@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.0" orientation="orthogonal" renderorder="right-down" width="250" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="5">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="250" height="250" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="6">
  <tileset firstgid="1" name="ground" tilewidth="32" tileheight="32" tilecount="90" columns="9">
   <image source="ground.png" width="288" height="320"/>
  </tileset>
@@ -783,6 +783,13 @@
   </properties>
   <object id="2" x="0.666667" y="289.333" width="254.667" height="28.6667"/>
   <object id="3" x="256.667" y="290" width="318.667" height="7.33333"/>
-  <object id="4" x="577.333" y="286.667" width="511.333" height="35.3333"/>
+  <object id="4" x="577.333" y="286.667" width="511.333" height="35.3333">
+   <properties>
+    <property name="restitution" type="float" value="15"/>
+   </properties>
+  </object>
+  <object id="5" name="This is a test!" x="231.5" y="127.5" width="188" height="50">
+   <text pixelsize="18" wrap="1" color="#348fff" bold="1" italic="1" underline="1" strikeout="1">This is a test!</text>
+  </object>
  </objectgroup>
 </map>

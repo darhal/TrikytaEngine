@@ -25,9 +25,9 @@ namespace Physics2D {
 	struct BodyParams 
 	{ 
 		BodyParams(float pmass = 1.0, float pfriction = 0.2, float prestitution = 0.0f, bool pisSensor = false)
-			: mass(pmass), friction(pfriction), restitution(prestitution), isSensor(pisSensor)
+			: mass(pmass), friction(pfriction), restitution(prestitution), sensor(pisSensor)
 		{}
-		float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool isSensor = false; 
+		float mass = 1.0; float friction = 1.0; float restitution = 0.0f; bool sensor = false;
 	};
 
 	struct PhysicsEngineParams 

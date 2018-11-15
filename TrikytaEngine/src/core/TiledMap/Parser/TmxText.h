@@ -66,6 +66,7 @@ namespace Tmx
         Text();
         ~Text();
 
+		std::string GetText() const noexcept { return text; }
         std::string GetFontFamily() const noexcept { return font_family; }
         int GetPixelSize() const noexcept { return pixel_size; }
         bool Wraps() const noexcept { return wrap; }
@@ -83,6 +84,7 @@ namespace Tmx
 
     private:
         std::string font_family;
+		std::string text;
         int pixel_size;
         bool wrap;
         Color* color;

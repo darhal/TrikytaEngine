@@ -35,7 +35,7 @@ namespace Tmx
     Text::Text()
     : font_family("sans-serif"), pixel_size(16), wrap(false), color(nullptr), bold(false),
       italic(false), underline(false), strikeout(false), kerning(true),
-      horizontal_alignment(LEFT), vertical_alignment(TOP)
+      horizontal_alignment(LEFT), vertical_alignment(TOP), text(" ")
     {
     }
 
@@ -61,6 +61,7 @@ namespace Tmx
         textElement->QueryBoolAttribute("underline", &underline);
         textElement->QueryBoolAttribute("strikeout", &strikeout);
         textElement->QueryBoolAttribute("kerning", &kerning);
+		text = textElement->GetText();
 
         if(textElement->FindAttribute("halign")) {
             auto ha_str = std::string(textElement->Attribute("halign"));

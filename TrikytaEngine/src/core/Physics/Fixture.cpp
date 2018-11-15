@@ -52,5 +52,5 @@ FixtureDef::FixtureDef(BodyType p_BodyType, BodyShape p_Shape, BodyParams p_Body
 	density = p_BodyParams.mass;
 	friction = p_BodyParams.friction;
 	restitution = p_BodyParams.restitution;
-	isSensor = p_BodyParams.isSensor;
+	isSensor = p_BodyParams.sensor;
 }

@@ -53,9 +53,9 @@ public:
 
 	// SIZE POS FUNCTIONS
 	inline void setSize(const Vec2i& p_Size) { m_Size = p_Size; updateRenderSize(); }
-	inline void setPosition(const Vec2i& p_Position) { m_Position = p_Position; if (!m_IsCamera) updateRenderPosition(m_Position); }
-	inline void setPositionX(int x) { m_Position.x = x; if (!m_IsCamera) updateRenderPosition(m_Position); }
-	inline void setPositionY(int y) { m_Position.y = y; if (!m_IsCamera) updateRenderPosition(m_Position); }
+	inline void setPosition(const Vec2i& p_Position) { m_Position = p_Position; if (!isAffectedByCamera()) updateRenderPosition(m_Position); }
+	inline void setPositionX(int x) { m_Position.x = x; if (!isAffectedByCamera()) updateRenderPosition(m_Position); }
+	inline void setPositionY(int y) { m_Position.y = y; if (!isAffectedByCamera()) updateRenderPosition(m_Position); }
 	inline Vec2i* getVecPosPtr() {return &m_Position;}
 	virtual Vec2i getSize() const { return m_Size; }
 	virtual Vec2i getPosition() override { return m_Position; }
@@ -75,8 +75,9 @@ public:
 	void attachTo(class Physics2D::PhysicsBody*, Vec2f);
 	void ToggleRotationAttachement(bool);
 
-	void setAffectedByCamera(bool p_bool) { m_IsCamera = p_bool; }
-	bool isAffectedByCamera() const { return m_IsCamera; }
+	virtual void setAffectedByCamera(Camera* m_cam) { m_Camera = m_cam; }
+	bool isAffectedByCamera() const { return m_Camera != nullptr; }
+	Camera* getCamera() { return m_Camera; }
 	void render(float);
 
 	class Physics2D::PhysicsBody* Physicalize(struct Physics2D::BodyParams p_BodyParam, enum class Physics2D::BodyType, enum class Physics2D::BodyShape, Vec2f = Vec2f(0.0f, 0.0f));
@@ -107,7 +108,7 @@ protected:
 	SDL_Rect m_SourceDrawCoord;
 	Vec2i m_ToFollowPos;
 	Vec2i m_Offset;
-	bool m_IsCamera;
+	Camera* m_Camera;
 	bool m_IsRotationAttached;
 	int m_ZOrder;
 

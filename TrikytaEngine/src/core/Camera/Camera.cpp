@@ -26,7 +26,7 @@ Camera::~Camera()
 void Camera::addObjectToCamera(Drawable* p_drawable)
 {
 	m_CameraAttachedObjects.emplace_back(p_drawable);
-	p_drawable->setAffectedByCamera(true);
+	p_drawable->setAffectedByCamera(this);
 }
 
 void Camera::moveCamera(Vec2i p_Offset)

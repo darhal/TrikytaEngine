@@ -87,7 +87,6 @@ namespace Tmx
 
         if (tempName) name = tempName;
         if (tempType) type = tempType;
-
         id = objectElem->IntAttribute("id");
         x = objectElem->IntAttribute("x");
         y = objectElem->IntAttribute("y");
