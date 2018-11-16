@@ -140,7 +140,7 @@ void EngineInstance::EngineLogic()
 void EngineInstance::Render() 
 {
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
-	std::chrono::duration<float> dt = (TimeNow.time_since_epoch() - LastTick.time_since_epoch());
+	std::chrono::duration<float> dt = (TimeNow.time_since_epoch() - LastTick.time_since_epoch()); // i think this is in seconds
 	float dtf = dt.count();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 	On_Engine_Render(dtf);
@@ -153,7 +153,6 @@ void EngineInstance::Render()
 	Console::getConsole()->Draw(dtf); // draw console
 	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
 	SDL_RenderPresent(m_Renderer);
-	//LogTerminal("DeltaTime : %f", 1/dtf);
 	LastTick = std::chrono::system_clock::now();
 }
 

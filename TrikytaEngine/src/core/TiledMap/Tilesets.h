@@ -70,6 +70,7 @@ struct TileData
 	bool isAnimated;
 	std::vector<TileData*> m_FramesVec;
 	unsigned int m_CurrentFrame; 
+	unsigned int m_AnimationDuration;
 	float LastDeltaTime;
 	std::vector<Physics2D::PhysicsBody*>* PhyBodys = nullptr;
 	bool IsPhy;

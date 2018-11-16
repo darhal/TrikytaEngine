@@ -6,6 +6,7 @@ namespace Tmx {
 	class Tileset;
 	class Tile;
 	class Object;
+	class Text;
 }
 namespace Physics2D
 {
@@ -22,6 +23,7 @@ public:
 	ObjectGroup(Tmx::Map*);
 	void ParseGroups(Tmx::Map*);
 	void ProcessPhysicalizedObject(const Tmx::Object*);
+	void ProcessText(const Tmx::Text*, const Tmx::Object*);
 	std::vector<Physics2D::PhysicsBody*> getBodies() const {return m_Bodies;}
 	std::vector<Drawable*> getDrawables() const { return m_Drawables; }
 	~ObjectGroup();

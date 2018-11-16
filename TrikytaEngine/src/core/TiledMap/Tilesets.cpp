@@ -106,6 +106,7 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 		m_Tiles[animTiles.first]->m_CurrentFrame = 0;
 		m_Tiles[animTiles.first]->LastDeltaTime = 0;
 		for (auto animFrameGIDs : animTiles.second) {
+			m_Tiles[animFrameGIDs.first]->m_AnimationDuration = animFrameGIDs.second; // this is animation time
 			m_Tiles[animTiles.first]->m_FramesVec.push_back(m_Tiles[animFrameGIDs.first]);
 		}
 	}

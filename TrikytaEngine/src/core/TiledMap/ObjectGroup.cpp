@@ -19,39 +19,22 @@ void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
 		if (objectGroup->GetProperties().GetBoolProperty("collision") == true) {
 			for (int j = 0; j < objectGroup->GetNumObjects(); ++j) {
 				// Get an object.
-				const Tmx::Object *object = objectGroup->GetObject(j);
+				const Tmx::Object* object = objectGroup->GetObject(j);
 				ObjectGroup::ProcessPhysicalizedObject(object);
-				/*if (object->GetGid() != 0) {
-					printf("Object(tile) gid: %d\n", object->GetGid());
-					printf("Object(tile) type: %s\n", object->GetType().c_str());
-				}*/
-
-				// Print Text information
-				const Tmx::Text *text = object->GetText();
+				const Tmx::Text* text = object->GetText(); // if its a text!
 				if (text != 0)
 				{
-					Color text_color;
-					int style = Font::Style::NORMAL;
-					if (text->GetColor() != nullptr) {
-						text_color.r = text->GetColor()->GetRed();
-						text_color.g = text->GetColor()->GetGreen();
-						text_color.b = text->GetColor()->GetBlue();
-						text_color.a = text->GetColor()->GetAlpha();
-					}
-					if (text->IsBold()){
-						style |= Font::Style::BOLD;
-					}
-					if (text->IsItalic()) {
-						style |= Font::Style::ITALIC;
-					}
-					if (text->IsUnderline()) {
-						style |= Font::Style::UNDERLINE;
-					}
-					if (text->IsStrikeout()) {
-						style |= Font::Style::STRIKETHROUGH;
-					}
-					auto ui_text = UI::Text::createText(object->GetText()->GetText(), "Engine_Assets/fonts/DroidSans.ttf", text->GetPixelSize(), Vec2i(object->GetX(), object->GetY()), text_color, style);
-					m_Drawables.emplace_back(ui_text);
+					ProcessText(text, object);
+				}
+			}
+		}else{
+			for (int j = 0; j < objectGroup->GetNumObjects(); ++j) {
+				// Get an object.
+				const Tmx::Object* object = objectGroup->GetObject(j);
+				const Tmx::Text* text = object->GetText(); // if its a text!
+				if (text != 0)
+				{
+					ProcessText(text, object);
 				}
 			}
 		}
@@ -141,6 +124,33 @@ void ObjectGroup::GetPhysicsSettings(const Tmx::Object* p_Object, Physics2D::Bod
 	if (p_Object->GetProperties().HasProperty("sensor")) {
 		p_params.sensor = p_Object->GetProperties().GetBoolProperty("sensor");
 	}
+}
+
+void ObjectGroup::ProcessText(const Tmx::Text* text, const Tmx::Object* object)
+{
+	Color text_color;
+	int style = Font::Style::NORMAL;
+	if (text->GetColor() != nullptr) {
+		text_color.r = text->GetColor()->GetRed();
+		text_color.g = text->GetColor()->GetGreen();
+		text_color.b = text->GetColor()->GetBlue();
+		text_color.a = text->GetColor()->GetAlpha();
+	}
+	if (text->IsBold()) {
+		style |= Font::Style::BOLD;
+	}
+	if (text->IsItalic()) {
+		style |= Font::Style::ITALIC;
+	}
+	if (text->IsUnderline()) {
+		style |= Font::Style::UNDERLINE;
+	}
+	if (text->IsStrikeout()) {
+		style |= Font::Style::STRIKETHROUGH;
+	}
+	
+	auto ui_text = UI::Text::createText(object->GetText()->GetText(), "Engine_Assets/fonts/DroidSans.ttf", text->GetPixelSize(), Vec2i(object->GetX(), object->GetY()), text_color, style);
+	m_Drawables.emplace_back(ui_text);
 }
 
 ObjectGroup::~ObjectGroup()
