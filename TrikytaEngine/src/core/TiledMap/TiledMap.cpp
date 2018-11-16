@@ -113,7 +113,7 @@ void TiledMap::renderAnimations(float dt)
 	auto r = ENGINE->getRenderer();
 	for (auto& itr : m_cachedAnimatiedTiles) {
 		itr->tiledLayerData->LastDeltaTime = itr->tiledLayerData->LastDeltaTime + dt;
-		if (itr->tiledLayerData->LastDeltaTime > itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->m_AnimationDuration/1000) {
+		if (itr->tiledLayerData->LastDeltaTime > itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->m_AnimationDuration/1000.f) {
 			itr->tiledLayerData->m_CurrentFrame++;
 			if (itr->tiledLayerData->m_CurrentFrame >= itr->tiledLayerData->m_FramesVec.size()) {
 				itr->tiledLayerData->m_CurrentFrame = 0;
