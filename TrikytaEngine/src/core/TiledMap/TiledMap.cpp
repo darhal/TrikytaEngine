@@ -10,8 +10,8 @@
 #include "core/Camera/Camera.h"
 #include <map>
 
-bool CameraUpdate = false;
 //TODO: correct the debug drawing that it stuck at one thing!
+bool CameraUpdate = false;
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
@@ -176,7 +176,7 @@ void TiledMap::LoadLayers()
 					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]);
 					tileData->setPosition(Vec2i(x, y), this);
 					tileData->IsPhy = false;
-					if (TilesetData->m_TileObjects[Gid].size() > 0) {
+					/*if (TilesetData->m_TileObjects[Gid].size() > 0) {
 						tileData->PhyBodys = new std::vector<Physics2D::PhysicsBody*>;
 						tileData->PhyBodys->reserve(TilesetData->m_TileObjects[Gid].size());
 						tileData->IsPhy = true;
@@ -184,7 +184,7 @@ void TiledMap::LoadLayers()
 							auto tileBody = Physics2D::PhysicsBody::CreateBody
 							(
 								Physics2D::PhysicsEngine::GetPhysicsWorld(), itr->m_BodyType,
-								itr->m_BodyShape, Physics2D::BodyParams{ 1.f,0.1f },
+								itr->m_BodyShape, itr->m_BodyParams,
 								itr->m_ObjectPos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y),
 								itr->m_ObjectCoord
 							);
@@ -193,6 +193,14 @@ void TiledMap::LoadLayers()
 						}
 						m_allMapBodies.reserve(m_allMapBodies.size()+tileData->PhyBodys->size());
 						m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
+					}*/
+					if (TilesetData->m_TileObjects[Gid].size() > 0) {
+						for (auto body : TilesetData->m_TileObjects[Gid]) {
+							Vec2f pos = body->GetTransform().p;
+							body->SetTransform(pos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y), body->GetTransform().q.GetAngle());
+							m_allMapBodies.emplace_back(body);
+							tileData->PhyBodys->emplace_back(body);
+						}
 					}
 					m_LayerData.emplace_back(LayerIndex, tileData);
 				}
@@ -201,7 +209,6 @@ void TiledMap::LoadLayers()
 	}
 	if (m_Group.getBodies().size() > 0) {
 		if (m_allMapBodies.size() > 0) {
-			//TODO: fix that IT CRASH
 			m_allMapBodies.reserve(m_allMapBodies.size() + m_Group.getBodies().size());
 			auto tempVec = m_Group.getBodies();
 			m_allMapBodies.insert(m_allMapBodies.end(), tempVec.begin(), tempVec.end());

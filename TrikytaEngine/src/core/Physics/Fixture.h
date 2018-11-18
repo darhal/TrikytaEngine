@@ -4,7 +4,8 @@
 #include "core/Common/defines.h"
 
 namespace Physics2D {
-	class FixtureDef : private b2FixtureDef {
+	class FixtureDef : public b2FixtureDef {
+	public : 
 		FixtureDef(BodyType, BodyShape, BodyParams, Vec2f, std::vector<Vec2f>);
 	};
 }

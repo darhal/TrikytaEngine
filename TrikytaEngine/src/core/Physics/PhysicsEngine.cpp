@@ -91,9 +91,10 @@ PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType,
 	BodyDef.position.Set(p_Position.x, p_Position.y);
 	if (p_BodyType == BodyType::STATIC) {
 		BodyDef.type = b2_staticBody;
-	}
-	else if (p_BodyType == BodyType::DYNAMIC) {
+	}else if (p_BodyType == BodyType::DYNAMIC) {
 		BodyDef.type = b2_dynamicBody;
+	}else if (p_BodyType == BodyType::KINEMATIC) {
+		BodyDef.type = b2_kinematicBody;
 	}
 	b2PolygonShape BodyBox;
 	b2ChainShape ChainShape;

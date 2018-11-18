@@ -35,7 +35,7 @@ void Game::On_Engine_Init()
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
-	
+
 	//text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(0, 350), Color{ 255,0,255, 255 }, TTF_STYLE_UNDERLINE | TTF_STYLE_BOLD);
 	//auto text2 = UI::Text::createText("This is a another output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(500, 350), Color{ 255,0,255, 255 }, TTF_STYLE_BOLD);
 	//to_bytes(Animation, anim, bytecode);
@@ -106,8 +106,8 @@ void Game::On_Engine_Init()
 	*/
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
-	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
+	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
+	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
@@ -229,7 +229,14 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
-	Log("TWO BODIED COLLISION!!")
+	/*auto bodyA = contact->GetFixtureA()->GetBody();
+	auto bodyB = contact->GetFixtureB()->GetBody();
+	auto coinbody = map->getGroupManager().getBodyByName("test")->GetBody();
+	if (bodyA == coinbody && bodyB == body->GetBody()) {
+		LogConsole(LogWarning, "Contact with a coin !");
+	}else if (bodyB == coinbody && bodyA == body->GetBody()) {
+		LogConsole(LogWarning, "Contact with a coin !");
+	}*/
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)

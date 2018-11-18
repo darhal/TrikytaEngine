@@ -102,7 +102,18 @@ namespace Physics2D {
 		/// Contacts are not created until the next time step.
 		/// @param def the fixture definition.
 		/// @warning This function is locked during callbacks.
-		Fixture* CreateFixture(const b2FixtureDef* def) { return m_Body->CreateFixture(def); }
+		Fixture* CreateFixture(const FixtureDef* def) 
+		{ 
+			/*b2FixtureDef fix;
+			fix.shape = def->shape;
+			fix.density = def->density;
+			fix.friction = def->friction;
+			fix.isSensor = def->isSensor;
+			fix.restitution = def->restitution;
+			fix.filter = def->filter;
+			return m_Body->CreateFixture(&fix);*/
+			return m_Body->CreateFixture(def);
+		}
 
 		/// Creates a fixture from a shape and attach it to this body.
 		/// This is a convenience function. Use b2FixtureDef if you need to set parameters

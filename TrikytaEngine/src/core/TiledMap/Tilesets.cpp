@@ -6,6 +6,7 @@
 #include "core/Common/defines.h"
 #include "core/Common/EngineInstance.h"
 #include "core/Common/TrikytaEngine.h"
+#include "core/Physics/Fixture.h"
 
 Tilesets::Tilesets(TiledMap* p_Map, int i): 
 	m_Tileset(*p_Map->m_Map->GetTileset(i)), 
@@ -137,15 +138,17 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
 	{
 		// Iterate through all Collision objects in the p_Tile.
-		m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
+		//m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
 		for (int j = 0; j < p_Tile->GetNumObjects(); ++j)
 		{
-			// Get an object.
-			const Tmx::Object *object = p_Tile->GetObject(j);
-
+			Physics2D::PhysicsBody* body = nullptr;
+			const Tmx::Object *object = p_Tile->GetObject(j);// Get an object.
+			Physics2D::BodyType b_type = Physics2D::BodyType::STATIC;
+			Physics2D::BodyParams b_params;
+			ObjectGroup::GetPhysicsSettings(object, b_type, b_params);
 			if (object->GetHeight() == 0 && object->GetWidth() == 0) {
 				// Print Polygon points.
-				const Tmx::Polygon *polygon = object->GetPolygon();
+				const Tmx::Polygon* polygon = object->GetPolygon();
 				if (polygon != 0)
 				{
 					std::vector<Vec2f> polyBufferPoints;
@@ -156,8 +159,19 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 						polyBufferPoints.emplace_back(point.x, point.y);
 					}
 					polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-					auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC };
-					m_TileObjects[gid].push_back(tile_Object);
+					//auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC, object };
+					//m_TileObjects[gid].push_back(tile_Object);
+					if (body == nullptr) {
+						LogTerminal("Creating polygone!");
+						body = Physics2D::PhysicsBody::CreateBody
+						(
+							Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type, Physics2D::BodyShape::POLYGON, b_params, Vec2f((float)object->GetX(), (float)object->GetY()),
+							polyBufferPoints
+						);
+					}else{
+						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::POLYGON, b_params, Vec2f((float)object->GetX(), (float)object->GetY()) , polyBufferPoints };
+						body->CreateFixture(&fixture);
+					}
 				}
 				// Print Polyline points.
 				const Tmx::Polyline *polyline = object->GetPolyline();
@@ -172,15 +186,52 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 
 					}
 					polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
-					auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC };
-					m_TileObjects[gid].push_back(tile_Object);
+					//auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC, object };
+					//m_TileObjects[gid].push_back(tile_Object);
+					if (body == nullptr) {
+						LogTerminal("Creating polygone!");
+						body = Physics2D::PhysicsBody::CreateBody
+						(
+							Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::POLYGON, b_params,Vec2f((float)object->GetX(), (float)object->GetY()),
+							polyBufferPoints
+						);
+					}else{
+						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::POLYGON, b_params, Vec2f((float)object->GetX(), (float)object->GetY()) , polyBufferPoints };
+						body->CreateFixture(&fixture);
+					}
 				}
 			}else {
 				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
 				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
-				auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC };
-				m_TileObjects[gid].push_back(tile_Object);
+				if (object->GetType() == "circle") {
+					//auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::CIRCLE, Physics2D::BodyType::STATIC, , object };
+					//m_TileObjects[gid].push_back(tile_Object);
+					if (body == nullptr) {
+						LogTerminal("Creating Circle body!");
+						body = 
+							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::CIRCLE, b_params,vecPos,vecCoord);
+					}else {
+						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::CIRCLE, b_params, vecPos, vecCoord };
+						body->CreateFixture(&fixture);
+					}
+				}else{
+					//auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC, , object };
+					//m_TileObjects[gid].push_back(tile_Object);
+					LogTerminal("Creating Box body!");
+					if (body == nullptr) {
+						body = 
+							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::BOX, b_params,vecPos,vecCoord);
+					}else {
+						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::BOX, b_params, vecPos, vecCoord };
+						body->CreateFixture(&fixture);
+					}
+				}
 			}
+			//body->SetUserData((void*)object);
+			m_TileObjects[gid].emplace_back(body);
 		}
+		/*if (body != nullptr) {
+			m_TileObjects[gid] = body;
+		}*/
 	}
 }

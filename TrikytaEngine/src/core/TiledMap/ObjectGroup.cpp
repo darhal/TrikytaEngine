@@ -7,6 +7,7 @@
 ObjectGroup::ObjectGroup(Tmx::Map* p_Map)
 {
 	ObjectGroup::ParseGroups(p_Map);
+	m_Map = p_Map;
 }
 
 void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
@@ -16,7 +17,7 @@ void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
 		// Get an object group.
 		const Tmx::ObjectGroup *objectGroup = p_Map->GetObjectGroup(i);
 		// Iterate through all objects in the object group.
-		if (objectGroup->GetProperties().GetBoolProperty("collision") == true) {
+		if (objectGroup->GetProperties().GetBoolProperty("collision") == true || (objectGroup->GetProperties().HasProperty("physicalize") && objectGroup->GetProperties().GetBoolProperty("physicalize") == true)) {
 			for (int j = 0; j < objectGroup->GetNumObjects(); ++j) {
 				// Get an object.
 				const Tmx::Object* object = objectGroup->GetObject(j);
@@ -46,6 +47,7 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 	Physics2D::BodyType b_type = Physics2D::BodyType::STATIC;
 	Physics2D::BodyParams b_params;
 	GetPhysicsSettings(p_Object, b_type, b_params);
+	Physics2D::PhysicsBody* body;
 	if (p_Object->GetHeight() == 0 && p_Object->GetWidth() == 0) {
 		///Process Polygones
 		const Tmx::Polygon *polygon = p_Object->GetPolygon();
@@ -55,18 +57,17 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 			polyBufferPoints.reserve(polygon->GetNumPoints()+1);
 			for (int i = 0; i < polygon->GetNumPoints(); i++)
 			{
-				const Tmx::Point &point = polygon->GetPoint(i);
+				const Tmx::Point& point = polygon->GetPoint(i);
 				polyBufferPoints.emplace_back(point.x, point.y);
 			}
 			polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-			auto body = Physics2D::PhysicsBody::CreateBody
+			body = Physics2D::PhysicsBody::CreateBody
 			(
 				Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,
 				Physics2D::BodyShape::POLYGON, b_params,
 				Vec2f{ (float)p_Object->GetX(), (float)p_Object->GetY() },
 				polyBufferPoints
 			);
-			m_Bodies.emplace_back(body);
 		}
 		/// Process Polylines!
 		const Tmx::Polyline *polyline = p_Object->GetPolyline();
@@ -80,26 +81,39 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 				polyBufferPoints.emplace_back(point.x, point.y);
 			}
 			polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
-			auto body = Physics2D::PhysicsBody::CreateBody
+			body = Physics2D::PhysicsBody::CreateBody
 			(
 				Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,
 				Physics2D::BodyShape::POLYGON, b_params,
 				Vec2f{ (float)p_Object->GetX(), (float)p_Object->GetY() },
 				polyBufferPoints
 			);
-			m_Bodies.emplace_back(body);
 		}
 	}else {
 		///PROCESS CIRCLES AND BOXES
-		auto body = Physics2D::PhysicsBody::CreateBody
-		(
-			Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,
-			Physics2D::BodyShape::BOX, b_params,
-			Vec2f{ (float)p_Object->GetX() + p_Object->GetWidth() / PTM, (float)p_Object->GetY() + p_Object->GetHeight() / PTM },
-			std::vector<Vec2f>{Vec2f(p_Object->GetWidth() / PTM, p_Object->GetHeight() / PTM)}
-		);
-		m_Bodies.emplace_back(body);
+		if (p_Object->GetType() == "circle") {
+			body = Physics2D::PhysicsBody::CreateBody
+			(
+				Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,
+				Physics2D::BodyShape::CIRCLE, b_params,
+				Vec2f{ (float)p_Object->GetX() + p_Object->GetWidth() / PTM, (float)p_Object->GetY() + p_Object->GetHeight() / PTM },
+				std::vector<Vec2f>{Vec2f(p_Object->GetWidth() / PTM, p_Object->GetHeight() / PTM)}
+			);
+		}else{
+			body = Physics2D::PhysicsBody::CreateBody
+			(
+				Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,
+				Physics2D::BodyShape::BOX, b_params,
+				Vec2f{ (float)p_Object->GetX() + p_Object->GetWidth() / PTM, (float)p_Object->GetY() + p_Object->GetHeight() / PTM },
+				std::vector<Vec2f>{Vec2f(p_Object->GetWidth() / PTM, p_Object->GetHeight() / PTM)}
+			);
+		}
 	}
+	m_Bodies.emplace_back(body);
+	if (p_Object->GetName() != "") {
+		m_ObjectsByName[p_Object->GetName()] = body;
+	}
+	m_ObjectsByID[p_Object->GetGid()] = body;
 }
 
 void ObjectGroup::GetPhysicsSettings(const Tmx::Object* p_Object, Physics2D::BodyType& p_type, Physics2D::BodyParams& p_params)
@@ -153,7 +167,31 @@ void ObjectGroup::ProcessText(const Tmx::Text* text, const Tmx::Object* object)
 	m_Drawables.emplace_back(ui_text);
 }
 
+const Tmx::ObjectGroup* ObjectGroup::getObjectGroup(const std::string& p_objectGroup)
+{
+	const Tmx::ObjectGroup* objectGroup = nullptr;
+	for (int i = 0; i < m_Map->GetNumObjectGroups(); ++i)
+	{
+		objectGroup = m_Map->GetObjectGroup(i);
+		if (objectGroup->GetName() == p_objectGroup) {
+			break;
+		}
+	}
+	return objectGroup;
+}
+
+Physics2D::PhysicsBody* ObjectGroup::getBodyByName(const std::string& p_Name) 
+{
+	return m_ObjectsByName[p_Name];
+}
+
+Physics2D::PhysicsBody* ObjectGroup::getBodyByID(int p_gid)
+{
+	return m_ObjectsByID[p_gid];
+}
+
 ObjectGroup::~ObjectGroup()
 {
 	//TODO: should this free the bodies here ?
 }
+

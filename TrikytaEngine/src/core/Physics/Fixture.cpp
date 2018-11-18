@@ -13,8 +13,7 @@ FixtureDef::FixtureDef(BodyType p_BodyType, BodyShape p_Shape, BodyParams p_Body
 		Vec2f dim = p_Dimentions.at(0);
 		BodyBox.SetAsBox(dim.x, dim.y);
 		shape = &BodyBox;
-	}
-	else if (p_Shape == BodyShape::POLYGON) {
+	}else if (p_Shape == BodyShape::POLYGON) {
 		const int& count = p_Dimentions.size() - 1;
 		std::vector<b2Vec2> vertices;
 		vertices.reserve(count);
@@ -28,8 +27,7 @@ FixtureDef::FixtureDef(BodyType p_BodyType, BodyShape p_Shape, BodyParams p_Body
 		PolyShape.Set(verticesConverted, count);
 		PolyShape.m_centroid.Set(p_Position.x, p_Position.y);
 		shape = &PolyShape;
-	}
-	else if (p_Shape == BodyShape::CHAIN) {
+	}else if (p_Shape == BodyShape::CHAIN) {
 		const int& count = p_Dimentions.size() - 1;
 		std::vector<b2Vec2> vertices;
 		vertices.reserve(count);
@@ -42,8 +40,7 @@ FixtureDef::FixtureDef(BodyType p_BodyType, BodyShape p_Shape, BodyParams p_Body
 		b2Vec2* verticesConverted = &vertices[0];
 		ChainShape.CreateChain(verticesConverted, count);
 		shape = &ChainShape;
-	}
-	else if (p_Shape == BodyShape::CIRCLE) {
+	}else if (p_Shape == BodyShape::CIRCLE) {
 		Vec2f dim = p_Dimentions.at(0);
 		CircleShape.m_p.Set(p_Position.x, p_Position.y); // position
 		CircleShape.m_radius = dim.x;

@@ -55,10 +55,10 @@ namespace Tmx
         void Parse(const tinyxml2::XMLNode *objectNode);
 
         /// Get the name of the object.
-        const std::string &GetName() const { return name; }
+        const std::string& GetName() const { return name; }
 
         /// Get the type of the object.
-        const std::string &GetType() const { return type; }
+        const std::string& GetType() const { return type; }
 
         /// Get the left side of the object, in pixels.
         int GetX() const { return x; }
@@ -85,19 +85,19 @@ namespace Tmx
         bool IsVisible() const { return visible; }
 
         /// Get the ellipse.
-        const Tmx::Ellipse *GetEllipse() const { return ellipse; }
+        const Tmx::Ellipse* GetEllipse() const { return ellipse; }
 
         /// Get the Polygon.
-        const Tmx::Polygon *GetPolygon() const { return polygon; }
+        const Tmx::Polygon* GetPolygon() const { return polygon; }
 
         /// Get the Polyline.
-        const Tmx::Polyline *GetPolyline() const { return polyline; }
+        const Tmx::Polyline* GetPolyline() const { return polyline; }
 
         /// Get the Text.
-        const Tmx::Text *GetText() const { return text; }
+        const Tmx::Text* GetText() const { return text; }
 
         /// Get the property set.
-        const Tmx::PropertySet &GetProperties() const { return properties; }
+        const Tmx::PropertySet& GetProperties() const { return properties; }
 
     private:
         std::string name;

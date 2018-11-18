@@ -51,6 +51,11 @@ public:
 	}
 	virtual void setAffectedByCamera(Camera* cam) override;
 	Vec2i getPosition() override;
+
+	inline ObjectGroup& getGroupManager() 
+	{
+		return m_Group;
+	}
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:

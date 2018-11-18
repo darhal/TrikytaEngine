@@ -42,7 +42,6 @@ void LuaSprite::LoadSpriteFunction()
 		.beginClass<::TiledMap>("Map")
 			.addStaticFunction("createMap", &TiledMap::Create)
 		.endClass();
-	//.endNamespace();
 
 
 	lua_pushcfunction(L, LuaSprite::CreateSprite);

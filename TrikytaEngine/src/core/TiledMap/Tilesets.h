@@ -20,6 +20,7 @@ struct TilesetObjectData {
 	Physics2D::BodyShape m_BodyShape;
 	Physics2D::BodyType m_BodyType;
 	Physics2D::BodyParams m_BodyParams;
+	Tmx::Object* m_Object;
 };
 
 struct TileAnimationData {
@@ -74,7 +75,7 @@ struct TileData
 	float LastDeltaTime;
 	std::vector<Physics2D::PhysicsBody*>* PhyBodys = nullptr;
 	bool IsPhy;
-	Vec2f bodyOffsetPos;
+
 	void setPosition(Vec2i pos, class TiledMap* p_Map) {
 		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
 		DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;
@@ -100,7 +101,8 @@ private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, TileData*> m_Tiles;
-	std::map<int, std::vector<TilesetObjectData*>> m_TileObjects;
+	//std::map<int, std::vector<TilesetObjectData*>> m_TileObjects;
+	std::map<int, std::vector<Physics2D::PhysicsBody*>> m_TileObjects;
 	std::map<int, std::vector<std::pair<int, unsigned int>>> m_TileAnimations;
 	SDL_Texture* m_ImageTexture;
 	Vec2i m_ImageSize;
