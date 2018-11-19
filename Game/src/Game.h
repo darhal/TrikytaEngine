@@ -20,6 +20,7 @@ public:
 	void OnCollisionEnd(class b2Contact*);
 	void OnClick(unsigned int, int, Vec2i);
 	void OnMouseMove(Vec2i);
+	void ManagerTortue();
 
 	class Sprite* obj;
 	class Animation* anim;
@@ -27,4 +28,5 @@ public:
 	class Physics2D::PhysicsBody* body;
 	class Physics2D::PhysicsBody* body2;
 	class TiledMap* map;
+	std::vector<Physics2D::PhysicsBody*> mechantBody;
 };
