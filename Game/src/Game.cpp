@@ -243,7 +243,7 @@ void Game::OnCollision(b2Contact* contact)
 	}*/
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
-	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 0) || map->isBodyPartOfTileset(bodyB, "misc2", 0);
+	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
 	if (isACoin) {
 		if (bodyB == body) {
 			LogConsole(LogWarning, "Contact with a coin !");

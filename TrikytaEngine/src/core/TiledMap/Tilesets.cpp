@@ -144,7 +144,9 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile, const int& gid)
 		{
 			// Get an object.
 			const Tmx::Object *object = p_Tile->GetObject(j);
-
+			Physics2D::BodyType b_type = Physics2D::BodyType::STATIC;
+			Physics2D::BodyParams b_params;
+			ObjectGroup::GetPhysicsSettings(object, b_type, b_params);
 			if (object->GetHeight() == 0 && object->GetWidth() == 0) {
 				// Print Polygon points.
 				const Tmx::Polygon *polygon = object->GetPolygon();
@@ -158,7 +160,7 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile, const int& gid)
 						polyBufferPoints.emplace_back(point.x, point.y);
 					}
 					polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC });
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, b_type, b_params });
 				}
 				// Print Polyline points.
 				const Tmx::Polyline *polyline = object->GetPolyline();
@@ -173,16 +175,16 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile, const int& gid)
 
 					}
 					polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
-					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC });
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, b_type, b_params });
 				}
 			}
 			else {
 				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
 				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
 				if (object->GetType() == "circle") {
-					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::CIRCLE, Physics2D::BodyType::STATIC });
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::CIRCLE, b_type, b_params });
 				}else{
-					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC });
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, b_type, b_params });
 				}
 			}
 		}
