@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <unordered_map>
 #include <cstring>
 #include <core/Drawable/Drawable.h>
 #include "core/Common/defines.h"
@@ -62,6 +63,7 @@ private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
+	//std::unordered_multimap<const std::string*, const class Tilesets*> m_MapTilesetsByName;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;

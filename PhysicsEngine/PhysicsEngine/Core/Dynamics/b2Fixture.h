@@ -22,6 +22,10 @@
 #include "Dynamics/b2Body.h"
 #include "Collision/b2Collision.h"
 #include "Collision/Shapes/b2Shape.h"
+namespace Physics2D
+{
+	class PhysicsBody;
+}
 
 class b2BlockAllocator;
 class b2Body;
@@ -194,7 +198,7 @@ public:
 
 	/// Dump this fixture to the log file.
 	void Dump(int32 bodyIndex);
-
+	Physics2D::PhysicsBody* GetPhysicsBody();
 protected:
 
 	friend class b2Body;
@@ -273,6 +277,11 @@ inline void b2Fixture::SetUserData(void* data)
 inline b2Body* b2Fixture::GetBody()
 {
 	return m_body;
+}
+
+inline Physics2D::PhysicsBody* b2Fixture::GetPhysicsBody()
+{
+	return m_body->m_physicsBody;
 }
 
 inline const b2Body* b2Fixture::GetBody() const

@@ -229,12 +229,21 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
-	/*auto bodyA = contact->GetFixtureA()->GetBody();
-	auto bodyB = contact->GetFixtureB()->GetBody();
-	auto coinbody = map->getGroupManager().getBodyByName("test")->GetBody();
-	if (bodyA == coinbody && bodyB == body->GetBody()) {
+	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
+	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
+	auto coinbody = map->getGroupManager().getBodiesByName("test");
+	bool isACoin = map->getGroupManager().isBodyInLayer(bodyA, "coins") || map->getGroupManager().isBodyInLayer(bodyB, "coins");
+	if (isACoin) {
+		if (bodyB == body) {
+			LogConsole(LogWarning, "Contact with a coin !");
+		}
+		else if (bodyA == body) {
+			LogConsole(LogWarning, "Contact with a coin !");
+		}
+	}
+	/*if (bodyA == coinbody && bodyB == body) {
 		LogConsole(LogWarning, "Contact with a coin !");
-	}else if (bodyB == coinbody && bodyA == body->GetBody()) {
+	}else if (bodyB == coinbody && bodyA == body) {
 		LogConsole(LogWarning, "Contact with a coin !");
 	}*/
 }

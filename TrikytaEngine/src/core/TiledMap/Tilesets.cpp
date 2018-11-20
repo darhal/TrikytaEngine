@@ -97,9 +97,11 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 			int(Tile_SizeX),
 			int(Tile_SizeY)
 		};
-		_id++;
 		m_Tiles[gid] = new TileData(gid, m_SourceDrawCoord, m_DestinationDrawCoord, m_ImageTexture, false, false);
 		m_Tiles[gid]->isAnimated = false;
+		m_Tiles[gid]->TileName = m_Tileset.GetName();
+		m_Tiles[gid]->id = _id;
+		_id++;
 	}
 	for (auto animTiles : m_TileAnimations) {
 		m_Tiles[animTiles.first]->isAnimated = true;
@@ -138,11 +140,11 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
 	{
 		// Iterate through all Collision objects in the p_Tile.
-		//m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
+		m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
 		for (int j = 0; j < p_Tile->GetNumObjects(); ++j)
 		{
 			Physics2D::PhysicsBody* body = nullptr;
-			const Tmx::Object *object = p_Tile->GetObject(j);// Get an object.
+			const Tmx::Object* object = p_Tile->GetObject(j);// Get an object.
 			Physics2D::BodyType b_type = Physics2D::BodyType::STATIC;
 			Physics2D::BodyParams b_params;
 			ObjectGroup::GetPhysicsSettings(object, b_type, b_params);
@@ -159,8 +161,6 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 						polyBufferPoints.emplace_back(point.x, point.y);
 					}
 					polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
-					//auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC, object };
-					//m_TileObjects[gid].push_back(tile_Object);
 					if (body == nullptr) {
 						LogTerminal("Creating polygone!");
 						body = Physics2D::PhysicsBody::CreateBody
@@ -186,10 +186,7 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 
 					}
 					polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
-					//auto tile_Object = new TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC, object };
-					//m_TileObjects[gid].push_back(tile_Object);
 					if (body == nullptr) {
-						LogTerminal("Creating polygone!");
 						body = Physics2D::PhysicsBody::CreateBody
 						(
 							Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::POLYGON, b_params,Vec2f((float)object->GetX(), (float)object->GetY()),
@@ -204,10 +201,7 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
 				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
 				if (object->GetType() == "circle") {
-					//auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::CIRCLE, Physics2D::BodyType::STATIC, , object };
-					//m_TileObjects[gid].push_back(tile_Object);
 					if (body == nullptr) {
-						LogTerminal("Creating Circle body!");
 						body = 
 							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::CIRCLE, b_params,vecPos,vecCoord);
 					}else {
@@ -215,9 +209,6 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 						body->CreateFixture(&fixture);
 					}
 				}else{
-					//auto tile_Object = new TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC, , object };
-					//m_TileObjects[gid].push_back(tile_Object);
-					LogTerminal("Creating Box body!");
 					if (body == nullptr) {
 						body = 
 							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::BOX, b_params,vecPos,vecCoord);
@@ -227,7 +218,6 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 					}
 				}
 			}
-			//body->SetUserData((void*)object);
 			m_TileObjects[gid].emplace_back(body);
 		}
 		/*if (body != nullptr) {

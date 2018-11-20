@@ -51,7 +51,11 @@ struct TileData
 		GID(o.GID),
 		m_CurrentFrame(o.m_CurrentFrame),
 		LastDeltaTime(o.LastDeltaTime),
-		m_FramesVec(o.m_FramesVec)
+		m_FramesVec(o.m_FramesVec),
+		m_AnimationDuration(o.m_AnimationDuration),
+		PhyBodys(o.PhyBodys),
+		TileName(o.TileName),
+		id(o.id)
 	{
 		SourceDraw = new SDL_Rect;
 		DestDraw = new SDL_Rect;
@@ -68,18 +72,29 @@ struct TileData
 	struct SDL_Rect* DestDraw;
 	struct SDL_Texture* Tex;
 	int GID;
+	int id;
 	bool isAnimated;
 	std::vector<TileData*> m_FramesVec;
 	unsigned int m_CurrentFrame; 
 	unsigned int m_AnimationDuration;
 	float LastDeltaTime;
-	std::vector<Physics2D::PhysicsBody*>* PhyBodys = nullptr;
+	std::vector<Physics2D::PhysicsBody*> PhyBodys;
+	//std::unordered_map<const std::string&, Physics2D::PhysicsBody*> m_BodiesByName;
 	bool IsPhy;
+	std::string TileName;
 
 	void setPosition(Vec2i pos, class TiledMap* p_Map) {
 		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
 		DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;
 		DestDraw->y = pos.y * p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster;
+	}
+
+	bool IsContainBody(Physics2D::PhysicsBody* body)
+	{
+		if (!PhyBodys.empty()) {
+			return std::find(PhyBodys.begin(), PhyBodys.end(), body) != PhyBodys.end();
+		}
+		return false;
 	}
 };
 
@@ -101,7 +116,6 @@ private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, TileData*> m_Tiles;
-	//std::map<int, std::vector<TilesetObjectData*>> m_TileObjects;
 	std::map<int, std::vector<Physics2D::PhysicsBody*>> m_TileObjects;
 	std::map<int, std::vector<std::pair<int, unsigned int>>> m_TileAnimations;
 	SDL_Texture* m_ImageTexture;

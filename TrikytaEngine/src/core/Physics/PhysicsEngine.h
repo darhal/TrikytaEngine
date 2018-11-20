@@ -73,8 +73,11 @@ namespace Physics2D {
 	protected:
 		PhysicsBody(b2Body* p_Body, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams) :
 			m_Body(p_Body), m_BodyType(p_BodyType), m_Shape(p_Shape), m_BodyParams(p_BodyParams)
-		{}
+		{
+			m_Body->m_physicsBody = this;
+		}
 	public:
+		
 		static PhysicsBody* CreateBody
 		(
 			PhysicsWorld* p_World, BodyType p_BodyType,
@@ -90,6 +93,7 @@ namespace Physics2D {
 		virtual Vec2i getPosition() override { return Vec2i((int)m_Body->GetPosition().x, (int)m_Body->GetPosition().y); }
 		virtual double GetRotation() override { return Utility::ToDegree(GetAngle()); }
 	private:
+		friend class b2Body;
 		b2Body* m_Body;
 		BodyType m_BodyType;
 		BodyShape m_Shape;

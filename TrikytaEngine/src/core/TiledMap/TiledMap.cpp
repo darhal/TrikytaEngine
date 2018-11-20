@@ -157,6 +157,7 @@ bool TiledMap::LoadTilesets()
 	for (int i = 0; i < m_Map->GetNumTilesets(); ++i)
 	{
 		m_MapTilesets->emplace_back(this, i);
+		//m_MapTilesetsByName[m_Map->GetTileset(i)->GetName()] = &m_MapTilesets->back();
 	}
 	return true;
 }
@@ -173,33 +174,16 @@ void TiledMap::LoadLayers()
 					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
 					Uint32 Gid = tileLayer->GetTileGid(x, y);
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
-					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]);
+					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]); // should we copy this right here ?
 					tileData->setPosition(Vec2i(x, y), this);
 					tileData->IsPhy = false;
-					/*if (TilesetData->m_TileObjects[Gid].size() > 0) {
-						tileData->PhyBodys = new std::vector<Physics2D::PhysicsBody*>;
-						tileData->PhyBodys->reserve(TilesetData->m_TileObjects[Gid].size());
-						tileData->IsPhy = true;
-						for (auto& itr : TilesetData->m_TileObjects[Gid]) {
-							auto tileBody = Physics2D::PhysicsBody::CreateBody
-							(
-								Physics2D::PhysicsEngine::GetPhysicsWorld(), itr->m_BodyType,
-								itr->m_BodyShape, itr->m_BodyParams,
-								itr->m_ObjectPos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y),
-								itr->m_ObjectCoord
-							);
-							tileData->PhyBodys->push_back(tileBody);
-							tileData->bodyOffsetPos = itr->m_ObjectPos;
-						}
-						m_allMapBodies.reserve(m_allMapBodies.size()+tileData->PhyBodys->size());
-						m_allMapBodies.insert(m_allMapBodies.end(), tileData->PhyBodys->begin(), tileData->PhyBodys->end());
-					}*/
 					if (TilesetData->m_TileObjects[Gid].size() > 0) {
+						tileData->PhyBodys = TilesetData->m_TileObjects[Gid];
+						auto tempVec = TilesetData->m_TileObjects[Gid];
+						m_allMapBodies.insert(m_allMapBodies.end(), tempVec.begin(), tempVec.end());
 						for (auto body : TilesetData->m_TileObjects[Gid]) {
 							Vec2f pos = body->GetTransform().p;
 							body->SetTransform(pos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y), body->GetTransform().q.GetAngle());
-							m_allMapBodies.emplace_back(body);
-							tileData->PhyBodys->emplace_back(body);
 						}
 					}
 					m_LayerData.emplace_back(LayerIndex, tileData);
