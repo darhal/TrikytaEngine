@@ -116,7 +116,7 @@ private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, TileData*> m_Tiles;
-	std::map<int, std::vector<Physics2D::PhysicsBody*>> m_TileObjects;
+	std::map<int, std::vector<TilesetObjectData>> m_TileObjects;
 	std::map<int, std::vector<std::pair<int, unsigned int>>> m_TileAnimations;
 	SDL_Texture* m_ImageTexture;
 	Vec2i m_ImageSize;

@@ -57,13 +57,16 @@ public:
 	{
 		return m_Group;
 	}
+
+	const std::vector<Physics2D::PhysicsBody*>& getTilesetBodiesByID(const std::string& tilsetName, int id);
+	bool isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id);
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
-	//std::unordered_multimap<const std::string*, const class Tilesets*> m_MapTilesetsByName;
+	std::map<std::string, std::map<int, std::vector<Physics2D::PhysicsBody*>>> m_BodyByTile;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;

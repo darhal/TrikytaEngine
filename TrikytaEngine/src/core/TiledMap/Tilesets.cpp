@@ -134,8 +134,63 @@ void Tilesets::ProcessTileAnimation(const Tmx::Tile* p_Tile,const int& gid)
 	}
 }
 
+void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile, const int& gid)
+{
+	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
+	{
+		// Iterate through all Collision objects in the p_Tile.
+		m_TileObjects[gid].reserve(p_Tile->GetNumObjects());
+		for (int j = 0; j < p_Tile->GetNumObjects(); ++j)
+		{
+			// Get an object.
+			const Tmx::Object *object = p_Tile->GetObject(j);
 
-void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
+			if (object->GetHeight() == 0 && object->GetWidth() == 0) {
+				// Print Polygon points.
+				const Tmx::Polygon *polygon = object->GetPolygon();
+				if (polygon != 0)
+				{
+					std::vector<Vec2f> polyBufferPoints;
+					polyBufferPoints.reserve(polygon->GetNumPoints() + 1);
+					for (int i = 0; i < polygon->GetNumPoints(); i++)
+					{
+						const Tmx::Point &point = polygon->GetPoint(i);
+						polyBufferPoints.emplace_back(point.x, point.y);
+					}
+					polyBufferPoints.emplace_back(polygon->GetPoint(0).x, polygon->GetPoint(0).y);
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC });
+				}
+				// Print Polyline points.
+				const Tmx::Polyline *polyline = object->GetPolyline();
+				if (polyline != 0)
+				{
+					std::vector<Vec2f> polyBufferPoints;
+					polyBufferPoints.reserve(polyline->GetNumPoints() + 1);
+					for (int i = 0; i < polyline->GetNumPoints(); i++)
+					{
+						const Tmx::Point &point = polyline->GetPoint(i);
+						polyBufferPoints.emplace_back(point.x, point.y);
+
+					}
+					polyBufferPoints.emplace_back(polyline->GetPoint(0).x, polyline->GetPoint(0).y);
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ Vec2f((float)object->GetX(), (float)object->GetY()), polyBufferPoints, Physics2D::BodyShape::POLYGON, Physics2D::BodyType::STATIC });
+				}
+			}
+			else {
+				auto vecPos = Vec2f((float)object->GetX() + object->GetWidth() / PTM, (float)object->GetY() + object->GetHeight() / PTM);
+				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
+				if (object->GetType() == "circle") {
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::CIRCLE, Physics2D::BodyType::STATIC });
+				}else{
+					m_TileObjects[gid].emplace_back(TilesetObjectData{ vecPos, vecCoord, Physics2D::BodyShape::BOX, Physics2D::BodyType::STATIC });
+				}
+			}
+		}
+	}
+}
+
+
+/*void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 {
 	if (p_Tile->HasObjects()) ///PROCESS COLLISION!
 	{
@@ -202,7 +257,7 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 				auto vecCoord = std::vector<Vec2f>{ Vec2f(object->GetWidth() / PTM, object->GetHeight() / PTM) };
 				if (object->GetType() == "circle") {
 					if (body == nullptr) {
-						body = 
+						body =
 							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::CIRCLE, b_params,vecPos,vecCoord);
 					}else {
 						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::CIRCLE, b_params, vecPos, vecCoord };
@@ -210,7 +265,7 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 					}
 				}else{
 					if (body == nullptr) {
-						body = 
+						body =
 							Physics2D::PhysicsBody::CreateBody(Physics2D::PhysicsEngine::GetPhysicsWorld(), b_type,Physics2D::BodyShape::BOX, b_params,vecPos,vecCoord);
 					}else {
 						Physics2D::FixtureDef fixture{ b_type, Physics2D::BodyShape::BOX, b_params, vecPos, vecCoord };
@@ -220,8 +275,5 @@ void Tilesets::ProcessTileObjects(const Tmx::Tile* p_Tile,const int& gid)
 			}
 			m_TileObjects[gid].emplace_back(body);
 		}
-		/*if (body != nullptr) {
-			m_TileObjects[gid] = body;
-		}*/
 	}
-}
+}*/

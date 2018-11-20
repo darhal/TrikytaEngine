@@ -178,12 +178,15 @@ void TiledMap::LoadLayers()
 					tileData->setPosition(Vec2i(x, y), this);
 					tileData->IsPhy = false;
 					if (TilesetData->m_TileObjects[Gid].size() > 0) {
-						tileData->PhyBodys = TilesetData->m_TileObjects[Gid];
-						auto tempVec = TilesetData->m_TileObjects[Gid];
-						m_allMapBodies.insert(m_allMapBodies.end(), tempVec.begin(), tempVec.end());
-						for (auto body : TilesetData->m_TileObjects[Gid]) {
-							Vec2f pos = body->GetTransform().p;
-							body->SetTransform(pos + Vec2f((float)tileData->DestDraw->x, (float)tileData->DestDraw->y), body->GetTransform().q.GetAngle());
+						tileData->IsPhy = true;
+						for (auto bp : TilesetData->m_TileObjects[Gid]) {
+							auto body = Physics2D::PhysicsBody::CreateBody(
+								Physics2D::PhysicsEngine::GetPhysicsWorld(),bp.m_BodyType, bp.m_BodyShape, bp.m_BodyParams, 
+								bp.m_ObjectPos + Vec2f(float(tileData->DestDraw->x), float(tileData->DestDraw->y)), bp.m_ObjectCoord
+							);
+							tileData->PhyBodys.emplace_back(body);
+							m_BodyByTile[tileData->TileName][tileData->id-1].emplace_back(body);
+							m_allMapBodies.emplace_back(body);
 						}
 					}
 					m_LayerData.emplace_back(LayerIndex, tileData);
@@ -347,6 +350,20 @@ void TiledMap::setAffectedByCamera(Camera* cam)
 	if (!isAffectedByCamera()) { return; }
 	for (auto objectsThatCanBeAffectedByCam : m_Group.getDrawables()) {
 		m_Camera->addObjectToCamera(objectsThatCanBeAffectedByCam);
+	}
+}
+
+const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
+{
+	return m_BodyByTile[tilsetName][id];
+}
+
+bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id)
+{
+	if (!m_BodyByTile[tilsetName][id].empty()) {
+		return std::find(m_BodyByTile[tilsetName][id].begin(), m_BodyByTile[tilsetName][id].end(), body) != m_BodyByTile[tilsetName][id].end();
+	}else{
+		return false;
 	}
 }
 
