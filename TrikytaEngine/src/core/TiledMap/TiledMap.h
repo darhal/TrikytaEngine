@@ -96,4 +96,3 @@ private:
 	friend class ObjectGroup;
 	friend struct TileData;
 };
-
