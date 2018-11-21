@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "ObjectHandler.h"
 #include "core/Drawable/Drawable.h"
+#include "core/Component/Component.h"
 
 Object::Object(bool pRegisterInHandler)
 {
@@ -53,4 +54,29 @@ void Object::attachTo(Object* obj, Vec2f p_Offset)
 	}
 	obj->addChildren(this);
 	m_Parent = obj;
+}
+
+const Component* Object::getComponent(int compType)
+{
+	for (const auto& component : m_Components) {
+		if (component->getComponentType() == compType) {
+			return component;
+		}
+	}
+	return NULL;
+}
+
+inline void Object::addComponent(Component* component)
+{
+	if (component != NULL) {
+		m_Components.emplace_back(component);
+		component->setOwner(this);
+		return;
+	}
+	
+}
+
+inline const std::vector<Component*>& Object::getComponents()
+{
+	return m_Components;
 }

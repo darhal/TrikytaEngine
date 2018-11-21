@@ -41,7 +41,8 @@ struct TileData
 		DestDraw(p_DestDraw),
 		Tex(p_Tex),
 		IsPhy(p_IsPhy),
-		isAnimated(p_IsAnimated)
+		isAnimated(p_IsAnimated), 
+		m_LayerType(LayerType::RETAINED)
 	{}
 
 	TileData(TileData& o) :
@@ -55,7 +56,8 @@ struct TileData
 		m_AnimationDuration(o.m_AnimationDuration),
 		PhyBodys(o.PhyBodys),
 		TileName(o.TileName),
-		id(o.id)
+		id(o.id),
+		m_LayerType(o.m_LayerType)
 	{
 		SourceDraw = new SDL_Rect;
 		DestDraw = new SDL_Rect;
@@ -82,6 +84,7 @@ struct TileData
 	//std::unordered_map<const std::string&, Physics2D::PhysicsBody*> m_BodiesByName;
 	bool IsPhy;
 	std::string TileName;
+	LayerType m_LayerType;
 
 	void setPosition(Vec2i pos, class TiledMap* p_Map) {
 		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!

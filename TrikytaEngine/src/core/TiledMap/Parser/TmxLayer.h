@@ -39,7 +39,7 @@ namespace tinyxml2 {
 namespace Tmx
 {
     class Map;
-		class Tile;
+	class Tile;
     enum LayerType
     {
         TMX_LAYERTYPE_TILE        = 0X01,

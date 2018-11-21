@@ -11,6 +11,11 @@ namespace Tmx {
 	class Tileset;
 }
 
+enum class LayerType{
+	IMMEDIATE,
+	RETAINED
+};
+
 struct LayerData
 {
 	LayerData(int layerId, struct TileData* tiledLayerData):
@@ -31,6 +36,13 @@ struct MapPart
 	SDL_Texture* m_Texture;
 	SDL_Rect m_Coords;
 	Vec2i m_InitPos;
+};
+
+struct ImmediateLayer : public LayerData
+{
+	ImmediateLayer(int layerId, struct TileData* tiledLayerData, class Drawable* drble) : LayerData(layerId, tiledLayerData), m_drble(drble)
+	{}
+	class Drawable* m_drble;
 };
 
 class TiledMap: public Drawable
@@ -67,11 +79,13 @@ private:
 	std::string m_AssetsPath;
 	std::vector<class Tilesets>* m_MapTilesets;
 	std::map<std::string, std::map<int, std::vector<Physics2D::PhysicsBody*>>> m_BodyByTile;
+	//std::map<std::pair<const std::string&, int>, std::vector<Physics2D::PhysicsBody*>> m_BodyByTile;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	std::vector<LayerData*> m_cachedAnimatiedTiles;
 	ObjectGroup m_Group;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData> m_LayerData;
+	std::map<std::pair<const std::string&, int>, ImmediateLayer> m_ImmediateLayerData;
 	std::vector<MapPart> m_MapGrids;
 private:
 	bool LoadTilesets();
@@ -82,3 +96,4 @@ private:
 	friend class ObjectGroup;
 	friend struct TileData;
 };
+

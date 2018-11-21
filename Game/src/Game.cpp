@@ -35,7 +35,7 @@ void Game::On_Engine_Init()
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
-
+	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(0, 0));
 	//text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(0, 350), Color{ 255,0,255, 255 }, TTF_STYLE_UNDERLINE | TTF_STYLE_BOLD);
 	//auto text2 = UI::Text::createText("This is a another output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(500, 350), Color{ 255,0,255, 255 }, TTF_STYLE_BOLD);
 	//to_bytes(Animation, anim, bytecode);

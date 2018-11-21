@@ -9,6 +9,7 @@
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Camera/Camera.h"
 #include <map>
+#include "core/Drawable/Sprite.h"
 
 //TODO: correct the debug drawing that it stuck at one thing!
 bool CameraUpdate = false;
@@ -40,7 +41,7 @@ TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_
 
 TiledMap::~TiledMap()
 {
-	for (auto& itr : m_LayerData) {
+	for (auto itr : m_LayerData) {
 		FREE(itr.tiledLayerData);
 	}
 	FREE(m_MapTilesets);
@@ -186,10 +187,26 @@ void TiledMap::LoadLayers()
 							);
 							tileData->PhyBodys.emplace_back(body);
 							m_BodyByTile[tileData->TileName][tileData->id-1].emplace_back(body);
+							//m_BodyByTile[std::make_pair(tileData->TileName, tileData->id - 1)].emplace_back(body);//switch to this after
 							m_allMapBodies.emplace_back(body);
 						}
 					}
-					m_LayerData.emplace_back(LayerIndex, tileData);
+					if (tileLayer->GetProperties().HasProperty("immediate") && tileLayer->GetProperties().GetBoolProperty("immediate")) {
+						if (!tileData->isAnimated) {
+							tileData->m_LayerType = LayerType::IMMEDIATE;
+							auto drble = new Drawable();
+							drble->m_SourceDrawCoord = *tileData->SourceDraw;
+							drble->m_DestinationDrawCoord = *tileData->DestDraw;
+							drble->m_Texture = tileData->Tex;
+							if (m_Camera != NULL) { m_Camera->addObjectToCamera(drble); }
+							m_ImmediateLayerData.emplace(std::make_pair(tileLayer->GetName(), x*y), ImmediateLayer(LayerIndex, tileData, drble));//todo fix this by just doing same as annimations
+						}else{
+
+						}
+					}else{
+						tileData->m_LayerType = LayerType::RETAINED;
+						m_LayerData.emplace_back(LayerIndex, tileData);
+					}
 				}
 			}
 		}
@@ -348,8 +365,11 @@ void TiledMap::setAffectedByCamera(Camera* cam)
 { 
 	Drawable::setAffectedByCamera(cam);
 	if (!isAffectedByCamera()) { return; }
-	for (auto objectsThatCanBeAffectedByCam : m_Group.getDrawables()) {
+	for (const auto& objectsThatCanBeAffectedByCam : m_Group.getDrawables()) {
 		m_Camera->addObjectToCamera(objectsThatCanBeAffectedByCam);
+	}
+	for (const auto& drwbleThatCanBeAffectedByCam : m_ImmediateLayerData) {
+		m_Camera->addObjectToCamera(drwbleThatCanBeAffectedByCam.second.m_drble);
 	}
 }
 
@@ -367,7 +387,21 @@ bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::stri
 	}
 }
 
+/*const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
+{
+	return m_BodyByTile[std::make_pair(tilsetName, id)];
+}
 
+bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id)
+{
+	if (m_BodyByTile.find(std::make_pair(tilsetName, id)) != m_BodyByTile.end()) {
+		return std::find(m_BodyByTile[std::make_pair(tilsetName, id)].begin(),
+			m_BodyByTile[std::make_pair(tilsetName, id)].end(), body) != m_BodyByTile[std::make_pair(tilsetName, id)].end();
+	}
+	else {
+		return false;
+	}
+}*/
 
 /////////////////////////////////////////////////
 int PrintMapInfo(Tmx::Map* map)

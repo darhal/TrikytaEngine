@@ -3,6 +3,7 @@
 #include "IObject.h"
 #include <vector>
 
+class Component;
 
 class Object : public IObject
 {
@@ -18,6 +19,22 @@ public:
 	void addChildren(Object*);
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
 
+	template<typename T>
+	const T* getComponent() {
+		T* componentResult = NULL;
+		for (const auto& component : m_Components) {
+			auto potentialComponent = dynamic_cast<T*>(component);
+			if (potentialComponent != NULL) {
+				componentResult = potentialComponent;
+				break;
+			}
+		}
+		return componentResult;
+	};
+	void addComponent(Component* component);
+	const std::vector<Component*>& getComponents();
+	const Component* getComponent(int compType);
+
 	void setRender(bool isVisible);
 
 	inline std::vector<Object*>* getChildrens() const { return m_Childrens; }
@@ -30,6 +47,7 @@ protected:
 
 	Object* m_Parent = nullptr;
 	std::vector<Object*>* m_Childrens;
+	std::vector<Component*> m_Components;
 private:
 
 };
