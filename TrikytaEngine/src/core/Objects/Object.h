@@ -20,7 +20,7 @@ public:
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
 
 	template<typename T>
-	const T* getComponent() {
+	T* getComponent() {
 		T* componentResult = NULL;
 		for (const auto& component : m_Components) {
 			auto potentialComponent = dynamic_cast<T*>(component);
@@ -51,3 +51,4 @@ protected:
 private:
 
 };
+

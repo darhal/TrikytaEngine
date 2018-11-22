@@ -16,6 +16,8 @@ bool CameraUpdate = false;
 
 int PrintMapInfo(Tmx::Map* map);//delete this later!
 
+LayerData::~LayerData() { FREE(tiledLayerData); }
+
 TiledMap* TiledMap::Create(std::string p_Filename) 
 {
 	Tmx::Map* map = new Tmx::Map();
@@ -35,14 +37,13 @@ TiledMap* TiledMap::Create(std::string p_Filename)
 
 TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath), m_Group(m_Map)
 {
-	
 	TiledMap::init();
 }
 
 TiledMap::~TiledMap()
 {
 	for (auto itr : m_LayerData) {
-		FREE(itr.tiledLayerData);
+		FREE(itr->tiledLayerData);
 	}
 	FREE(m_MapTilesets);
 	FREE(m_Map);
@@ -57,7 +58,7 @@ bool TiledMap::init()
 	if (CameraUpdate) {// working but have to draw on other textures too
 		m_DestinationDrawCoord = { m_Position.x, m_Position.y, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() };
 		m_SourceDrawCoord = { 0, 0, ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight() }; //TODO: Change this to camera size
-	}else { // shows nothing
+	}else{ // shows nothing
 		m_DestinationDrawCoord = { m_Position.x, m_Position.y, m_Size.x, m_Size.y };
 		m_SourceDrawCoord = { 0, 0, m_Size.x, m_Size.y }; //TODO: Change this to camera size
 	}
@@ -112,17 +113,22 @@ void TiledMap::DivideMap(Vec2i& maxGridSize)
 void TiledMap::renderAnimations(float dt)
 {
 	auto r = ENGINE->getRenderer();
-	for (auto& itr : m_cachedAnimatiedTiles) {
-		itr->tiledLayerData->LastDeltaTime = itr->tiledLayerData->LastDeltaTime + dt;
-		if (itr->tiledLayerData->LastDeltaTime > itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->m_AnimationDuration/1000.f) {
-			itr->tiledLayerData->m_CurrentFrame++;
-			if (itr->tiledLayerData->m_CurrentFrame >= itr->tiledLayerData->m_FramesVec.size()) {
-				itr->tiledLayerData->m_CurrentFrame = 0;
+	for (auto& itr : m_cachedImmediateTiles) {
+		if (itr->tiledLayerData->isAnimated) {
+			itr->tiledLayerData->LastDeltaTime = itr->tiledLayerData->LastDeltaTime + dt;
+			if (itr->tiledLayerData->LastDeltaTime > itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->m_AnimationDuration / 1000.f) {
+				itr->tiledLayerData->m_CurrentFrame++;
+				if (itr->tiledLayerData->m_CurrentFrame >= itr->tiledLayerData->m_FramesVec.size()) {
+					itr->tiledLayerData->m_CurrentFrame = 0;
+				}
+				itr->tiledLayerData->LastDeltaTime = 0;
 			}
-			itr->tiledLayerData->LastDeltaTime = 0;
+			SDL_RenderCopy(r, itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->Tex,
+				itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->SourceDraw, itr->tiledLayerData->DestDraw);
+		}else{
+			SDL_RenderCopy(r, itr->tiledLayerData->Tex,
+				itr->tiledLayerData->SourceDraw, itr->tiledLayerData->DestDraw);
 		}
-		SDL_RenderCopy(r, itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->Tex,
-			itr->tiledLayerData->m_FramesVec.at(itr->tiledLayerData->m_CurrentFrame)->SourceDraw, itr->tiledLayerData->DestDraw);
 	}
 }
 
@@ -142,8 +148,7 @@ void TiledMap::render(float dt)
 		SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
 		if (CameraUpdate) {
 			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
-		}
-		else {
+		}else{
 			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 		}
 	}
@@ -155,8 +160,7 @@ bool TiledMap::LoadTilesets()
 	// Iterate through the tilesets.
 	m_MapTilesets = new std::vector<Tilesets>;
 	m_MapTilesets->reserve(m_Map->GetNumTilesets());
-	for (int i = 0; i < m_Map->GetNumTilesets(); ++i)
-	{
+	for (int i = 0; i < m_Map->GetNumTilesets(); ++i){
 		m_MapTilesets->emplace_back(this, i);
 		//m_MapTilesetsByName[m_Map->GetTileset(i)->GetName()] = &m_MapTilesets->back();
 	}
@@ -177,7 +181,15 @@ void TiledMap::LoadLayers()
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
 					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]); // should we copy this right here ?
 					tileData->setPosition(Vec2i(x, y), this);
+					tileData->m_MapGrid = Vec2i(x, y);
 					tileData->IsPhy = false;
+					m_LayerData.emplace_back(new LayerData(LayerIndex, tileData));
+					if ((tileLayer->GetProperties().HasProperty("immediate") && tileLayer->GetProperties().GetBoolProperty("immediate")) || tileData->isAnimated) {
+						tileData->m_LayerType = LayerType::IMMEDIATE;
+						m_ImmediateLayerData[std::make_pair(tileData->TileName, x*y)] = m_LayerData.back();
+					}else {
+						tileData->m_LayerType = LayerType::RETAINED;
+					}
 					if (TilesetData->m_TileObjects[Gid].size() > 0) {
 						tileData->IsPhy = true;
 						for (auto bp : TilesetData->m_TileObjects[Gid]) {
@@ -189,23 +201,8 @@ void TiledMap::LoadLayers()
 							m_BodyByTile[tileData->TileName][tileData->id-1].emplace_back(body);
 							//m_BodyByTile[std::make_pair(tileData->TileName, tileData->id - 1)].emplace_back(body);//switch to this after
 							m_allMapBodies.emplace_back(body);
+							body->addComponent(m_LayerData.back());
 						}
-					}
-					if (tileLayer->GetProperties().HasProperty("immediate") && tileLayer->GetProperties().GetBoolProperty("immediate")) {
-						if (!tileData->isAnimated) {
-							tileData->m_LayerType = LayerType::IMMEDIATE;
-							auto drble = new Drawable();
-							drble->m_SourceDrawCoord = *tileData->SourceDraw;
-							drble->m_DestinationDrawCoord = *tileData->DestDraw;
-							drble->m_Texture = tileData->Tex;
-							if (m_Camera != NULL) { m_Camera->addObjectToCamera(drble); }
-							m_ImmediateLayerData.emplace(std::make_pair(tileLayer->GetName(), x*y), ImmediateLayer(LayerIndex, tileData, drble));//todo fix this by just doing same as annimations
-						}else{
-
-						}
-					}else{
-						tileData->m_LayerType = LayerType::RETAINED;
-						m_LayerData.emplace_back(LayerIndex, tileData);
 					}
 				}
 			}
@@ -233,16 +230,16 @@ void TiledMap::LoadMapIntoTexture()
 			Vec2i min = Vec2i(texture_data.m_Coords.x, texture_data.m_Coords.y);
 			Vec2i max = Vec2i(texture_data.m_Coords.x, texture_data.m_Coords.y) + Vec2i(texture_data.m_Coords.w, texture_data.m_Coords.h);
 			for (auto& itr : m_LayerData) {
-				if (itr.tiledLayerData->isAnimated) {
-					m_cachedAnimatiedTiles.emplace_back(&itr);
+				if (itr->tiledLayerData->m_LayerType == LayerType::IMMEDIATE) {
+					m_cachedImmediateTiles.emplace_back(itr);
 				}else{
 					//Perform corpping!
-					if (Utility::IsInBox(Vec2i(itr.tiledLayerData->DestDraw->x, itr.tiledLayerData->DestDraw->y), min, max)){
+					if (Utility::IsInBox(Vec2i(itr->tiledLayerData->DestDraw->x, itr->tiledLayerData->DestDraw->y), min, max)){
 						SDL_Rect tempDestDraw;
-						memcpy(&tempDestDraw, itr.tiledLayerData->DestDraw, sizeof(SDL_Rect));
+						memcpy(&tempDestDraw, itr->tiledLayerData->DestDraw, sizeof(SDL_Rect));
 						tempDestDraw.x -= min.x;
 						tempDestDraw.y -= min.y;
-						SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, &tempDestDraw);
+						SDL_RenderCopy(r, itr->tiledLayerData->Tex, itr->tiledLayerData->SourceDraw, &tempDestDraw);
 					}
 				}
 			}
@@ -250,11 +247,11 @@ void TiledMap::LoadMapIntoTexture()
 	}else{
 		SDL_SetRenderTarget(r, m_Texture);
 		for (auto& itr : m_LayerData) {
-			if (itr.tiledLayerData->isAnimated) {
-				m_cachedAnimatiedTiles.emplace_back(&itr);
+			if (itr->tiledLayerData->m_LayerType == LayerType::IMMEDIATE) {
+				m_cachedImmediateTiles.emplace_back(itr);
 			}
 			else {
-				SDL_RenderCopy(r, itr.tiledLayerData->Tex, itr.tiledLayerData->SourceDraw, itr.tiledLayerData->DestDraw);
+				SDL_RenderCopy(r, itr->tiledLayerData->Tex, itr->tiledLayerData->SourceDraw, itr->tiledLayerData->DestDraw);
 			}
 		}
 	}
@@ -272,7 +269,7 @@ void TiledMap::setPosition(Vec2i pos)
 		if (pos.y >= 0 && pos.y <= m_Size.y- m_DestinationDrawCoord.h) {
 			m_SourceDrawCoord.y = pos.y; // remove negative sign for the real source here source is used as Dest!
 		}
-		for (auto& itr : m_cachedAnimatiedTiles) {
+		for (auto& itr : m_cachedImmediateTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
 			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
@@ -298,7 +295,7 @@ void TiledMap::setPosition(Vec2i pos)
 			m_DestinationDrawCoord.x = -pos.x; // remove negative sign for the real source here source is used as Dest!
 			m_DestinationDrawCoord.y = -pos.y;
 		}
-		for (auto& itr : m_cachedAnimatiedTiles) {
+		for (auto& itr : m_cachedImmediateTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
 			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
 			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
@@ -313,7 +310,7 @@ void TiledMap::translateMap(Vec2i pos)
 		m_Position += pos;
 		m_SourceDrawCoord.x -= pos.x;
 		m_SourceDrawCoord.y -= pos.y;
-		for (auto& itr : m_cachedAnimatiedTiles) {
+		for (auto& itr : m_cachedImmediateTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
 			itr->tiledLayerData->DestDraw->x = current_rect->x + pos.x;
 			itr->tiledLayerData->DestDraw->y = current_rect->y + pos.y;
@@ -368,9 +365,6 @@ void TiledMap::setAffectedByCamera(Camera* cam)
 	for (const auto& objectsThatCanBeAffectedByCam : m_Group.getDrawables()) {
 		m_Camera->addObjectToCamera(objectsThatCanBeAffectedByCam);
 	}
-	for (const auto& drwbleThatCanBeAffectedByCam : m_ImmediateLayerData) {
-		m_Camera->addObjectToCamera(drwbleThatCanBeAffectedByCam.second.m_drble);
-	}
 }
 
 const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
@@ -384,6 +378,15 @@ bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::stri
 		return std::find(m_BodyByTile[tilsetName][id].begin(), m_BodyByTile[tilsetName][id].end(), body) != m_BodyByTile[tilsetName][id].end();
 	}else{
 		return false;
+	}
+}
+
+void TiledMap::DeleteTileInLayer(LayerData* tileToDelete)
+{
+	auto itr = std::find(m_cachedImmediateTiles.begin(), m_cachedImmediateTiles.end(), tileToDelete);
+	if (itr != m_cachedImmediateTiles.end()) {
+		m_cachedImmediateTiles.erase(itr);
+		FREE(tileToDelete);
 	}
 }
 

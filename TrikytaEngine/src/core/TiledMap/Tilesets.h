@@ -43,7 +43,8 @@ struct TileData
 		IsPhy(p_IsPhy),
 		isAnimated(p_IsAnimated), 
 		m_LayerType(LayerType::RETAINED)
-	{}
+	{
+	}
 
 	TileData(TileData& o) :
 		Tex(o.Tex),
@@ -57,7 +58,8 @@ struct TileData
 		PhyBodys(o.PhyBodys),
 		TileName(o.TileName),
 		id(o.id),
-		m_LayerType(o.m_LayerType)
+		m_LayerType(o.m_LayerType),
+		m_MapGrid(o.m_MapGrid)
 	{
 		SourceDraw = new SDL_Rect;
 		DestDraw = new SDL_Rect;
@@ -70,13 +72,22 @@ struct TileData
 		DestDraw->w = o.DestDraw->w;
 		DestDraw->h = o.DestDraw->h;
 	}
+	~TileData() {
+		FREE(SourceDraw);
+		FREE(DestDraw);
+		if (!PhyBodys.empty()) {
+			for (auto body : PhyBodys) {
+				FREE(body); // its safer!
+			}
+		}
+	}
 	struct SDL_Rect* SourceDraw;
 	struct SDL_Rect* DestDraw;
-	struct SDL_Texture* Tex;
+	struct SDL_Texture* Tex; //TO NOT FREE ITS USED BY OTHER MAP PARTS!
 	int GID;
 	int id;
 	bool isAnimated;
-	std::vector<TileData*> m_FramesVec;
+	std::vector<TileData*> m_FramesVec; // not freed atm!
 	unsigned int m_CurrentFrame; 
 	unsigned int m_AnimationDuration;
 	float LastDeltaTime;
@@ -85,6 +96,7 @@ struct TileData
 	bool IsPhy;
 	std::string TileName;
 	LayerType m_LayerType;
+	Vec2i m_MapGrid;
 
 	void setPosition(Vec2i pos, class TiledMap* p_Map) {
 		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!

@@ -1,10 +1,12 @@
 #pragma once
 #include <map>
-#include <unordered_map>
 #include <cstring>
 #include <core/Drawable/Drawable.h>
 #include "core/Common/defines.h"
 #include "core/TiledMap/ObjectGroup.h"
+#include "core/Components/Component.h"
+
+struct TileData;
 
 namespace Tmx {
 	class Map;
@@ -16,13 +18,17 @@ enum class LayerType{
 	RETAINED
 };
 
-struct LayerData
+struct LayerData: public Component
 {
-	LayerData(int layerId, struct TileData* tiledLayerData):
+	LayerData(int layerId, TileData* tiledLayerData):
 		layerId(layerId), tiledLayerData(tiledLayerData)
-	{}
+	{
+		m_ComponentType = TILE_COMPONENT;
+	}
+	~LayerData();
+	//LayerData(const LayerData& o) : layerId(o.layerId), tiledLayerData(o.tiledLayerData){}
 	int layerId;
-	struct TileData* tiledLayerData;
+	TileData* tiledLayerData;
 };
 
 struct MapPart
@@ -36,13 +42,6 @@ struct MapPart
 	SDL_Texture* m_Texture;
 	SDL_Rect m_Coords;
 	Vec2i m_InitPos;
-};
-
-struct ImmediateLayer : public LayerData
-{
-	ImmediateLayer(int layerId, struct TileData* tiledLayerData, class Drawable* drble) : LayerData(layerId, tiledLayerData), m_drble(drble)
-	{}
-	class Drawable* m_drble;
 };
 
 class TiledMap: public Drawable
@@ -72,6 +71,8 @@ public:
 
 	const std::vector<Physics2D::PhysicsBody*>& getTilesetBodiesByID(const std::string& tilsetName, int id);
 	bool isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id);
+
+	void DeleteTileInLayer(LayerData* tileToDelete);
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:
@@ -81,12 +82,12 @@ private:
 	std::map<std::string, std::map<int, std::vector<Physics2D::PhysicsBody*>>> m_BodyByTile;
 	//std::map<std::pair<const std::string&, int>, std::vector<Physics2D::PhysicsBody*>> m_BodyByTile;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
-	std::vector<LayerData*> m_cachedAnimatiedTiles;
-	ObjectGroup m_Group;
+	std::vector<LayerData*> m_cachedImmediateTiles;
 	// contain TileData indexed with layer index!
-	std::vector<LayerData> m_LayerData;
-	std::map<std::pair<const std::string&, int>, ImmediateLayer> m_ImmediateLayerData;
+	std::vector<LayerData*> m_LayerData;
+	std::map<std::pair<const std::string&, int>, LayerData*> m_ImmediateLayerData;
 	std::vector<MapPart> m_MapGrids;
+	ObjectGroup m_Group;
 private:
 	bool LoadTilesets();
 	void LoadLayers();

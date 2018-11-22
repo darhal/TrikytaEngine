@@ -119,11 +119,11 @@ void EngineInstance::EngineLogic()
 	int startTicks = 0;
 	while (m_EngineState) {
 		startTicks = SDL_GetTicks();
-
+		
 		EventManager::GetEventManager()->HandleSDLEvents(Event, this);
 		Render();
 		TimerManager::Update();
-
+		
 		//Increment the frame counter
 		frame++;
 		//If we want to cap the frame rate

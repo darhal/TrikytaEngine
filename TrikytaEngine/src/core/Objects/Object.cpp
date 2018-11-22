@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "ObjectHandler.h"
 #include "core/Drawable/Drawable.h"
-#include "core/Component/Component.h"
+#include "core/Components/Component.h"
 
 Object::Object(bool pRegisterInHandler)
 {
@@ -66,17 +66,17 @@ const Component* Object::getComponent(int compType)
 	return NULL;
 }
 
-inline void Object::addComponent(Component* component)
+void Object::addComponent(Component* component)
 {
 	if (component != NULL) {
 		m_Components.emplace_back(component);
 		component->setOwner(this);
 		return;
 	}
-	
+
 }
 
-inline const std::vector<Component*>& Object::getComponents()
+const std::vector<Component*>& Object::getComponents()
 {
 	return m_Components;
 }

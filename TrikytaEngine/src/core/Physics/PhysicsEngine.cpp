@@ -47,11 +47,29 @@ PhysicsWorld::PhysicsWorld(const PhysicsEngineParams& p_Params) :
 	}
 }
 
+void PhysicsWorld::DestroyBody(PhysicsBody* body) {
+	b2World::DestroyBody(body->GetBody()); // this will crash physics engine!
+	FREE(body);
+}
+
+void PhysicsWorld::QueueDelete(b2Body* body) {
+	m_DeleteQueue.emplace_back(body);
+}
+
 void PhysicsWorld::update(float /*dt*/)
 {
 	m_World->Step(m_TimeStep, m_VelocityIterations, m_PositionIterations);
+	PhysicsWorld::ClearQueue(); // Clear trash!
 	if (m_DebugDraw) 
 		m_World->DrawDebugData();
+}
+
+void PhysicsWorld::ClearQueue()
+{
+	for (auto body : m_DeleteQueue) {
+		b2World::DestroyBody(body);
+	}
+	m_DeleteQueue.clear();
 }
 
 void PhysicsWorld::AddContactListener()

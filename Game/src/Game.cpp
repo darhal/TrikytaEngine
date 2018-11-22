@@ -246,10 +246,17 @@ void Game::OnCollision(b2Contact* contact)
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
 	if (isACoin) {
 		if (bodyB == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
-		}
-		else if (bodyA == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
+			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->DeleteTileInLayer(tileToDelete);
+				LogConsole(LogWarning, "Contact with a coin !");
+			}
+		}else if (bodyA == body) {
+			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->DeleteTileInLayer(tileToDelete);
+				LogConsole(LogWarning, "Contact with a coin !");
+			}
 		}
 	}
 	/*if (bodyA == coinbody && bodyB == body) {

@@ -58,8 +58,10 @@ namespace Physics2D {
 
 		void deleteDebugger();
 		void setDebugger();
-
+		void DestroyBody(PhysicsBody* body);
+		void ClearQueue();
 		friend PhysicsEngine;
+		friend class PhysicsBody;
 	private:
 		b2GLDraw debugDrawInstance;
 		b2World* m_World;
@@ -67,6 +69,8 @@ namespace Physics2D {
 		float m_TimeStep;
 		int m_VelocityIterations, m_PositionIterations;
 		class ::PhysicsContactListener* m_PhyContactListener = nullptr;
+		std::vector<b2Body*> m_DeleteQueue;
+		void QueueDelete(b2Body* body);
 	};
 
 	class PhysicsBody : public Object {
@@ -86,7 +90,10 @@ namespace Physics2D {
 		);
 		~PhysicsBody() 
 		{
-			m_Body->GetWorld()->DestroyBody(m_Body);
+			//m_Body->GetWorld()->DestroyBody(m_Body); // this will crash physics engine!
+			if (PhysicsEngine::GetPhysicsWorld() != NULL) {
+				PhysicsEngine::GetPhysicsWorld()->QueueDelete(m_Body);
+			}
 		};
 		b2Body* GetBody() const { return m_Body; }
 
