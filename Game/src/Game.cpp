@@ -35,6 +35,23 @@ void Game::On_Engine_Init()
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
+
+	/*
+	auto zombie_boy = Animation::Create("assets/chars/zombie.png", "assets/chars/zombie_attack.txt", Vec2i(430/10, 519/10), Vec2i(550, 200), 0.04f);
+	zombie_boy->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
+	zombie_boy->ToggleRotationAttachement(false);
+	auto zombie_girl = Animation::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie_attack.txt", Vec2i(521/10, 576 /10), Vec2i(250, 200), 0.04f);
+	zombie_girl->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
+	zombie_girl->ToggleRotationAttachement(false);
+
+	anim = Animation::Create("assets/chars/plane.png", "assets/chars/plane_shoot.txt", Vec2i(443 / 4, 302 / 4), Vec2i(250, 120), 0.04f);
+	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::BOX, Vec2f(0.f, 0.f));
+	anim->ToggleRotationAttachement(false);
+	body->SetAngularDamping(1000.f);
+	cam->addObjectToCamera(zombie_girl);
+	cam->addObjectToCamera(zombie_boy);
+	cam->addObjectToCamera(anim);
+	*/
 	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(0, 0));
 	//text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(0, 350), Color{ 255,0,255, 255 }, TTF_STYLE_UNDERLINE | TTF_STYLE_BOLD);
 	//auto text2 = UI::Text::createText("This is a another output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(500, 350), Color{ 255,0,255, 255 }, TTF_STYLE_BOLD);
