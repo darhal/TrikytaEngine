@@ -66,10 +66,33 @@ void PhysicsWorld::update(float /*dt*/)
 
 void PhysicsWorld::ClearQueue()
 {
-	for (auto body : m_DeleteQueue) {
+	for (auto& body : m_DeleteQueue) {
 		b2World::DestroyBody(body);
 	}
 	m_DeleteQueue.clear();
+	for (auto& bodyToCreate : m_CreateQueue) {
+		CreateBodyInQueue(bodyToCreate);
+	}
+	m_CreateQueue.clear();
+}
+
+void PhysicsWorld::CreateBodyInQueue(const PhysicsParamsWarpper& bodyToCreate)
+{
+	b2Body* Body = PhysicsEngine::CreateBodyHelper(this, bodyToCreate.m_BodyType, bodyToCreate.m_Shape, bodyToCreate.m_BodyParams, bodyToCreate.m_Position, bodyToCreate.m_Dimentions);
+	bodyToCreate.m_TempBody->m_BodyType = bodyToCreate.m_BodyType;
+	bodyToCreate.m_TempBody->m_Shape = bodyToCreate.m_Shape;
+	bodyToCreate.m_TempBody->m_BodyParams = bodyToCreate.m_BodyParams;
+	bodyToCreate.m_TempBody->setBody(Body);
+}
+
+void PhysicsWorld::QueueCreate(PhysicsBody* temp_body, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions)
+{
+	// Anticpate of the same body is the delete queue ! (Not sure if it gonna work proerly bcuz of PhysicsBody and b2Body and probably will never happen!)
+	if (std::find(m_DeleteQueue.begin(), m_DeleteQueue.end(), temp_body->GetBody()) != m_DeleteQueue.end()) {
+		FREE(temp_body);
+		return;
+	}
+	m_CreateQueue.emplace_back(p_BodyType, p_Shape, p_BodyParams, p_Position, p_Dimentions, temp_body);
 }
 
 void PhysicsWorld::AddContactListener()
@@ -104,14 +127,28 @@ void PhysicsWorld::setDebugger()
 
 PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions)
 {
+	if (p_World == nullptr) { return NULL; } // we have no choice!
+	if (p_World->IsLocked()) {
+		auto temp_body =  new PhysicsBody();
+		p_World->QueueCreate(temp_body, p_BodyType, p_Shape, p_BodyParams, p_Position, p_Dimentions);
+		return temp_body; // musnt return a NULL ! this is just a temp body !
+	}
+	b2Body* Body =  PhysicsEngine::CreateBodyHelper(p_World, p_BodyType, p_Shape, p_BodyParams, p_Position, p_Dimentions);
+	return new PhysicsBody(Body, p_BodyType, p_Shape, p_BodyParams);
+}
+
+b2Body* PhysicsEngine::CreateBodyHelper(PhysicsWorld* p_World, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions)
+{
 	BodyDef BodyDef;
 	b2FixtureDef fixtureDef;
 	BodyDef.position.Set(p_Position.x, p_Position.y);
 	if (p_BodyType == BodyType::STATIC) {
 		BodyDef.type = b2_staticBody;
-	}else if (p_BodyType == BodyType::DYNAMIC) {
+	}
+	else if (p_BodyType == BodyType::DYNAMIC) {
 		BodyDef.type = b2_dynamicBody;
-	}else if (p_BodyType == BodyType::KINEMATIC) {
+	}
+	else if (p_BodyType == BodyType::KINEMATIC) {
 		BodyDef.type = b2_kinematicBody;
 	}
 	b2PolygonShape BodyBox;
@@ -161,8 +198,7 @@ PhysicsBody* PhysicsBody::CreateBody(PhysicsWorld* p_World, BodyType p_BodyType,
 	fixtureDef.friction = p_BodyParams.friction;
 	fixtureDef.restitution = p_BodyParams.restitution;
 	fixtureDef.isSensor = p_BodyParams.sensor;
-	b2Body* Body = p_World->getWorld()->CreateBody(&BodyDef);
-	Body->CreateFixture(&fixtureDef);
-	return new PhysicsBody(Body, p_BodyType, p_Shape, p_BodyParams);
+	b2Body* out_body = p_World->getWorld()->CreateBody(&BodyDef);
+	out_body->CreateFixture(&fixtureDef);
+	return out_body;
 }
-

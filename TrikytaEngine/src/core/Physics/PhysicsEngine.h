@@ -46,6 +46,9 @@ namespace Physics2D {
 		static PhysicsWorld* GetPhysicsWorld();
 		static PhysicsWorld* _PhysicsWorld;
 		friend class PhysicsBody;
+		friend class PhysicsWorld;
+	private:
+		static b2Body* CreateBodyHelper(PhysicsWorld* p_World, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions);
 	};
 
 	class PhysicsWorld : public PhysicsEngine, public b2World {
@@ -63,6 +66,12 @@ namespace Physics2D {
 		friend PhysicsEngine;
 		friend class PhysicsBody;
 	private:
+		struct PhysicsParamsWarpper {
+			PhysicsParamsWarpper(BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions, PhysicsBody* temp_body):
+				m_BodyType(p_BodyType),  m_Shape(p_Shape), m_BodyParams(p_BodyParams), m_Position(p_Position), m_Dimentions(p_Dimentions), m_TempBody(temp_body)
+			{}
+			BodyType m_BodyType; BodyShape m_Shape; BodyParams m_BodyParams; Vec2f m_Position; std::vector<Vec2f> m_Dimentions; PhysicsBody* m_TempBody;
+		};
 		b2GLDraw debugDrawInstance;
 		b2World* m_World;
 		bool m_DebugDraw;
@@ -70,7 +79,10 @@ namespace Physics2D {
 		int m_VelocityIterations, m_PositionIterations;
 		class ::PhysicsContactListener* m_PhyContactListener = nullptr;
 		std::vector<b2Body*> m_DeleteQueue;
+		std::vector<PhysicsParamsWarpper> m_CreateQueue;
 		void QueueDelete(b2Body* body);
+		void QueueCreate(PhysicsBody*, BodyType, BodyShape, BodyParams, Vec2f, std::vector<Vec2f>);
+		void CreateBodyInQueue(const PhysicsParamsWarpper&);
 	};
 
 	class PhysicsBody : public Object {
@@ -80,6 +92,7 @@ namespace Physics2D {
 		{
 			m_Body->m_physicsBody = this;
 		}
+		PhysicsBody() {}
 	public:
 		
 		static PhysicsBody* CreateBody
@@ -96,11 +109,12 @@ namespace Physics2D {
 			}
 		};
 		b2Body* GetBody() const { return m_Body; }
-
 		virtual Vec2i getPosition() override { return Vec2i((int)m_Body->GetPosition().x, (int)m_Body->GetPosition().y); }
 		virtual double GetRotation() override { return Utility::ToDegree(GetAngle()); }
 	private:
+		inline void setBody(b2Body* body) { m_Body = body; m_Body->m_physicsBody = this; }
 		friend class b2Body;
+		friend class PhysicsWorld;
 		b2Body* m_Body;
 		BodyType m_BodyType;
 		BodyShape m_Shape;

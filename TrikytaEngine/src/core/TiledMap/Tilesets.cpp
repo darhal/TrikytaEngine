@@ -7,6 +7,21 @@
 #include "core/Common/EngineInstance.h"
 #include "core/Common/TrikytaEngine.h"
 #include "core/Physics/Fixture.h"
+#include "core/Camera/Camera.h"
+
+void TileData::setPosition(Vec2i pos, class TiledMap* p_Map)
+{
+	int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
+	DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;
+	DestDraw->y = pos.y * p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster;
+	m_MapGrid = pos;
+	m_PhysicsPos = Vec2f(float(DestDraw->x), float(DestDraw->y));
+	if (p_Map->getCamera() != nullptr) {
+		DestDraw->x -= p_Map->getCamera()->getCameraPosition().x;
+		DestDraw->y -= p_Map->getCamera()->getCameraPosition().y;
+	}
+}
+
 
 Tilesets::Tilesets(TiledMap* p_Map, int i): 
 	m_Tileset(*p_Map->m_Map->GetTileset(i)), 
@@ -101,6 +116,7 @@ void Tilesets::LoadTiles(std::string m_ImgSource, TiledMap* p_Map)
 		m_Tiles[gid]->isAnimated = false;
 		m_Tiles[gid]->TileName = m_Tileset.GetName();
 		m_Tiles[gid]->id = _id;
+		m_TilesByID[_id] = m_Tiles[gid]; // to get it by id!
 		_id++;
 	}
 	for (auto animTiles : m_TileAnimations) {

@@ -16,7 +16,7 @@ public:
 	Component() :
 		m_ComponentType(BASIC_COMPONENT)
 	{}
-
+	virtual ~Component(){}
 	virtual int getComponentType() { return m_ComponentType; }
 	virtual Object* getOwner() { return m_Owner; }
 	virtual void setOwner(Object* owner) { m_Owner = owner; }

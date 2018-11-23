@@ -1,3 +1,5 @@
+#include <map>
+#include <algorithm>
 #include "TiledMap.h"
 #include "Tilesets.h"
 #include "core/Common/TrikytaEngine.h"
@@ -8,7 +10,6 @@
 #include <SDL/SDL.h>
 #include "core/Physics/PhysicsEngine.h"
 #include "core/Camera/Camera.h"
-#include <map>
 #include "core/Drawable/Sprite.h"
 
 //TODO: correct the debug drawing that it stuck at one thing!
@@ -146,11 +147,7 @@ void TiledMap::render(float dt)
 		}
 	}else{
 		SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
-		if (CameraUpdate) {
-			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
-		}else{
-			SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
-		}
+		SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 	}
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
@@ -162,7 +159,7 @@ bool TiledMap::LoadTilesets()
 	m_MapTilesets->reserve(m_Map->GetNumTilesets());
 	for (int i = 0; i < m_Map->GetNumTilesets(); ++i){
 		m_MapTilesets->emplace_back(this, i);
-		//m_MapTilesetsByName[m_Map->GetTileset(i)->GetName()] = &m_MapTilesets->back();
+		m_MapTilesetsByName[m_Map->GetTileset(i)->GetName()] = &m_MapTilesets->back();
 	}
 	return true;
 }
@@ -171,37 +168,39 @@ void TiledMap::LoadLayers()
 {
 	for (int LayerIndex = 0; LayerIndex < m_Map->GetNumTileLayers(); ++LayerIndex) {
 		const Tmx::TileLayer* tileLayer = m_Map->GetTileLayer(LayerIndex);
+		m_LayerByName[tileLayer->GetName()] = std::make_pair(tileLayer, LayerIndex);
 		Log("[TILED MAPS] Layer: %s (W: %d, H: %d)", tileLayer->GetName().c_str(), tileLayer->GetWidth(), tileLayer->GetHeight());
 		for (int y = 0; y < tileLayer->GetHeight(); ++y) {
 			for (int x = 0; x < tileLayer->GetWidth(); ++x) {
 				if (tileLayer->GetTileTilesetIndex(x, y) != -1) {
-					m_LayerData.reserve(m_LayerData.size() + 1);
 					int TilesetIndex = tileLayer->GetTileTilesetIndex(x, y);
 					Uint32 Gid = tileLayer->GetTileGid(x, y);
 					auto TilesetData = &(m_MapTilesets->at(TilesetIndex));
 					TileData* tileData = new TileData(*TilesetData->m_Tiles[Gid]); // should we copy this right here ?
 					tileData->setPosition(Vec2i(x, y), this);
-					tileData->m_MapGrid = Vec2i(x, y);
 					tileData->IsPhy = false;
-					m_LayerData.emplace_back(new LayerData(LayerIndex, tileData));
+					auto tileLayerData = new LayerData(LayerIndex, tileData);
 					if ((tileLayer->GetProperties().HasProperty("immediate") && tileLayer->GetProperties().GetBoolProperty("immediate")) || tileData->isAnimated) {
 						tileData->m_LayerType = LayerType::IMMEDIATE;
-						m_ImmediateLayerData[std::make_pair(tileData->TileName, x*y)] = m_LayerData.back();
+						m_ImmediateLayerData[std::make_pair(tileLayer->GetName(), x*y)] = tileLayerData;
+						m_cachedImmediateTiles.emplace_back(tileLayerData);
 					}else {
 						tileData->m_LayerType = LayerType::RETAINED;
+						m_LayerData.emplace_back(tileLayerData);
 					}
 					if (TilesetData->m_TileObjects[Gid].size() > 0) {
 						tileData->IsPhy = true;
 						for (auto bp : TilesetData->m_TileObjects[Gid]) {
 							auto body = Physics2D::PhysicsBody::CreateBody(
 								Physics2D::PhysicsEngine::GetPhysicsWorld(),bp.m_BodyType, bp.m_BodyShape, bp.m_BodyParams, 
-								bp.m_ObjectPos + Vec2f(float(tileData->DestDraw->x), float(tileData->DestDraw->y)), bp.m_ObjectCoord
+								bp.m_ObjectPos + tileData->m_PhysicsPos, bp.m_ObjectCoord
 							);
+							body->autoClearComponents(false);
 							tileData->PhyBodys.emplace_back(body);
-							m_BodyByTile[tileData->TileName][tileData->id-1].emplace_back(body);
-							//m_BodyByTile[std::make_pair(tileData->TileName, tileData->id - 1)].emplace_back(body);//switch to this after
+							//m_BodyByTile[tileData->TileName][tileData->id-1].emplace_back(body);
+							m_BodyByTile[std::make_pair(tileData->TileName, tileData->id - 1)].emplace_back(body);//switch to this after
 							m_allMapBodies.emplace_back(body);
-							body->addComponent(m_LayerData.back());
+							body->addComponent(tileLayerData);
 						}
 					}
 				}
@@ -231,7 +230,7 @@ void TiledMap::LoadMapIntoTexture()
 			Vec2i max = Vec2i(texture_data.m_Coords.x, texture_data.m_Coords.y) + Vec2i(texture_data.m_Coords.w, texture_data.m_Coords.h);
 			for (auto& itr : m_LayerData) {
 				if (itr->tiledLayerData->m_LayerType == LayerType::IMMEDIATE) {
-					m_cachedImmediateTiles.emplace_back(itr);
+					continue;
 				}else{
 					//Perform corpping!
 					if (Utility::IsInBox(Vec2i(itr->tiledLayerData->DestDraw->x, itr->tiledLayerData->DestDraw->y), min, max)){
@@ -248,9 +247,8 @@ void TiledMap::LoadMapIntoTexture()
 		SDL_SetRenderTarget(r, m_Texture);
 		for (auto& itr : m_LayerData) {
 			if (itr->tiledLayerData->m_LayerType == LayerType::IMMEDIATE) {
-				m_cachedImmediateTiles.emplace_back(itr);
-			}
-			else {
+				continue;
+			}else {
 				SDL_RenderCopy(r, itr->tiledLayerData->Tex, itr->tiledLayerData->SourceDraw, itr->tiledLayerData->DestDraw);
 			}
 		}
@@ -367,46 +365,91 @@ void TiledMap::setAffectedByCamera(Camera* cam)
 	}
 }
 
-const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
+void TiledMap::deleteTileInLayer(LayerData* tileToDelete)
 {
-	return m_BodyByTile[tilsetName][id];
-}
-
-bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id)
-{
-	if (!m_BodyByTile[tilsetName][id].empty()) {
-		return std::find(m_BodyByTile[tilsetName][id].begin(), m_BodyByTile[tilsetName][id].end(), body) != m_BodyByTile[tilsetName][id].end();
-	}else{
-		return false;
-	}
-}
-
-void TiledMap::DeleteTileInLayer(LayerData* tileToDelete)
-{
+	if (tileToDelete == NULL) { LogConsole(LogError, "Attempt to delete a nullptr !"); return; }
 	auto itr = std::find(m_cachedImmediateTiles.begin(), m_cachedImmediateTiles.end(), tileToDelete);
 	if (itr != m_cachedImmediateTiles.end()) {
 		m_cachedImmediateTiles.erase(itr);
+		int id = tileToDelete->tiledLayerData->id - 1;
+		std::string tile_name = tileToDelete->tiledLayerData->TileName;
 		FREE(tileToDelete);
+		//Run NULL PTR collector !
+		auto& bodyByTile = m_BodyByTile[std::make_pair(tile_name, id)];
+		bodyByTile.erase(std::remove_if(bodyByTile.begin(), bodyByTile.end(), [](const Physics2D::PhysicsBody* o) { return o == NULL; }), bodyByTile.end());
+		m_allMapBodies.erase(std::remove_if(m_allMapBodies.begin(), m_allMapBodies.end(), [](const Physics2D::PhysicsBody* o) { return o == NULL; }), m_allMapBodies.end());
 	}
 }
 
-/*const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
+LayerData* TiledMap::getGridInLayerAt(const std::string& layer_name, int x, int y)
+{
+	return m_ImmediateLayerData[std::make_pair(layer_name, x*y)];
+};
+
+//TODO: should we protect other layers so it wont accidently modify them ?!
+void TiledMap::addTileToLayer(Tilesets* tile_set, int _id, const std::string& layer_name, Vec2i pos)
+{
+	int id = _id + 1;// trikyta id is starting with 1!
+	if (m_ImmediateLayerData[std::make_pair(layer_name, pos.x*pos.y)] != nullptr) {
+		if (m_ImmediateLayerData[std::make_pair(layer_name, pos.x*pos.y)]->tiledLayerData->id == id) { //Trying to draw same thing in same area refuse !
+			return;
+		}
+		deleteTileInLayer(m_ImmediateLayerData[std::make_pair(layer_name, pos.x*pos.y)]);
+	}
+	auto tileLayer = m_LayerByName[layer_name].first;
+	int LayerIndex = m_LayerByName[layer_name].second;
+	if (tileLayer == nullptr) { return LogConsole(LogError, "The layer: %s doesn't exsit!", layer_name.c_str());; } // it doesnt exsit!
+	TileData* tileData = new TileData(*tile_set->m_TilesByID[id]); // should we copy this right here ?
+	int Gid = tile_set->m_TilesByID[id]->GID;
+	tileData->setPosition(pos, this);
+	tileData->IsPhy = false;
+	auto layerTileData = new LayerData(LayerIndex, tileData);
+	if ((tileLayer->GetProperties().HasProperty("immediate") && tileLayer->GetProperties().GetBoolProperty("immediate")) || tileData->isAnimated) {
+		tileData->m_LayerType = LayerType::IMMEDIATE;
+		m_ImmediateLayerData[std::make_pair(layer_name, pos.x*pos.y)] = layerTileData;
+		m_cachedImmediateTiles.emplace_back(layerTileData);
+	}else{
+		tileData->m_LayerType = LayerType::RETAINED;
+		m_LayerData.emplace_back(layerTileData);
+	}
+	if (tile_set->m_TileObjects[Gid].size() > 0) {
+		tileData->IsPhy = true;
+		for (auto bp : tile_set->m_TileObjects[Gid]) {
+			auto body = Physics2D::PhysicsBody::CreateBody(
+				Physics2D::PhysicsEngine::GetPhysicsWorld(), bp.m_BodyType, bp.m_BodyShape, bp.m_BodyParams,
+				bp.m_ObjectPos + tileData->m_PhysicsPos, bp.m_ObjectCoord
+			);
+			body->autoClearComponents(false);
+			tileData->PhyBodys.emplace_back(body);
+			m_BodyByTile[std::make_pair(tileData->TileName, tileData->id - 1)].emplace_back(body);
+			m_allMapBodies.emplace_back(body);
+			body->addComponent(layerTileData);
+		}
+	}
+}
+
+Tilesets* TiledMap::getTilset(const std::string& tileset_name)
+{
+	return m_MapTilesetsByName[tileset_name];
+}
+
+const std::vector<Physics2D::PhysicsBody*>& TiledMap::getTilesetBodiesByID(const std::string& tilsetName, int id)
 {
 	return m_BodyByTile[std::make_pair(tilsetName, id)];
 }
 
 bool TiledMap::isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id)
 {
+	if (body == nullptr) { return false; }
 	if (m_BodyByTile.find(std::make_pair(tilsetName, id)) != m_BodyByTile.end()) {
 		return std::find(m_BodyByTile[std::make_pair(tilsetName, id)].begin(),
 			m_BodyByTile[std::make_pair(tilsetName, id)].end(), body) != m_BodyByTile[std::make_pair(tilsetName, id)].end();
-	}
-	else {
+	}else{
 		return false;
 	}
-}*/
+}
 
-/////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int PrintMapInfo(Tmx::Map* map)
 {
 	if (map->HasError())

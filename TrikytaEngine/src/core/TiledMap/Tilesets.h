@@ -97,12 +97,9 @@ struct TileData
 	std::string TileName;
 	LayerType m_LayerType;
 	Vec2i m_MapGrid;
+	Vec2f m_PhysicsPos;
 
-	void setPosition(Vec2i pos, class TiledMap* p_Map) {
-		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
-		DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;
-		DestDraw->y = pos.y * p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster;
-	}
+	void setPosition(Vec2i pos, class TiledMap* p_Map);
 
 	bool IsContainBody(Physics2D::PhysicsBody* body)
 	{
@@ -131,6 +128,7 @@ private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, TileData*> m_Tiles;
+	std::map<int, TileData*> m_TilesByID;
 	std::map<int, std::vector<TilesetObjectData>> m_TileObjects;
 	std::map<int, std::vector<std::pair<int, unsigned int>>> m_TileAnimations;
 	SDL_Texture* m_ImageTexture;
