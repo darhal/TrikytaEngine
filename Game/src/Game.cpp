@@ -84,7 +84,10 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::HORIZONTAL);
 		}else if (p_Key == SDLK_UP) {
-			body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
+			//body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
+			Vec2f v = body->GetLinearVelocity();
+			v.y = -50.f;
+			body->SetLinearVelocity(v);
 		}else if (p_Key == SDLK_DOWN) {
 			
 		}else if (p_Key == SDLK_c) {

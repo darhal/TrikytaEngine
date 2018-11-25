@@ -1397,11 +1397,7 @@
   </properties>
   <object id="2" x="0.666667" y="288.333" width="254.667" height="446.667"/>
   <object id="3" x="255.375" y="288.333" width="322.292" height="10"/>
-  <object id="4" x="576.708" y="288.167" width="767.958" height="446.833">
-   <properties>
-    <property name="friction" type="float" value="10"/>
-   </properties>
-  </object>
+  <object id="4" x="576.708" y="288.167" width="767.958" height="446.833"/>
   <object id="14" x="1375" y="479" width="481" height="324"/>
   <object id="16" x="1856" y="482">
    <polygon points="0,0 191,191 191,219 0,222"/>
