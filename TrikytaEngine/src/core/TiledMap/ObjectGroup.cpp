@@ -15,13 +15,15 @@ void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
 	for (int i = 0; i < p_Map->GetNumObjectGroups(); ++i)
 	{
 		// Get an object group.
-		const Tmx::ObjectGroup *objectGroup = p_Map->GetObjectGroup(i);
+		const Tmx::ObjectGroup* objectGroup = p_Map->GetObjectGroup(i);
+		m_ObjectLayer[objectGroup->GetName()] = objectGroup;
 		// Iterate through all objects in the object group.
 		if (objectGroup->GetProperties().GetBoolProperty("collision") == true || (objectGroup->GetProperties().HasProperty("physicalize") && objectGroup->GetProperties().GetBoolProperty("physicalize") == true)) {
+			m_Bodies.reserve(m_Bodies.size() + objectGroup->GetNumObjects());
 			for (int j = 0; j < objectGroup->GetNumObjects(); ++j) {
 				// Get an object.
 				const Tmx::Object* object = objectGroup->GetObject(j);
-				ObjectGroup::ProcessPhysicalizedObject(object);
+				ObjectGroup::ProcessPhysicalizedObject(object, objectGroup);
 				const Tmx::Text* text = object->GetText(); // if its a text!
 				if (text != 0)
 				{
@@ -42,7 +44,7 @@ void ObjectGroup::ParseGroups(Tmx::Map* p_Map)
 	}
 }
 
-void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
+void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object,const Tmx::ObjectGroup* p_ObjectGroup)
 {
 	Physics2D::BodyType b_type = Physics2D::BodyType::STATIC;
 	Physics2D::BodyParams b_params;
@@ -111,9 +113,10 @@ void ObjectGroup::ProcessPhysicalizedObject(const Tmx::Object* p_Object)
 	}
 	m_Bodies.emplace_back(body);
 	if (p_Object->GetName() != "") {
-		m_ObjectsByName[p_Object->GetName()] = body;
+		m_ObjectsByName[p_Object->GetName()].emplace_back(body);
 	}
 	m_ObjectsByID[p_Object->GetGid()] = body;
+	m_BodyByLayer[p_ObjectGroup->GetName()].emplace_back(body);
 }
 
 void ObjectGroup::GetPhysicsSettings(const Tmx::Object* p_Object, Physics2D::BodyType& p_type, Physics2D::BodyParams& p_params)
@@ -180,14 +183,33 @@ const Tmx::ObjectGroup* ObjectGroup::getObjectGroup(const std::string& p_objectG
 	return objectGroup;
 }
 
-Physics2D::PhysicsBody* ObjectGroup::getBodyByName(const std::string& p_Name) 
+const std::vector<Physics2D::PhysicsBody*>&  ObjectGroup::getBodiesByName(const std::string& p_Name)
 {
 	return m_ObjectsByName[p_Name];
+}
+
+bool ObjectGroup::isBodyInGroupByName(Physics2D::PhysicsBody* p_Body, const std::string& p_Name)
+{
+	if (!m_ObjectsByName[p_Name].empty()) {
+		return std::find(m_ObjectsByName[p_Name].begin(), m_ObjectsByName[p_Name].end(), p_Body) != m_ObjectsByName[p_Name].end();
+	}
+	else {
+		return false;
+	}
 }
 
 Physics2D::PhysicsBody* ObjectGroup::getBodyByID(int p_gid)
 {
 	return m_ObjectsByID[p_gid];
+}
+
+bool ObjectGroup::isBodyInLayer(Physics2D::PhysicsBody* p_Body, const std::string& layerName)
+{
+	if (!m_BodyByLayer[layerName].empty()){
+		return std::find(m_BodyByLayer[layerName].begin(), m_BodyByLayer[layerName].end(), p_Body) != m_BodyByLayer[layerName].end();
+	}else{
+		return false;
+	}
 }
 
 ObjectGroup::~ObjectGroup()

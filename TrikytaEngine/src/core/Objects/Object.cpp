@@ -2,6 +2,8 @@
 #include "Object.h"
 #include "ObjectHandler.h"
 #include "core/Drawable/Drawable.h"
+#include "core/Components/Component.h"
+#include <algorithm>
 
 Object::Object(bool pRegisterInHandler)
 {
@@ -12,11 +14,19 @@ Object::Object(bool pRegisterInHandler)
 		ObjectHandler::PushObjectAsSleep(this);
 	}
 	m_IsRender = pRegisterInHandler;
+	m_AutoClearComponent = true;
 };
 
 Object::~Object()
 {
 	ObjectHandler::RemoveObject(this);
+	//Clear components !
+	if (m_AutoClearComponent) {
+		for (auto component : m_Components) {
+			FREE(component);
+		}
+	}
+	m_Components.clear();
 };
 
 bool Object::init()
@@ -53,4 +63,35 @@ void Object::attachTo(Object* obj, Vec2f p_Offset)
 	}
 	obj->addChildren(this);
 	m_Parent = obj;
+}
+
+const Component* Object::getComponent(int compType)
+{
+	for (const auto& component : m_Components) {
+		if (component->getComponentType() == compType) {
+			return component;
+		}
+	}
+	return NULL;
+}
+
+void Object::addComponent(Component* component)
+{
+	if (component != NULL) {
+		m_Components.emplace_back(component);
+		component->setOwner(this);
+		return;
+	}
+
+}
+
+void Object::removeComponent(Component* component)
+{
+	std::remove_if(m_Components.begin(), m_Components.end(), [=](const Component* o) { return o == component; }), m_Components.end();
+	FREE(component);
+}
+
+const std::vector<Component*>& Object::getComponents()
+{
+	return m_Components;
 }

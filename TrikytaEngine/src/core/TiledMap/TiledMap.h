@@ -4,19 +4,33 @@
 #include <core/Drawable/Drawable.h>
 #include "core/Common/defines.h"
 #include "core/TiledMap/ObjectGroup.h"
+#include "core/Components/Component.h"
+
+struct TileData;
+class Tilesets;
 
 namespace Tmx {
 	class Map;
 	class Tileset;
+	class TileLayer;
 }
 
-struct LayerData
+enum class LayerType{
+	IMMEDIATE,
+	RETAINED
+};
+
+struct LayerData: public Component
 {
-	LayerData(int layerId, struct TileData* tiledLayerData):
+	LayerData(int layerId, TileData* tiledLayerData):
 		layerId(layerId), tiledLayerData(tiledLayerData)
-	{}
+	{
+		m_ComponentType = TILE_COMPONENT;
+	}
+	~LayerData();
+	//LayerData(const LayerData& o) : layerId(o.layerId), tiledLayerData(o.tiledLayerData){}
 	int layerId;
-	struct TileData* tiledLayerData;
+	TileData* tiledLayerData;
 };
 
 struct MapPart
@@ -56,18 +70,31 @@ public:
 	{
 		return m_Group;
 	}
+
+	const std::vector<Physics2D::PhysicsBody*>& getTilesetBodiesByID(const std::string& tilsetName, int id);
+	bool isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id);
+
+	void deleteTileInLayer(LayerData* tileToDelete);
+	LayerData* getGridInLayerAt(const std::string&, int, int);
+	void addTileToLayer(Tilesets* tile_set, int id, const std::string& layer_name, Vec2i pos);
+	Tilesets* getTilset(const std::string& tileset_name);
 protected:
 	TiledMap(Tmx::Map*, std::string&);
 private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
-	std::vector<class Tilesets>* m_MapTilesets;
+	std::vector<Tilesets>* m_MapTilesets;
+	std::map<std::pair<std::string, int>, std::vector<Physics2D::PhysicsBody*>> m_BodyByTile;
 	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
-	std::vector<LayerData*> m_cachedAnimatiedTiles;
-	ObjectGroup m_Group;
+	std::vector<LayerData*> m_cachedImmediateTiles;
 	// contain TileData indexed with layer index!
-	std::vector<LayerData> m_LayerData;
+	std::vector<LayerData*> m_LayerData;
+	std::map<std::pair<std::string, int>, LayerData*> m_ImmediateLayerData;
+	std::map<std::string, Tilesets*> m_MapTilesetsByName;
 	std::vector<MapPart> m_MapGrids;
+	//std::map<const std::string&, std::pair<const Tmx::TileLayer*, int>> m_LayerByName;
+	std::map<std::string, std::pair<const Tmx::TileLayer*, int>> m_LayerByName;
+	ObjectGroup m_Group;
 private:
 	bool LoadTilesets();
 	void LoadLayers();

@@ -61,7 +61,7 @@ namespace Tmx
         int GetFirstGid() const { return first_gid; }
 
         /// Returns the name of the tileset.
-        const std::string &GetName() const { return name; }
+        const std::string& GetName() const { return name; }
 
         /// Get the width of a single tile.
         int GetTileWidth() const { return tile_width; } 

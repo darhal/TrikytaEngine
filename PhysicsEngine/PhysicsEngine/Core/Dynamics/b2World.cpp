@@ -33,6 +33,7 @@
 #include "Common/b2Draw.h"
 #include "Common/b2Timer.h"
 #include <new>
+#include <core/Common/defines.h>
 
 b2World::b2World(const b2Vec2& gravity)
 {
@@ -141,7 +142,7 @@ void b2World::DestroyBody(b2Body* b)
 	{
 		return;
 	}
-
+	if (b == NULL) { LogTerminal("Attempt to delete a NULL body (b2World.cpp -> Line 145)!"); return; }
 	// Delete the attached joints.
 	b2JointEdge* je = b->m_jointList;
 	while (je)

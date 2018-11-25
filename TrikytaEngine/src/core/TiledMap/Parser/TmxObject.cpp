@@ -80,7 +80,7 @@ namespace Tmx
     void Object::Parse(const tinyxml2::XMLNode *objectNode)
     {
         const tinyxml2::XMLElement *objectElem = objectNode->ToElement();
-
+		name = "";
         // Read the attributes of the object.
         const char *tempName = objectElem->Attribute("name");
         const char *tempType = objectElem->Attribute("type");

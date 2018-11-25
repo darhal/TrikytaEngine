@@ -60,7 +60,7 @@ namespace Tmx
         void Parse(const tinyxml2::XMLNode *objectGroupNode);
 
         /// Get a single object.
-        const Tmx::Object *GetObject(int index) const { return objects.at(index); }
+        const Tmx::Object* GetObject(int index) const { return objects.at(index); }
 
         /// Get the number of objects in the list.
         int GetNumObjects() const { return objects.size(); }

@@ -8,7 +8,7 @@
 #define DEGTORAD				0.0174532925199432957f
 #define RADTODEG				57.295779513082320876f
 #define	MAX_CONSOLE_OUPUT		5
-#define FREE(p)					do { delete (p); p = NULL;} while(0)//if (x != NULL) { delete x; x=NULL;};
+#define FREE(p)					if (p !=NULL ) {do { delete (p); p = NULL;} while(0);}
 
 /** We need this to easily convert between pixel and real-world coordinates*/
 static const float PTM =		2.f;

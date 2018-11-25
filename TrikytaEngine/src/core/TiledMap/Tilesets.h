@@ -41,8 +41,10 @@ struct TileData
 		DestDraw(p_DestDraw),
 		Tex(p_Tex),
 		IsPhy(p_IsPhy),
-		isAnimated(p_IsAnimated)
-	{}
+		isAnimated(p_IsAnimated), 
+		m_LayerType(LayerType::RETAINED)
+	{
+	}
 
 	TileData(TileData& o) :
 		Tex(o.Tex),
@@ -51,7 +53,13 @@ struct TileData
 		GID(o.GID),
 		m_CurrentFrame(o.m_CurrentFrame),
 		LastDeltaTime(o.LastDeltaTime),
-		m_FramesVec(o.m_FramesVec)
+		m_FramesVec(o.m_FramesVec),
+		m_AnimationDuration(o.m_AnimationDuration),
+		PhyBodys(o.PhyBodys),
+		TileName(o.TileName),
+		id(o.id),
+		m_LayerType(o.m_LayerType),
+		m_MapGrid(o.m_MapGrid)
 	{
 		SourceDraw = new SDL_Rect;
 		DestDraw = new SDL_Rect;
@@ -64,22 +72,41 @@ struct TileData
 		DestDraw->w = o.DestDraw->w;
 		DestDraw->h = o.DestDraw->h;
 	}
+	~TileData() {
+		FREE(SourceDraw);
+		FREE(DestDraw);
+		if (!PhyBodys.empty()) {
+			for (auto body : PhyBodys) {
+				FREE(body); // its safer!
+			}
+		}
+	}
 	struct SDL_Rect* SourceDraw;
 	struct SDL_Rect* DestDraw;
-	struct SDL_Texture* Tex;
+	struct SDL_Texture* Tex; //TO NOT FREE ITS USED BY OTHER MAP PARTS!
 	int GID;
+	int id;
 	bool isAnimated;
-	std::vector<TileData*> m_FramesVec;
+	std::vector<TileData*> m_FramesVec; // not freed atm!
 	unsigned int m_CurrentFrame; 
 	unsigned int m_AnimationDuration;
 	float LastDeltaTime;
-	std::vector<Physics2D::PhysicsBody*>* PhyBodys = nullptr;
+	std::vector<Physics2D::PhysicsBody*> PhyBodys;
+	//std::unordered_map<const std::string&, Physics2D::PhysicsBody*> m_BodiesByName;
 	bool IsPhy;
+	std::string TileName;
+	LayerType m_LayerType;
+	Vec2i m_MapGrid;
+	Vec2f m_PhysicsPos;
 
-	void setPosition(Vec2i pos, class TiledMap* p_Map) {
-		int YAdjuster = p_Map->getMap()->GetTileHeight() - SourceDraw->h; // adjust the Y to fit in the grids!
-		DestDraw->x = pos.x * (p_Map->getMap()->GetTileWidth()) + p_Map->m_Position.x;
-		DestDraw->y = pos.y * p_Map->getMap()->GetTileHeight() + p_Map->m_Position.y + YAdjuster;
+	void setPosition(Vec2i pos, class TiledMap* p_Map);
+
+	bool IsContainBody(Physics2D::PhysicsBody* body)
+	{
+		if (!PhyBodys.empty()) {
+			return std::find(PhyBodys.begin(), PhyBodys.end(), body) != PhyBodys.end();
+		}
+		return false;
 	}
 };
 
@@ -101,8 +128,8 @@ private:
 	const std::string m_TilesetName;
 	const Tmx::Tileset& m_Tileset;
 	std::map<int, TileData*> m_Tiles;
-	//std::map<int, std::vector<TilesetObjectData*>> m_TileObjects;
-	std::map<int, std::vector<Physics2D::PhysicsBody*>> m_TileObjects;
+	std::map<int, TileData*> m_TilesByID;
+	std::map<int, std::vector<TilesetObjectData>> m_TileObjects;
 	std::map<int, std::vector<std::pair<int, unsigned int>>> m_TileAnimations;
 	SDL_Texture* m_ImageTexture;
 	Vec2i m_ImageSize;

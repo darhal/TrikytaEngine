@@ -307,6 +307,7 @@
     <ClInclude Include="src\core\Common\TrikytaEngine.h" />
     <ClInclude Include="src\core\Common\Utility.h" />
     <ClInclude Include="src\core\Common\Vec2.h" />
+    <ClInclude Include="src\core\Components\Component.h" />
     <ClInclude Include="src\core\Drawable\Animation.h" />
     <ClInclude Include="src\core\Drawable\Drawable.h" />
     <ClInclude Include="src\core\Drawable\Sprite.h" />

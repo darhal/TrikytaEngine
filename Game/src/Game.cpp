@@ -16,10 +16,12 @@
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
 #include <core/Utility/BasicSerialization.h>
+#include <core/TiledMap/Tilesets.h>
 
 //UI::EditBox* editBox;
 Camera* cam;
 bool moveleft = true; 
+bool anti_spam = false;
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -46,11 +48,8 @@ void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
-	//map = TiledMap::Create("assets/example/maps/map3.tmx");
 	cam->addObjectToCamera(map);
 	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
-	auto animbonus = Animation::Create("assets/bonus/bonus.png", "assets/bonus/bonus.txt", Vec2i(40, 40), Vec2i(100,150), 0.03f);
-	//auto animtortue = Animation::Create("assets/mechants/mechant.png", "assets/mechants/tortue.txt", Vec2i(40, 40), Vec2i(200,300), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
@@ -78,6 +77,14 @@ void Game::On_Engine_Init()
 			}
 
 
+		}
+		if (objectGroup->GetName()=="bonus"){
+			for (int k = 0; k<objectGroup->GetNumObjects(); k++){
+				const Tmx::Object* object1 = objectGroup->GetObject(k);
+				Vec2i pos1 = Vec2i(object1->GetX(),object1->GetY());
+				auto animbonus = Animation::Create("assets/bonus/bonus.png", "assets/bonus/bonus.txt", Vec2i(20, 20), pos1, 0.03f);
+				cam->addObjectToCamera(animbonus);
+			}
 		}
 	}
 	auto t = TimerManager::CreateTimer(CALLBACK_0(Game::ManagerTortue,this), 1000, 0, true);
@@ -132,14 +139,63 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
-	auto bodyA = contact->GetFixtureA()->GetBody();
-	auto bodyB = contact->GetFixtureB()->GetBody();
-	auto coinbody = map->getGroupManager().getBodyByName("coins")->GetBody();
-	if (bodyA == coinbody && bodyB == body->GetBody()) {
-		LogConsole(LogWarning, "Contact with a coin !");
-	}else if (bodyB == coinbody && bodyA == body->GetBody()) {
-		LogConsole(LogWarning, "Contact with a coin !");
+	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
+	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
+	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
+	bool isARedSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 2) || map->isBodyPartOfTileset(bodyB, "misc2", 2);
+	bool isAGreenSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 1) || map->isBodyPartOfTileset(bodyB, "misc2", 1);
+	if (isACoin) {
+		if (bodyB == body) {
+			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->deleteTileInLayer(tileToDelete);
+				LogConsole(LogWarning, "Contact with a coin !");
+			}
+		}else if (bodyA == body) {
+			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->deleteTileInLayer(tileToDelete);
+				LogConsole(LogWarning, "Contact with a coin !");
+			}
+		}
+	}else if (isARedSwitch && !anti_spam) {
+		if (bodyB == body) {
+			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
+				LogConsole(LogWarning, "Contact with a red switch !");
+			}
+			anti_spam = true;
+			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
+		}else if (bodyA == body) {
+			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
+				LogConsole(LogWarning, "Contact with a red switch !");
+			}
+			anti_spam = true;
+			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
+		}
+	}else if (isAGreenSwitch && !anti_spam) {
+		if (bodyB == body) {
+			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
+				LogConsole(LogWarning, "Contact with a green switch !");
+			}
+			anti_spam = true;
+			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
+		}else if (bodyA == body) {
+			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
+			if (tileToDelete != NULL) {
+				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
+				LogConsole(LogWarning, "Contact with a green switch !");
+			}
+			anti_spam = true;
+			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
+		}
 	}
+
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)

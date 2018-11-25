@@ -22,6 +22,10 @@
 #include "Common/b2Math.h"
 #include "Collision/Shapes/b2Shape.h"
 #include <memory>
+namespace Physics2D
+{
+	class PhysicsBody;
+}
 
 class b2Fixture;
 class b2Joint;
@@ -408,6 +412,8 @@ private:
 	friend class b2RopeJoint;
 	friend class b2WeldJoint;
 	friend class b2WheelJoint;
+	friend class b2Fixture;
+	friend class Physics2D::PhysicsBody;
 
 	// m_flags
 	enum
@@ -470,6 +476,7 @@ private:
 	float32 m_sleepTime;
 
 	void* m_userData;
+	Physics2D::PhysicsBody* m_physicsBody;
 };
 
 inline b2BodyType b2Body::GetType() const

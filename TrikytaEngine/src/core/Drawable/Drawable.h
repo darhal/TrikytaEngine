@@ -113,6 +113,8 @@ protected:
 	int m_ZOrder;
 
 	class Physics2D::PhysicsBody* m_Body = nullptr;
+
+	friend class TiledMap;
 private:
 	
 };
