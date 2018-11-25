@@ -22,7 +22,7 @@ public:
 	void addChildren(Object*);
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
 
-	template<typename T, typename = std::enable_if_t<std::is_base_of<Component, T>::value>>
+	template<typename T, typename = std::enable_if<std::is_base_of<Component, T>::value>>
 	T* getComponent() {
 		if (T::getType() && m_Components.count(T::getType()) > 0 && m_Components[T::getType()]) {
 			return static_cast<T*>(m_Components[T::getType()]);
@@ -30,7 +30,7 @@ public:
 		return NULL;
 	};
 
-	template<typename T, typename = std::enable_if_t<std::is_base_of<Component, T>::value>>
+	template<typename T, typename = std::enable_if<std::is_base_of<Component, T>::value>>
 	void addComponent(T* component) {
 		if (component != NULL && m_Components[component->getComponentType()] == NULL) { // dont overwrite components!
 			m_Components[component->getComponentType()] = ((void*)component);
