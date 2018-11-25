@@ -70,7 +70,6 @@ bool TiledMap::init()
 		m_DestinationDrawCoord = { m_Position.x, m_Position.y, maxGridSize.x, maxGridSize.y };
 		m_SourceDrawCoord = { 0, 0, maxGridSize.x, maxGridSize.y }; //TODO: Change this to camera size
 	}
-	//TODO FIX TEXTURE SIZE!
 	if (m_MapGrids.size() > 0) {
 		m_Texture = m_MapGrids.at(0).m_Texture;
 	} else {
@@ -136,7 +135,6 @@ void TiledMap::renderAnimations(float dt)
 void TiledMap::render(float dt)
 {
 	auto r = ENGINE->getRenderer();
-	renderAnimations(dt);
 	if (m_MapGrids.size() > 0) {
 		for (MapPart& texture_data : m_MapGrids) {
 			SDL_SetTextureBlendMode(texture_data.m_Texture, SDL_BLENDMODE_BLEND);
@@ -149,6 +147,7 @@ void TiledMap::render(float dt)
 		SDL_SetTextureBlendMode(m_Texture, SDL_BLENDMODE_BLEND);
 		SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 	}
+	renderAnimations(dt);
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
 

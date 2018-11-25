@@ -33,7 +33,7 @@ bool SetOpenGLAttributes()
 	return true;
 }*/
 
-constexpr int FRAMES_PER_SECOND = 75;
+constexpr int FRAMES_PER_SECOND = 3000;
 
 bool EngineInstance::Init()
 {
