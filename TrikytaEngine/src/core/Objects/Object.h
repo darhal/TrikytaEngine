@@ -2,7 +2,9 @@
 #include <core/Common/Vec2.h>
 #include "IObject.h"
 #include <vector>
+#include <map>
 #include <algorithm>
+#include "core/Components/Component.h"
 
 class Component;
 
@@ -20,24 +22,25 @@ public:
 	void addChildren(Object*);
 	void attachTo(Object*, Vec2f = Vec2f(0.f, 0.f));
 
-	template<typename T>
+	template<typename T, typename = std::enable_if_t<std::is_base_of<Component, T>::value>>
 	T* getComponent() {
-		T* componentResult = NULL;
-		bool runNullPtrCollector = false;
-		for (const auto& component : m_Components) {
-			if (component == NULL) { runNullPtrCollector = true; continue; }
-			auto potentialComponent = dynamic_cast<T*>(component);
-			if (potentialComponent != NULL) {
-				componentResult = potentialComponent;
-				break;
-			}
+		if (T::getType() && m_Components.count(T::getType()) > 0 && m_Components[T::getType()]) {
+			return static_cast<T*>(m_Components[T::getType()]);
 		}
-		if (runNullPtrCollector) {std::remove_if(m_Components.begin(), m_Components.end(), [=](const Component* o) { return o == NULL; }), m_Components.end();}
-		return componentResult;
+		return NULL;
 	};
-	void addComponent(Component* component);
+
+	template<typename T, typename = std::enable_if_t<std::is_base_of<Component, T>::value>>
+	void addComponent(T* component) {
+		if (component != NULL && m_Components[component->getComponentType()] == NULL) { // dont overwrite components!
+			m_Components[component->getComponentType()] = ((void*)component);
+			component->setOwner(this);
+			return;
+		}
+	};
+
 	void removeComponent(Component* component);
-	const std::vector<Component*>& getComponents();
+	void getComponents(std::vector<Component*>&);
 	const Component* getComponent(int compType);
 
 	void setRender(bool isVisible);
@@ -54,7 +57,7 @@ protected:
 	bool m_AutoClearComponent;
 	Object* m_Parent = nullptr;
 	std::vector<Object*>* m_Childrens;
-	std::vector<Component*> m_Components;
+	std::map<int, void*> m_Components; // components !
 private:
 
 };

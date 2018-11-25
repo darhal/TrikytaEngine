@@ -14,7 +14,6 @@
 #include <UI/UIEditBox.h>
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
-#include <core/Utility/BasicSerialization.h>
 #include <core/TiledMap/Tilesets.h>
 
 //UI::EditBox* editBox;
@@ -52,77 +51,7 @@ void Game::On_Engine_Init()
 	body->SetAngularDamping(1000.f);
 	cam->addObjectToCamera(zombie_girl);
 	cam->addObjectToCamera(zombie_boy);
-	cam->addObjectToCamera(anim);
-	*/
-	//obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(0, 0));
-	//text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(0, 350), Color{ 255,0,255, 255 }, TTF_STYLE_UNDERLINE | TTF_STYLE_BOLD);
-	//auto text2 = UI::Text::createText("This is a another output example", "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(500, 350), Color{ 255,0,255, 255 }, TTF_STYLE_BOLD);
-	//to_bytes(Animation, anim, bytecode);
-	//make_from_bytes<Animation>(bytecode, &test[2]);
-	/*auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
-		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()), Color{ 255,255,255, 255 });
-	editBox->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
-	/*auto editBox2 = UI::EditBox::createEditBox("ENTER 2", "Engine_Assets/fonts/DroidSans.ttf", 18,
-		Vec2i(START_POS_X, Console::getConsole()->getStartYPos()+250), Color{ 255,255,255, 255 });
-	editBox2->getText()->setBackgroundColor(Color{ 0,0,0,255 });*/
-
-	//for (int i = 0; i < 100; i++) {
-	//auto t = TimerManager::CreateTimer(f, 1000, 3, true);
-	//}
-	
-	//std::string lol = "FPS: " + std::to_string(1));
-	//a->updateText(lol);
-
-	//sprite test
-	/*obj = Sprite::Create("assets/test.png", Vec2i(464, 464), Vec2i(0, 0));
-	//Log("Sprite obj : %s", obj->getFileName().c_str());
-	//obj->Physicalize({ 1.f, 1.f }, Physics2D::BodyType::DYNAMIC);
-
-	text = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(0, 50), Color{ 255,255,255, 255 });
-	text->setScale(1);
-	text->setColor(Color(0, 255, 0, 255));
-
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(0, 0), Vec2i(650, 75), 0.03f);
-	Log("Animation obj : %s", anim->getFileName().c_str());*/
-	/*text->attachTo(anim, Vec2f(0.2f,0.f));
-	anim->Physicalize(1.f, 1.f, Physics2D::BodyType::DYNAMIC, Vec2f(0.4f, 0.046f));
-
-	auto text2 = UI::Text::createText("This is a simple output example", "Engine_Assets/fonts/DroidSans.ttf", 12, Vec2i(450, 50), Color{ 255,255,255, 255 });
-	text2->Physicalize(1.f, 1.f, Physics2D::BodyType::DYNAMIC);
-
-	using namespace Physics2D;
-	auto Ground = PhysicsBody::CreateBody
-	(
-		PhysicsEngine::GetPhysicsWorld(), BodyType::STATIC,
-		BodyShape::BOX, BodyParams{ 1,1 },
-		Vec2f{0.f, (float)(this->GetScreenHeight()+ 464 / PTM)-150.f },
-		std::vector<Vec2f>{Vec2f((float)this->GetScreenWeight(), 464/ PTM)}
-	);*/
-	/*
-	body = PhysicsBody::CreateBody
-	(
-		PhysicsEngine::GetPhysicsWorld(), BodyType::DYNAMIC,
-		BodyShape::BOX, BodyParams{1.f,0.1f},
-		Vec2f{ 50 + obj->getSize().x/PTM, 100+obj->getSize().y/PTM },
-		std::vector<Vec2f>{Vec2f(obj->getSize().x/PTM, obj->getSize().y/PTM)}
-	);
-
-	body2 = PhysicsBody::CreateBody
-	(
-		PhysicsEngine::GetPhysicsWorld(), BodyType::DYNAMIC,
-		BodyShape::BOX, BodyParams{ 1.f,0.1f },
-		Vec2f{ 650 + anim->getSize().x/PTM, 75 + anim->getSize().y/PTM },
-		std::vector<Vec2f>{Vec2f((anim->getSize().x-100)/PTM, (anim->getSize().y-10)/PTM)}
-	);
-	// attaching testing
-	obj->attachTo(body, Vec2f(-0.5f, -0.5f));
-	anim->attachTo(body2, Vec2f(-0.5f, -0.5f));
-
-	//Phy simulation test
-	body2->SetLinearVelocity(b2Vec2(-35.f, 0.f));
-	body->SetLinearVelocity(b2Vec2(35.f, 0.f));
-	body2->SetAngularDamping(6.f);
-	*/
+	cam->addObjectToCamera(anim);*/
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
@@ -137,103 +66,29 @@ void Game::On_Engine_Render(float /*dt*/)
 	// Offset the player quad by the camera position 
 	bool b = true;
 	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
-	/*if (!(pos.x >= 0 && pos.x <= map->getSize().x)) {
-		//anim->setAffectedByCamera(false);
-		anim->updateRenderPositionFromCamera(Vec2i(cam->getCameraPosition().x / 2, 0));
-		b = false;
-	}
-	if (!(pos.y >= 0 && pos.y <= map->getSize().y)) {
-		//anim->setAffectedByCamera(false);
-		anim->updateRenderPositionFromCamera(Vec2i(0, cam->getCameraPosition().y / 2));
-		b = false;
-	} */
 	if (b)
 		cam->setCameraPosition(pos);
-	/*Vec2i pos = Vec2i(body->GetPosition().x, body->GetPosition().y);
-	LogConsole(LogWarning, "Physics position : (%d, %d) | Sprite Position (%d, %d)", pos.x, pos.y, anim->getPosition().x, anim->getPosition().x);
-	pos = anim->getPosition();
-	Vec2i tempPos = pos - cam->getCameraPosition();*/
-
-	//Center the camera over the dot
-	/*auto camera = Vec2i((anim->getPosition().x + anim->getSize().x / 2) - ENGINE->GetScreenWidth() / 2, (anim->getPosition().y + anim->getSize().y / 2) - ENGINE->GetScreenHeight() / 2);
-	//Keep the camera in bounds
-	if (camera.x < 0)
-	{
-		camera.x = 0;
-	}
-	if (camera.y < 0)
-	{
-		camera.y = 0;
-	}
-	if (camera.x > map->getSize().x - cam->getCameraSize().x)
-	{
-		camera.x = map->getSize().x - cam->getCameraSize().x;
-	}
-	if (camera.y > map->getSize().y - cam->getCameraSize().y)
-	{
-		camera.y = map->getSize().y - cam->getCameraSize().y;
-	}
-	anim->setPosition(camera);
-	cam->setCameraPosition(camera);*/
-
-	/*if (obj->getPosition().x > obj->getSize().x + this->GetScreenWeight()) {
-		obj->setPositionX(-(obj->getSize().x));
-	}
-	if (obj->getPosition().y > this->GetScreenHeight()+ obj->getSize().y) {
-		obj->setPositionY(-obj->getSize().y);
-	}*/
-		
-	/*if (anim->getPosition().x > anim->getSize().x + this->GetScreenWeight()) {
-		anim->setPositionX(-(anim->getSize().x));
-	}
-	if (anim->getPosition().y > this->GetScreenHeight() + anim->getSize().y) {
-		anim->setPositionY(-anim->getSize().y);
-	}
-	anim->setPosition(Vec2i(anim->getPosition().x+1, anim->getPosition().y+0));*/
-	//obj->setPosition(Vec2i(obj->getPosition().x+1, obj->getPosition().y+0));
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
 	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
-			body->SetLinearVelocity(Vec2f(50.f, body->GetLinearVelocity().y));
+			Vec2f v = body->GetLinearVelocity();
+			v.x = 50.f;
+			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::NONE);
-			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
-			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
-			cam->setCameraPosition(Vec2i(x, y));*/
-			//cam->moveCamera(Vec2i(10, 0));
-			//body->SetAwake(true);
-		}
-		else if (p_Key == SDLK_LEFT) {
-			body->SetLinearVelocity(Vec2f(-50.f, body->GetLinearVelocity().y));
+		}else if (p_Key == SDLK_LEFT) {
+			Vec2f v = body->GetLinearVelocity();
+			v.x = -50.f;
+			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::HORIZONTAL);
-			/*//cam->moveCamera(Vec2i(-5, 0));
-			int x = (int)body->GetWorldCenter().x - anim->getSize().x;
-			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
-			cam->setCameraPosition(Vec2i(x, y));*/
-			//cam->moveCamera(Vec2i(-10, 0));
-			//body->SetAwake(true);
-		}
-		else if (p_Key == SDLK_UP) {
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y-35.f));
-			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
-			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
-			cam->setCameraPosition(Vec2i(x, y));
-			LogTerminal(" %d, %d ", x, y);*/
-			//cam->moveCamera(Vec2i(0, 10));
-			//body->SetAwake(true);
+		}else if (p_Key == SDLK_UP) {
+			body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
 		}else if (p_Key == SDLK_DOWN) {
-			//cam->moveCamera(Vec2i(0, -5));
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y+35.f));
-			/*int x = (int)body->GetWorldCenter().x - anim->getSize().x;
-			int y = (int)body->GetWorldCenter().y - anim->getSize().y;
-			cam->setCameraPosition(Vec2i(x, y));
-			LogTerminal(" %d, %d ", x, y);*/
-			//cam->moveCamera(Vec2i(0, -10));
-			//body->SetAwake(true);
-		}
-		else if (p_Key == SDLK_c) {
+			
+		}else if (p_Key == SDLK_c) {
+
 		}
 	}
 };
@@ -283,17 +138,17 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a red switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a red switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}
 	}else if (isAGreenSwitch && !anti_spam) {
 		if (bodyB == body) {
@@ -301,24 +156,19 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a green switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a green switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}
 	}
-	/*if (bodyA == coinbody && bodyB == body) {
-		LogConsole(LogWarning, "Contact with a coin !");
-	}else if (bodyB == coinbody && bodyA == body) {
-		LogConsole(LogWarning, "Contact with a coin !");
-	}*/
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)

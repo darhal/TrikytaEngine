@@ -23,7 +23,7 @@ Object::~Object()
 	//Clear components !
 	if (m_AutoClearComponent) {
 		for (auto component : m_Components) {
-			FREE(component);
+			FREE(component.second);
 		}
 	}
 	m_Components.clear();
@@ -67,31 +67,24 @@ void Object::attachTo(Object* obj, Vec2f p_Offset)
 
 const Component* Object::getComponent(int compType)
 {
-	for (const auto& component : m_Components) {
-		if (component->getComponentType() == compType) {
-			return component;
-		}
+	if (m_Components[compType]) {
+		return static_cast<Component*>(m_Components[compType]);
 	}
 	return NULL;
 }
 
-void Object::addComponent(Component* component)
-{
-	if (component != NULL) {
-		m_Components.emplace_back(component);
-		component->setOwner(this);
-		return;
-	}
-
-}
-
 void Object::removeComponent(Component* component)
 {
-	std::remove_if(m_Components.begin(), m_Components.end(), [=](const Component* o) { return o == component; }), m_Components.end();
-	FREE(component);
+	if (m_Components.count(component->getComponentType()) > 0 && m_Components[component->getComponentType()]) {
+		m_Components[component->getComponentType()] = NULL;
+		FREE(component);
+	}
 }
 
-const std::vector<Component*>& Object::getComponents()
+void Object::getComponents(std::vector<Component*>& out_vector)
 {
-	return m_Components;
+	out_vector.reserve(m_Components.size());
+	for (auto& itr : m_Components) {
+		out_vector.emplace_back(static_cast<Component*>(itr.second));
+	}
 }
