@@ -37,7 +37,6 @@ void Game::On_Engine_Init()
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 
-	
 	/*auto zombie_boy = Animation::Create("assets/chars/zombie.png", "assets/chars/zombie_attack.txt", Vec2i(430/10, 519/10), Vec2i(550, 200), 0.04f);
 	zombie_boy->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
 	zombie_boy->ToggleRotationAttachement(false);

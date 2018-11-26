@@ -20,15 +20,14 @@ enum class LayerType{
 	RETAINED
 };
 
-struct LayerData: public Component
+ADD_COMPONENT(TILE_COMPONENT)
+struct LayerData : public Component
 {
 	REGISTER_COMPONENT(LayerData, TILE_COMPONENT);
-
 	LayerData(int layerId, TileData* tiledLayerData):
 		layerId(layerId), tiledLayerData(tiledLayerData)
-	{
-		m_ComponentType = TILE_COMPONENT;
-	}
+	{}
+
 	~LayerData();
 	//LayerData(const LayerData& o) : layerId(o.layerId), tiledLayerData(o.tiledLayerData){}
 	int layerId;

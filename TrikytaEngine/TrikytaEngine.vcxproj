@@ -155,7 +155,6 @@
     <ClCompile Include="src\core\Common\EngineInstance.cpp" />
     <ClCompile Include="src\core\Common\TrikytaEngine.cpp" />
     <ClCompile Include="src\core\Common\Utility.cpp" />
-    <ClCompile Include="src\core\Common\Vec2.cpp" />
     <ClCompile Include="src\core\Drawable\Animation.cpp" />
     <ClCompile Include="src\core\Drawable\Drawable.cpp" />
     <ClCompile Include="src\core\Drawable\Sprite.cpp" />
@@ -304,6 +303,7 @@
     <ClInclude Include="src\core\Common\defines.h" />
     <ClInclude Include="src\core\Common\EngineInstance.h" />
     <ClInclude Include="src\core\Common\Logger.h" />
+    <ClInclude Include="src\core\Common\Macros.hpp" />
     <ClInclude Include="src\core\Common\TrikytaEngine.h" />
     <ClInclude Include="src\core\Common\Utility.h" />
     <ClInclude Include="src\core\Common\Vec2.h" />
