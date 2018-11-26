@@ -128,4 +128,6 @@ typedef unsigned long long uint_fast64;
 typedef long long          intmax;
 typedef unsigned long long uintmax;
 
-#include "Logger.h"
+#ifndef NOLOGGER
+	#include "Logger.h"
+#endif

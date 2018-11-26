@@ -1,7 +1,6 @@
 #include <core/Objects/ObjectHandler.h>
 #include <core/Utility/TimerManager.h>
 #include <core/Common/defines.h>
-#include "core/TiledMap/Parser/Tmx.h"
 #include <core/Drawable/Sprite.h>
 #include <core/Common/Vec2.h>
 #include <core/Drawable/Animation.h>
@@ -15,7 +14,6 @@
 #include <UI/UIEditBox.h>
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
-#include <core/Utility/BasicSerialization.h>
 #include <core/TiledMap/Tilesets.h>
 
 //UI::EditBox* editBox;
@@ -28,19 +26,21 @@ void Game::On_Engine_Pre_Init()
 	LogTerminal("Trikyta Engine Pre-initializing. ");
 };
 
-void Game::ManagerTortue()
-{
-	for (auto& b : mechantBody){
-		if (moveleft){
+void Game::ManagerMechant()
+{	float speedX= moveleft ? 25.f : -25.f;
+	if (moveleft){
+			speedX=-25.f;
 			moveleft=false;
-			dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::NONE);
 		}
 		else{
+			speedX=25.f;
 			moveleft=true;
-			dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::HORIZONTAL);
 		}
+	for (auto& b : mechantBody){
+		moveleft ?
+		dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::NONE):
+		dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::HORIZONTAL);
 		b->SetLinearVelocity(Vec2f(0.f,0.f));
-		float speedX= moveleft ? 25.f : -25.f;
 		b->SetLinearVelocity(Vec2f(speedX,0.f));
 	}
 }
@@ -49,7 +49,7 @@ void Game::On_Engine_Init()
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
 	cam->addObjectToCamera(map);
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
+	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/5, 217/5), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
@@ -78,6 +78,21 @@ void Game::On_Engine_Init()
 
 
 		}
+		if (objectGroup->GetName()=="squelette"){
+			for (int m = 0; m < objectGroup->GetNumObjects(); ++m) {
+				// Get an object.
+				const Tmx::Object* object2 = objectGroup->GetObject(m);
+				Vec2i pos2 = Vec2i(object2->GetX(),object2->GetY());
+				auto animsquelette = Animation::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie_walk.txt", Vec2i(40, 40), pos2, 0.03f);
+				cam->addObjectToCamera(animsquelette);
+				auto bodysquelette = animsquelette->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+				mechantBody.emplace_back(bodysquelette);
+				bodysquelette->SetAngularDamping(1000.f);
+				animsquelette->ToggleRotationAttachement(false);
+			}
+
+
+		} 
 		if (objectGroup->GetName()=="bonus"){
 			for (int k = 0; k<objectGroup->GetNumObjects(); k++){
 				const Tmx::Object* object1 = objectGroup->GetObject(k);
@@ -87,8 +102,7 @@ void Game::On_Engine_Init()
 			}
 		}
 	}
-	auto t = TimerManager::CreateTimer(CALLBACK_0(Game::ManagerTortue,this), 1000, 0, true);
-
+	auto t = TimerManager::CreateTimer(CALLBACK_0(Game::ManagerMechant,this), 1000, 0, true);
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
@@ -105,28 +119,30 @@ void Game::On_Engine_Render(float /*dt*/)
 	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
 	if (b)
 		cam->setCameraPosition(pos);
-
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 { 
 	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
-			body->SetLinearVelocity(Vec2f(50.f, body->GetLinearVelocity().y));
+			Vec2f v = body->GetLinearVelocity();
+			v.x = 50.f;
+			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::NONE);
-		}
-		else if (p_Key == SDLK_LEFT) {
-			body->SetLinearVelocity(Vec2f(-50.f, body->GetLinearVelocity().y));
+		}else if (p_Key == SDLK_LEFT) {
+			Vec2f v = body->GetLinearVelocity();
+			v.x = -50.f;
+			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::HORIZONTAL);
-		}
-		else if (p_Key == SDLK_UP) {
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y-35.f));
+		}else if (p_Key == SDLK_UP) {
+			//body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
+			Vec2f v = body->GetLinearVelocity();
+			v.y = -50.f;
+			body->SetLinearVelocity(v);
 		}else if (p_Key == SDLK_DOWN) {
-			//cam->moveCamera(Vec2i(0, -5));
-			body->SetLinearVelocity(Vec2f(body->GetLinearVelocity().x+0.f, body->GetLinearVelocity().y+35.f));
-		}
-		else if (p_Key == SDLK_c) {
 			
+		}else if (p_Key == SDLK_c) {
+
 		}
 	}
 };
@@ -139,6 +155,18 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
+	/*auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
+	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
+	auto coinbody = map->getGroupManager().getBodiesByName("test");
+	bool isACoin = map->getGroupManager().isBodyInLayer(bodyA, "coins") || map->getGroupManager().isBodyInLayer(bodyB, "coins");
+	if (isACoin) {
+		if (bodyB == body) {
+			LogConsole(LogWarning, "Contact with a coin !");
+		}
+		else if (bodyA == body) {
+			LogConsole(LogWarning, "Contact with a coin !");
+		}
+	}*/
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
@@ -164,17 +192,17 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a red switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 1, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a red switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}
 	}else if (isAGreenSwitch && !anti_spam) {
 		if (bodyB == body) {
@@ -182,20 +210,19 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a green switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->addTileToLayer(map->getTilset("misc2"), 2, "switch", tileToDelete->tiledLayerData->m_MapGrid);
 				LogConsole(LogWarning, "Contact with a green switch !");
+				anti_spam = true;
+				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
-			anti_spam = true;
-			TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 		}
 	}
-
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)

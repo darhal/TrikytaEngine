@@ -88,10 +88,10 @@ void PhysicsWorld::CreateBodyInQueue(const PhysicsParamsWarpper& bodyToCreate)
 void PhysicsWorld::QueueCreate(PhysicsBody* temp_body, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams, Vec2f p_Position, std::vector<Vec2f> p_Dimentions)
 {
 	// Anticpate of the same body is the delete queue ! (Not sure if it gonna work proerly bcuz of PhysicsBody and b2Body and probably will never happen!)
-	if (std::find(m_DeleteQueue.begin(), m_DeleteQueue.end(), temp_body->GetBody()) != m_DeleteQueue.end()) {
+	/*if (std::find(m_DeleteQueue.begin(), m_DeleteQueue.end(), temp_body->GetBody()) != m_DeleteQueue.end()) {
 		FREE(temp_body);
 		return;
-	}
+	}*/
 	m_CreateQueue.emplace_back(p_BodyType, p_Shape, p_BodyParams, p_Position, p_Dimentions, temp_body);
 }
 

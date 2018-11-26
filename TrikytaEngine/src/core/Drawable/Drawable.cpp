@@ -18,7 +18,8 @@ Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
 	m_RotationCenter(SDL_Point{ p_Size.x/2, p_Size.y/2 }),
 	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE),
 	Object(p_RegisterInHandler),
-	m_ZOrder(0)
+	m_ZOrder(0),
+	m_Camera(nullptr)
 {
 }
 

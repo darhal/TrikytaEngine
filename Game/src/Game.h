@@ -20,7 +20,7 @@ public:
 	void OnCollisionEnd(class b2Contact*);
 	void OnClick(unsigned int, int, Vec2i);
 	void OnMouseMove(Vec2i);
-	void ManagerTortue();
+	void ManagerMechant();
 
 	class Sprite* obj;
 	class Animation* anim;

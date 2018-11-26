@@ -382,7 +382,7 @@ namespace Physics2D {
 		const Fixture* GetFixtureList() const { return m_Body->GetFixtureList(); }
 
 		/// Get the list of all joints attached to this body.
-		JointEdge* GetJointList() { m_Body->GetJointList(); }
+		JointEdge* GetJointList() { return m_Body->GetJointList(); }
 		const JointEdge* GetJointList() const { return m_Body->GetJointList(); }
 
 		/// Get the list of all contacts attached to this body.

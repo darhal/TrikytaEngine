@@ -22,6 +22,8 @@ enum class LayerType{
 
 struct LayerData: public Component
 {
+	REGISTER_COMPONENT(LayerData, TILE_COMPONENT);
+
 	LayerData(int layerId, TileData* tiledLayerData):
 		layerId(layerId), tiledLayerData(tiledLayerData)
 	{
@@ -71,7 +73,6 @@ public:
 		return m_Group;
 	}
 
-	const std::vector<Physics2D::PhysicsBody*>& getTilesetBodiesByID(const std::string& tilsetName, int id);
 	bool isBodyPartOfTileset(Physics2D::PhysicsBody* body, const std::string& tilsetName, int id);
 
 	void deleteTileInLayer(LayerData* tileToDelete);
@@ -84,8 +85,6 @@ private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;
 	std::vector<Tilesets>* m_MapTilesets;
-	std::map<std::pair<std::string, int>, std::vector<Physics2D::PhysicsBody*>> m_BodyByTile;
-	std::vector<Physics2D::PhysicsBody*> m_allMapBodies;
 	std::vector<LayerData*> m_cachedImmediateTiles;
 	// contain TileData indexed with layer index!
 	std::vector<LayerData*> m_LayerData;

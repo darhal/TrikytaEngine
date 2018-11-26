@@ -75,10 +75,8 @@ struct TileData
 	~TileData() {
 		FREE(SourceDraw);
 		FREE(DestDraw);
-		if (!PhyBodys.empty()) {
-			for (auto body : PhyBodys) {
-				FREE(body); // its safer!
-			}
+		for (auto body : PhyBodys) {
+			FREE(body); // its safer!
 		}
 	}
 	struct SDL_Rect* SourceDraw;
