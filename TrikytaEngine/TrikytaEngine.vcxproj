@@ -156,6 +156,7 @@
     <ClCompile Include="src\core\Common\TrikytaEngine.cpp" />
     <ClCompile Include="src\core\Common\Utility.cpp" />
     <ClCompile Include="src\core\Drawable\Animation.cpp" />
+    <ClCompile Include="src\core\Drawable\AnimationSet.cpp" />
     <ClCompile Include="src\core\Drawable\Drawable.cpp" />
     <ClCompile Include="src\core\Drawable\Sprite.cpp" />
     <ClCompile Include="src\core\Events\EventManager.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="src\core\Common\Vec2.h" />
     <ClInclude Include="src\core\Components\Component.h" />
     <ClInclude Include="src\core\Drawable\Animation.h" />
+    <ClInclude Include="src\core\Drawable\AnimationSet.hpp" />
     <ClInclude Include="src\core\Drawable\Drawable.h" />
     <ClInclude Include="src\core\Drawable\Sprite.h" />
     <ClInclude Include="src\core\Events\EventManager.h" />

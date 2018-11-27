@@ -15,10 +15,12 @@
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
 #include <core/TiledMap/Tilesets.h>
+#include <core/Drawable/AnimationSet.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
 bool anti_spam = false;
+AnimationSet* aa;
 
 void Game::On_Engine_Pre_Init()  
 { 
@@ -37,6 +39,17 @@ void Game::On_Engine_Init()
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 
+	aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
+	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
+	bodyaa->SetFixedRotation(true);
+	cam->addObjectToCamera(aa);
+
+	Console::AddCommandHandler("setanim", 
+		[](const std::vector<std::string>& args) {
+			std::string anim_name = args.at(0);
+			aa->setAnimation(anim_name);
+		}
+	);
 	/*auto zombie_boy = Animation::Create("assets/chars/zombie.png", "assets/chars/zombie_attack.txt", Vec2i(430/10, 519/10), Vec2i(550, 200), 0.04f);
 	zombie_boy->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
 	zombie_boy->ToggleRotationAttachement(false);
@@ -88,9 +101,9 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			v.y = -50.f;
 			body->SetLinearVelocity(v);
 		}else if (p_Key == SDLK_DOWN) {
-			
+			aa->setAnimation("Idle");
 		}else if (p_Key == SDLK_c) {
-
+			aa->setAnimation("Attack");
 		}
 	}
 };
