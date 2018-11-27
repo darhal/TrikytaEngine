@@ -131,7 +131,12 @@ Vec2<T> operator-(const Vec2<T>& rhs, const Vec2<T>& lhs) {
 
 template<typename T>
 Vec2<T> operator/(const Vec2<T>& rhs, const Vec2<T>& lhs) {
-	return Vec2<T>(rhs.x / lhs.x, lhs.y / lhs.y);
+	return Vec2<T>(rhs.x / lhs.x, rhs.y / lhs.y);
+}
+
+template<typename T>
+Vec2<T> operator/(const Vec2<T>& rhs, int left) {
+	return Vec2<T>(rhs.x / left, rhs.y / left);
 }
 
 template<typename T>

@@ -28,8 +28,7 @@ public:
 	//bool initWithAnimationPack();
 	void setAnimation(const std::string&);
 
-	virtual Vec2<int> getSize() { return Vec2i(m_CurrentFrame->at(0).w, m_CurrentFrame->at(0).h); }
-//	inline std::vector<SDL_Rect>* getSpriteFramesCoords() { return SpriteFramesCoords; }
+	//virtual Vec2<int> getSize() { return Vec2i(m_CurrentFrame->at(0).w, m_CurrentFrame->at(0).h); }
 
 	static AnimationSet* Create(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position, int p_FramesMax, int p_FirstFrame = 0)
 	{

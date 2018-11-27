@@ -22,7 +22,7 @@ public:
 	void OnMouseMove(Vec2i);
 
 	class Sprite* obj;
-	class Animation* anim;
+	class AnimationSet* anim;
 	class UI::Text* text;
 	class Physics2D::PhysicsBody* body;
 	class Physics2D::PhysicsBody* body2;

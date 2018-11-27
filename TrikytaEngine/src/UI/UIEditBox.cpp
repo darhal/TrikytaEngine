@@ -5,6 +5,7 @@
 #include "UIManager.h"
 #include "Events/UIEventHandler.h"
 #include "core/InputManager/InputManager.h"
+#include "core/Common/TrikytaEngine.h"
 
 using namespace UI;
 
@@ -73,6 +74,14 @@ void EditBox::OnUIClick(Vec2i pos, bool isDown)
 
 void EditBox::render(float dt)
 {
+	SDL_Rect m_WidgetBounderies = SDL_Rect{ m_InputText->getPosition().x, m_InputText->getPosition().y, m_InputText->getSize().x, m_InputText->getSize().y};
+	SDL_Rect m_WidgetLineBounderies = SDL_Rect{ m_InputText->getPosition().x-1, m_InputText->getPosition().y-1, m_InputText->getSize().x+2, m_InputText->getSize().y+2 };
+	SDL_SetRenderDrawBlendMode(ENGINE->getRenderer(), SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
+	SDL_RenderFillRect(ENGINE->getRenderer(), &m_WidgetBounderies);
+	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_WidgetBounderies);
+	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_WidgetLineBounderies);
+	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
 	InputManager::getInputManager()->DrawCursor(dt);
 }
 

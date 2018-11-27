@@ -38,7 +38,6 @@ void Manager::addElement(Base* p_UiObj, bool isRenderable)
 {
 	if (isRenderable) {
 		Manager::getUIRenderableContainer().push_back(p_UiObj);
-		
 	} else {
 		Manager::getUIContainer().push_back(p_UiObj);
 	}
@@ -55,8 +54,7 @@ void Manager::removeElement(Base* p_UiObj, bool isRenderable)
 {
 	if (isRenderable) {
 		Manager::getUIRenderableContainer().remove(p_UiObj);
-	}
-	else {
+	}else {
 		Manager::getUIContainer().remove(p_UiObj);
 	}
 }

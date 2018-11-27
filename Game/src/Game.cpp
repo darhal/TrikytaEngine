@@ -33,37 +33,24 @@ void Game::On_Engine_Init()
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
 	//map = TiledMap::Create("assets/example/maps/map3.tmx");
 	cam->addObjectToCamera(map);
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
+	anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
+	anim->setAnimation("Idle");
 
-	aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
-	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
-	bodyaa->SetFixedRotation(true);
-	cam->addObjectToCamera(aa);
 
 	Console::AddCommandHandler("setanim", 
-		[](const std::vector<std::string>& args) {
+		[=](const std::vector<std::string>& args) {
 			std::string anim_name = args.at(0);
-			aa->setAnimation(anim_name);
+			anim->setAnimation(anim_name);
 		}
 	);
-	/*auto zombie_boy = Animation::Create("assets/chars/zombie.png", "assets/chars/zombie_attack.txt", Vec2i(430/10, 519/10), Vec2i(550, 200), 0.04f);
-	zombie_boy->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
-	zombie_boy->ToggleRotationAttachement(false);
-	auto zombie_girl = Animation::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie_attack.txt", Vec2i(521/10, 576 /10), Vec2i(250, 200), 0.04f);
-	zombie_girl->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.f))->SetAngularDamping(1000.f);
-	zombie_girl->ToggleRotationAttachement(false);
-
-	anim = Animation::Create("assets/chars/plane.png", "assets/chars/plane_shoot.txt", Vec2i(443 / 4, 302 / 4), Vec2i(250, 120), 0.04f);
-	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::BOX, Vec2f(0.f, 0.f));
-	anim->ToggleRotationAttachement(false);
-	body->SetAngularDamping(1000.f);
-	cam->addObjectToCamera(zombie_girl);
-	cam->addObjectToCamera(zombie_boy);
-	cam->addObjectToCamera(anim);*/
+	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
+	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
+	bodyaa->SetFixedRotation(true);
+	cam->addObjectToCamera(aa);*/
 	//EVENT TESTING!!
 	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
@@ -90,20 +77,32 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			v.x = 50.f;
 			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::NONE);
+			anim->setAnimation("Run");
 		}else if (p_Key == SDLK_LEFT) {
 			Vec2f v = body->GetLinearVelocity();
 			v.x = -50.f;
 			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::HORIZONTAL);
+			anim->setAnimation("Run");
 		}else if (p_Key == SDLK_UP) {
 			//body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
 			Vec2f v = body->GetLinearVelocity();
 			v.y = -50.f;
 			body->SetLinearVelocity(v);
+			anim->setAnimation("Jump");
 		}else if (p_Key == SDLK_DOWN) {
 			aa->setAnimation("Idle");
 		}else if (p_Key == SDLK_c) {
 			aa->setAnimation("Attack");
+		}
+	}else if (p_KeyState == SDL_KEYUP) {
+		if (p_Key == SDLK_RIGHT || p_Key == SDLK_LEFT) {
+			Vec2f v = body->GetLinearVelocity();
+			v.x = 0.f;
+			body->SetLinearVelocity(v);
+			anim->setAnimation("Idle");
+		}else if (p_Key == SDLK_UP) {
+			anim->setAnimation("Fall");
 		}
 	}
 };
