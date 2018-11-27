@@ -2,8 +2,7 @@
 #include "Base/UIEditBoxBase.h"
 #include "core/Common/Color.h"
 #include <string>
-
-//TODO: Find a solution when you switch directly from an editbox to another (due to events treated one after the other)
+#include <SDL/SDL.h>
 
 namespace UI {
 	class Text;
@@ -16,7 +15,7 @@ namespace UI {
 		}
 
 		EditBox(const std::string&, const std::string&, uint8, Vec2i, Color);
-
+		void buildWidget();
 		virtual void OnUIClick(Vec2i, bool) override;
 		inline virtual Vec2i getPos() override;
 		inline virtual Vec2i getSize() override;
@@ -26,6 +25,8 @@ namespace UI {
 		UI::Text* getText() {return m_InputText;}
 	private:
 		void UpdateText();
+		SDL_Texture* widget_texture;
 		UI::Text* m_InputText;
+		SDL_Rect m_WidgetBounderies;
 	};
 }

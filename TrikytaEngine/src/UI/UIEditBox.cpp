@@ -11,7 +11,27 @@ using namespace UI;
 
 EditBox::EditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, Vec2i p_Pos, Color p_Color)
 {
-	m_InputText = Text::createText(p_Text, p_Font, p_TextSize, p_Pos, p_Color);
+	Manager::addElement(this, true);
+	m_InputText = Text::createText(p_Text, p_Font, p_TextSize, p_Pos, p_Color, Font::Style::NORMAL, false);
+	EditBox::buildWidget();
+}
+
+void EditBox::buildWidget()
+{
+	auto r = ENGINE->getRenderer();
+	
+	auto widgetBounderies = SDL_Rect{ 1, 1, m_InputText->getSize().x, m_InputText->getSize().y };
+	m_WidgetBounderies = SDL_Rect{ getPos().x, getPos().y, widgetBounderies.w + 2, widgetBounderies.h + 2 };
+	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
+
+	SDL_SetRenderTarget(r, widget_texture);
+	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 175);
+	SDL_RenderFillRect(r, &widgetBounderies);
+	SDL_RenderDrawRect(r, &widgetBounderies);
+	widgetBounderies = SDL_Rect{ 0, 0, m_WidgetBounderies.w, m_WidgetBounderies.h };
+	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 255);
+	SDL_RenderDrawRect(r, &widgetBounderies);
+	SDL_SetRenderTarget(r, NULL);
 }
 
 Vec2i EditBox::getPos()
@@ -74,15 +94,21 @@ void EditBox::OnUIClick(Vec2i pos, bool isDown)
 
 void EditBox::render(float dt)
 {
-	SDL_Rect m_WidgetBounderies = SDL_Rect{ m_InputText->getPosition().x, m_InputText->getPosition().y, m_InputText->getSize().x, m_InputText->getSize().y};
-	SDL_Rect m_WidgetLineBounderies = SDL_Rect{ m_InputText->getPosition().x-1, m_InputText->getPosition().y-1, m_InputText->getSize().x+2, m_InputText->getSize().y+2 };
-	SDL_SetRenderDrawBlendMode(ENGINE->getRenderer(), SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 200);
-	SDL_RenderFillRect(ENGINE->getRenderer(), &m_WidgetBounderies);
-	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_WidgetBounderies);
-	SDL_RenderDrawRect(ENGINE->getRenderer(), &m_WidgetLineBounderies);
-	SDL_SetRenderDrawColor(ENGINE->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
-	InputManager::getInputManager()->DrawCursor(dt);
+	auto r = ENGINE->getRenderer();
+
+	/*auto widgetBounderies = SDL_Rect{ m_InputText->getPosition().x, m_InputText->getPosition().y, m_InputText->getSize().x, m_InputText->getSize().y };
+	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 175);
+	SDL_RenderFillRect(r, &widgetBounderies);
+	SDL_RenderDrawRect(r, &widgetBounderies);
+	SDL_RenderDrawRect(r, &m_WidgetBounderies);
+	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0xFF);
+	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);*/
+
+	SDL_SetTextureBlendMode(widget_texture, SDL_BLENDMODE_BLEND);
+	SDL_RenderCopy(ENGINE->getRenderer(), widget_texture, NULL, &m_WidgetBounderies);
+	m_InputText->render(dt);
+	if (IsEditActive) { InputManager::getInputManager()->DrawCursor(dt); }
 }
 
 /*void EditBox::OnUIFocus(bool isFocus)

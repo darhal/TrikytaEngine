@@ -10,9 +10,9 @@ void EditBoxBase::OnUIFocus(bool isFocus, Vec2i pMouseClick)
 	IsEditActive = isFocus;
 	if (isFocus) {
 		InputManager::getInputManager()->setCurosrPosition(getPos(), getSize());
-		Manager::addElement(this, true);
+		//Manager::addElement(this, true);
 	}else{
-		Manager::removeElement(this, true);
+		//Manager::removeElement(this, true);
 		//LogConsole(LogWarning, "Size of container : %d", Manager::getUIContainer().size());
 		for (const auto& obj : Manager::getUIContainer()) {
 			Vec2i maxPos = obj->getSize() + obj->getPos();

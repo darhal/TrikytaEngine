@@ -39,7 +39,8 @@ void Game::On_Engine_Init()
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 	anim->setAnimation("Idle");
-
+	auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
+		Vec2i(250, 250), Color{ 0,255,255, 255 });
 
 	Console::AddCommandHandler("setanim", 
 		[=](const std::vector<std::string>& args) {
