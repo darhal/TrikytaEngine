@@ -23,8 +23,11 @@ public:
 
 	virtual void OnUIClick(Vec2i, bool) override;
 	virtual void OnUIFocus(bool, Vec2i) override;
-	inline virtual Vec2i getPos() override;
+	inline virtual Vec2i getTextPos() override;
+	inline virtual Vec2i getTextSize() override;
+
 	inline virtual Vec2i getSize() override;
+	inline virtual Vec2i getPos() override;
 
 	virtual void render(float) override;
 	void ProcessEventHelper(SDL_Event&);

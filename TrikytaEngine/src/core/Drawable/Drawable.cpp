@@ -9,7 +9,7 @@ TODO: ISSUES
 -Add system to handle a bundle of animations, physics (player, entity, charecter...)
 */
 
-Drawable::Drawable(Vec2i m_Pos, Vec2i p_Size, bool p_RegisterInHandler) :
+Drawable::Drawable(const Vec2i& m_Pos, const Vec2i& p_Size, bool p_RegisterInHandler) :
 	m_Position(Vec2i(m_Pos)), m_Size(Vec2i(p_Size)),
 	m_NormalSize(Vec2i(0, 0)), m_DrawCoord(Vec2i(0, 0)),
 	m_DestinationDrawCoord(SDL_Rect{ m_Pos.x, m_Pos.y, p_Size.x, p_Size.y }),

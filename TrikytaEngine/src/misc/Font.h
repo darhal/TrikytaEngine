@@ -16,9 +16,9 @@ public:
 		NORMAL = TTF_STYLE_NORMAL
 	};
 
-	static Font* createOrGetFont(std::string, uint8);
+	static Font* createOrGetFont(const std::string&, uint8);
 
-	Font(std::string, uint8);
+	Font(const std::string&, uint8);
 	~Font();
 	void Destory();
 

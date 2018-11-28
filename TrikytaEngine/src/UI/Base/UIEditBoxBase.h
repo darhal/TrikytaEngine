@@ -4,10 +4,17 @@
 
 namespace UI 
 {
+	class Text;
 	class EditBoxBase : public Base
 	{
 	public:
 		virtual void OnUIFocus(bool, Vec2i) override;
+		virtual void OnToggleEdit(bool) {}
 		bool IsEditActive = false;
+		UI::Text* getText() { return m_InputText; }
+		virtual Vec2i getTextSize();
+		virtual Vec2i getTextPos();
+	protected:
+		UI::Text* m_InputText;
 	};
 }

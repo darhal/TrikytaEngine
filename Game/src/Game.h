@@ -6,7 +6,7 @@ struct ENGINE_CONFIG;
 class Game : public EngineInstance
 {
 public:
-	Game(ENGINE_CONFIG& p_Config) :
+	Game(const ENGINE_CONFIG& p_Config) :
 		EngineInstance(p_Config)
 	{}
 

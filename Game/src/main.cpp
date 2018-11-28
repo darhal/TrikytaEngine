@@ -22,8 +22,7 @@ int WINAPI WinMain(
 
 int main()
 {
-	ENGINE_CONFIG config = LuaEngine::LStateManager::GetLStateManager()->LLoadConfig(LuaEngine::LStateManager::GetLuaState());
-	auto GameInstance = TrikytaEngine::Create(config);
+	auto GameInstance = TrikytaEngine::Create(LuaEngine::LStateManager::GetLStateManager()->LLoadConfig(LuaEngine::LStateManager::GetLuaState()));
 	return 0;
 };
 

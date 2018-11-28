@@ -18,7 +18,7 @@ public:
 		m_PrimarySurface(nullptr)
 	{};*/
 
-	EngineInstance(struct ENGINE_CONFIG& p_Config) :
+	EngineInstance(const struct ENGINE_CONFIG& p_Config) :
 		m_EngineConfig(p_Config),
 		m_Window(nullptr),
 		m_Renderer(nullptr),
@@ -46,7 +46,7 @@ public:
 	const int GetScreenHeight() const { return (int)m_EngineConfig.WINDOW_HEIGHT; }
 	const SDL_RendererInfo& getRenderInfo() { return m_RenderInfo; }
 private:
-	struct ENGINE_CONFIG& m_EngineConfig;
+	const struct ENGINE_CONFIG& m_EngineConfig;
 	bool m_EngineState;
 	std::string m_Wnd_Name;
 	SDL_Window* m_Window;

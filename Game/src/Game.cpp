@@ -31,7 +31,6 @@ void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
-	//map = TiledMap::Create("assets/example/maps/map3.tmx");
 	cam->addObjectToCamera(map);
 	anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
@@ -39,8 +38,8 @@ void Game::On_Engine_Init()
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 	anim->setAnimation("Idle");
-	auto editBox = UI::EditBox::createEditBox("ENTER SMTHG", "Engine_Assets/fonts/DroidSans.ttf", 18,
-		Vec2i(250, 250), Color{ 0,255,255, 255 });
+	auto editBox = UI::EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
+		Vec2i(250, 250), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
 
 	Console::AddCommandHandler("setanim", 
 		[=](const std::vector<std::string>& args) {

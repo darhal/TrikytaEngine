@@ -7,13 +7,13 @@
 class Sprite : public Drawable
 {
 protected:
-	Sprite(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position) :
+	Sprite(const std::string& p_Filename, const Vec2<int>& p_Size, const Vec2<int>& p_Position) :
 		Drawable(p_Position, p_Size), m_Filename(p_Filename)
 	{
 		init();
 	}
 
-	Sprite(const std::string& p_Filename, Vec2<int>& p_Position) :
+	Sprite(const std::string& p_Filename, const Vec2<int>& p_Position) :
 		m_Filename(p_Filename), Drawable(p_Position)
 	{
 		init();
@@ -23,7 +23,7 @@ public:
 	Sprite() {} // default ctor
 	virtual bool init() override;
 
-	static Sprite* Create(const std::string& p_Filename, Vec2<int> p_Size, Vec2<int> p_Position)
+	static Sprite* Create(const std::string& p_Filename, const Vec2<int>& p_Size, const Vec2<int>& p_Position)
 	{
 		return new Sprite(p_Filename, p_Size, p_Position);
 	}

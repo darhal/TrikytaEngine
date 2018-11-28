@@ -9,39 +9,45 @@
 
 using namespace UI;
 
-EditBox::EditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, Vec2i p_Pos, Color p_Color)
+EditBox::EditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, const Vec2i& p_Pos, const Vec2i& p_Size,const Color& p_Color)
 {
 	Manager::addElement(this, true);
+
 	m_InputText = Text::createText(p_Text, p_Font, p_TextSize, p_Pos, p_Color, Font::Style::NORMAL, false);
+	m_InputText->setPosition(p_Pos + (Vec2i(10, p_Size.y) / 2) - Vec2i(0, m_InputText->getSize().y) / 2);
+	m_Pos = p_Pos;
+	m_Size = p_Size;
 	EditBox::buildWidget();
 }
 
 void EditBox::buildWidget()
 {
 	auto r = ENGINE->getRenderer();
-	
-	auto widgetBounderies = SDL_Rect{ 1, 1, m_InputText->getSize().x, m_InputText->getSize().y };
-	m_WidgetBounderies = SDL_Rect{ getPos().x, getPos().y, widgetBounderies.w + 2, widgetBounderies.h + 2 };
+	int onClickedEffectAmount = 10;
+	m_WidgetBounderies = SDL_Rect{m_Pos.x, m_Pos.y, m_Size.x, m_Size.y};
 	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
-
+	int padding = 1;
+	auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
 	SDL_SetRenderTarget(r, widget_texture);
-	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 175);
+	SDL_RenderClear(r);
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 180);
 	SDL_RenderFillRect(r, &widgetBounderies);
-	SDL_RenderDrawRect(r, &widgetBounderies);
-	widgetBounderies = SDL_Rect{ 0, 0, m_WidgetBounderies.w, m_WidgetBounderies.h };
-	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 255);
-	SDL_RenderDrawRect(r, &widgetBounderies);
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+	for (int i = padding; i >= 0; i--) {
+		widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
+		SDL_RenderDrawRect(r, &widgetBounderies);
+	}
 	SDL_SetRenderTarget(r, NULL);
 }
 
 Vec2i EditBox::getPos()
-{ 
-	return m_InputText->getPosition(); 
+{
+	return m_Pos;
 };
 
 Vec2i EditBox::getSize()
-{ 
-	return m_InputText->getSize(); 
+{
+	return m_Size;
 };
 
 void EditBox::PorcessEvents(SDL_Event& e)
@@ -84,10 +90,10 @@ void EditBox::PorcessEvents(SDL_Event& e)
 void EditBox::UpdateText()
 {
 	m_InputText->updateTextHelper();
-	InputManager::getInputManager()->setCurosrPosition(getPos(), getSize());
+	InputManager::getInputManager()->setCurosrPosition(getTextPos(), getTextSize());
 }
 
-void EditBox::OnUIClick(Vec2i pos, bool isDown) 
+void EditBox::OnUIClick(Vec2i pos, bool isDown)
 {
 
 }
@@ -95,30 +101,83 @@ void EditBox::OnUIClick(Vec2i pos, bool isDown)
 void EditBox::render(float dt)
 {
 	auto r = ENGINE->getRenderer();
-
-	/*auto widgetBounderies = SDL_Rect{ m_InputText->getPosition().x, m_InputText->getPosition().y, m_InputText->getSize().x, m_InputText->getSize().y };
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 175);
-	SDL_RenderFillRect(r, &widgetBounderies);
-	SDL_RenderDrawRect(r, &widgetBounderies);
-	SDL_RenderDrawRect(r, &m_WidgetBounderies);
-	SDL_SetRenderDrawColor(r, 0x00, 0x00, 0x00, 0xFF);
-	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);*/
-
 	SDL_SetTextureBlendMode(widget_texture, SDL_BLENDMODE_BLEND);
-	SDL_RenderCopy(ENGINE->getRenderer(), widget_texture, NULL, &m_WidgetBounderies);
+	SDL_RenderCopy(r, widget_texture, NULL, &m_WidgetBounderies);
+
+	
 	m_InputText->render(dt);
-	if (IsEditActive) { InputManager::getInputManager()->DrawCursor(dt); }
+	if (IsEditActive) { 
+		int editPadding = 2;
+		auto widgetBounderies = SDL_Rect{ m_Pos.x-editPadding, m_Pos.y - editPadding, m_Size.x + editPadding * 2, m_Size.y + editPadding * 2 };
+		Color color = Color(10, 206, 250, 220);
+		SDL_SetRenderDrawColor(r, color.r, color.g, color.b, color.a);
+		for (int i = editPadding; i >= 0; i--) {
+			widgetBounderies = SDL_Rect{ widgetBounderies.x + 1, widgetBounderies.x + 1, widgetBounderies.w - 2, widgetBounderies.h - 2 };
+			SDL_RenderDrawRect(r, &widgetBounderies);
+			color.a -= i * 17;
+			color.b -= i * 17;
+			SDL_SetRenderDrawColor(r, color.r, color.g, color.b, color.a);
+		}
+		InputManager::getInputManager()->DrawCursor(dt); 
+	}
+	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
 
-/*void EditBox::OnUIFocus(bool isFocus)
+void EditBox::OnToggleEdit(bool isEdit)
 {
-	if (isFocus) {
-		InputManager::getInputManager()->setCurosrPosition(getPos(), getSize());
-		UI::Manager::addElement(this, isFocus);
-	}else {
-		UI::Manager::removeElement(this, isFocus);
+	auto r = ENGINE->getRenderer();
+	SDL_SetRenderTarget(r, widget_texture);
+	if (isEdit) {
+		int padding = 1;
+		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding*2, m_Size.y - padding*2 };
+		SDL_RenderClear(r);
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 220);
+		SDL_RenderFillRect(r, &widgetBounderies);
+		int sartingAlpha = 200;
+		SDL_SetRenderDrawColor(r, 10, 206, 250, 220);
+		for (int i = padding; i >= 0; i--) {
+			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
+			SDL_RenderDrawRect(r, &widgetBounderies);
+			SDL_SetRenderDrawColor(r, 10, 206, 250, sartingAlpha - i*4);
+		}
+	}else{
+		int padding = 1;
+		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
+		SDL_RenderClear(r);
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 180);
+		SDL_RenderFillRect(r, &widgetBounderies);
+		int sartingAlpha = 200;
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+		for (int i = padding; i >= 0; i--) {
+			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
+			SDL_RenderDrawRect(r, &widgetBounderies);
+		}
 	}
-	IsEditActive = isFocus;
-	InputManager::getInputManager()->ActivateInput(IsEditActive);
-};*/
+	SDL_SetRenderTarget(r, NULL);
+};
+
+/*
+	m_WidgetBounderies = SDL_Rect{m_Pos.x, m_Pos.y, m_Size.x, m_Size.y};
+	m_WidgetSourceDraw = SDL_Rect{ m_onClickedEffectAmount, m_onClickedEffectAmount, m_WidgetBounderies.w, m_WidgetBounderies.h};
+	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w+m_onClickedEffectAmount, m_WidgetBounderies.h+m_onClickedEffectAmount);
+	int sartingAlpha = 200;
+	auto widgetBounderies = SDL_Rect{ 0, 0, m_Size.x + m_onClickedEffectAmount, m_Size.y + m_onClickedEffectAmount };
+	SDL_SetRenderDrawColor(r, 10, 206, 250, sartingAlpha);
+	for (int i = m_onClickedEffectAmount; i >= 0; i--) {
+		widgetBounderies = SDL_Rect{ widgetBounderies.x + 1, widgetBounderies.x + 1, widgetBounderies.w - 2, widgetBounderies.h - 2 };
+		SDL_RenderDrawRect(r, &widgetBounderies);
+		SDL_SetRenderDrawColor(r, 10, 206, 250, sartingAlpha + i * i);
+	}
+	int padding = 2;
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+	for (int i = padding; i >= 0; i--) {
+		widgetBounderies = SDL_Rect{ widgetBounderies.x + 1, widgetBounderies.x + 1, widgetBounderies.w - 2, widgetBounderies.h - 2 };
+		SDL_RenderDrawRect(r, &widgetBounderies);
+	}
+	SDL_SetRenderTarget(r, widget_texture);
+	SDL_RenderClear(r);
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 165);
+	SDL_RenderFillRect(r, &widgetBounderies);
+	SDL_SetRenderTarget(r, NULL);
+*/

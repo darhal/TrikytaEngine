@@ -53,12 +53,12 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				m_Text = ">";
 				m_CmdHistorySelector = -1;
 				updateTextHelper();
-				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+				InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 			}else if (e.key.keysym.sym == SDLK_BACKSPACE && m_Text.length() > 1) { //Handle backspace
 				m_Text.pop_back();
 				updateTextHelper();
 				m_CmdHistorySelector = -1;
-				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+				InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 			}else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) { //Handle copy
 				m_Text.erase(m_Text.begin());
 				SDL_SetClipboardText(m_Text.c_str());
@@ -69,7 +69,7 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 				cachedText.erase(cachedText.begin());
 				m_Text = ">"+ cachedText +std::string(SDL_GetClipboardText());
 				updateTextHelper();
-				InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+				InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 			}else if (e.key.keysym.sym == SDLK_UP) { //Handle paste
 				if (m_CmdHistroy.size()) {
 					m_CmdHistorySelector++;
@@ -79,7 +79,7 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 					}
 					m_Text = m_CmdHistroy.at(m_CmdHistorySelector);
 					updateTextHelper();
-					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+					InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 				}
 			}else if (e.key.keysym.sym == SDLK_DOWN) { //Handle paste
 				if (m_CmdHistroy.size()){
@@ -88,12 +88,12 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 						m_CmdHistorySelector = -1;
 						m_Text = ">";
 						updateTextHelper();
-						InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+						InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 						return;
 					}
 					m_Text = m_CmdHistroy.at(m_CmdHistorySelector);
 					updateTextHelper();
-					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+					InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 				}
 			}
 		}
@@ -105,7 +105,7 @@ void ConsoleCommandField::PorcessEvents(SDL_Event& e)
 					m_Text += e.text.text;
 					lastTimeStamp = e.text.timestamp;
 					updateTextHelper();
-					InputManager::getInputManager()->setCurosrPosition(getPosition(), getSize());
+					InputManager::getInputManager()->setCurosrPosition(getPosition(), getTextSize());
 				}
 			}
 		}
@@ -165,15 +165,10 @@ void ConsoleCommandField::OnUIFocus(bool isFocus, Vec2i mouseClick)
 	}
 };
 
-Vec2i ConsoleCommandField::getPos()
-{
-	return ConsoleText::getPosition();
-};
-
-Vec2i ConsoleCommandField::getSize()
-{
-	return ConsoleText::getSize();
-};
+Vec2i ConsoleCommandField::getTextSize(){return ConsoleText::getSize();};
+Vec2i ConsoleCommandField::getTextPos(){return ConsoleText::getPosition();};
+Vec2i ConsoleCommandField::getSize(){return ConsoleText::getSize();};
+Vec2i ConsoleCommandField::getPos(){return ConsoleText::getPosition();};
 
 ConsoleCommandField::~ConsoleCommandField()
 {
