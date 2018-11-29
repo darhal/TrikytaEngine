@@ -10,7 +10,7 @@
 AnimationSet::~AnimationSet()
 {
 	for (auto& itr : SpriteFramesCoords) {
-		//FREE(itr.second);
+		FREE(itr.second);
 	}
 };
 

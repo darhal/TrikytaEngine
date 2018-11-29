@@ -202,6 +202,7 @@
     <ClCompile Include="src\misc\Font.cpp" />
     <ClCompile Include="src\UI\Base\UIEditBoxBase.cpp" />
     <ClCompile Include="src\UI\UIBase.cpp" />
+    <ClCompile Include="src\UI\UIButton.cpp" />
     <ClCompile Include="src\UI\UIEditBox.cpp" />
     <ClCompile Include="src\UI\Events\UIEventHandler.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="src\misc\Font.h" />
     <ClInclude Include="src\UI\Base\UIEditBoxBase.h" />
     <ClInclude Include="src\UI\UIBase.h" />
+    <ClInclude Include="src\UI\UIButton.hpp" />
     <ClInclude Include="src\UI\UIEditBox.h" />
     <ClInclude Include="src\UI\Events\UIEventHandler.h" />
     <ClInclude Include="src\UI\UIManager.h" />

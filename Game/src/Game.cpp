@@ -16,6 +16,7 @@
 #include <core/Physics/Joints.h>
 #include <core/TiledMap/Tilesets.h>
 #include <core/Drawable/AnimationSet.hpp>
+#include <UI/UIButton.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -40,6 +41,8 @@ void Game::On_Engine_Init()
 	anim->setAnimation("Idle");
 	auto editBox = UI::EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
 		Vec2i(250, 250), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
+	using namespace UI;
+	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(250, 500), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
 
 	Console::AddCommandHandler("setanim", 
 		[=](const std::vector<std::string>& args) {
