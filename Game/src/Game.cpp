@@ -70,7 +70,7 @@ void Game::On_Engine_Init()
 				Vec2i pos = Vec2i(object->GetX(),object->GetY());
 				auto animtortue = Animation::Create("assets/mechants/mechant.png", "assets/mechants/tortue.txt", Vec2i(40, 40), pos, 0.03f);
 				cam->addObjectToCamera(animtortue);
-				auto bodytortue = animtortue->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+				bodytortue = animtortue->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 				mechantBody.emplace_back(bodytortue);
 				bodytortue->SetAngularDamping(1000.f);
 				animtortue->ToggleRotationAttachement(false);
@@ -85,7 +85,7 @@ void Game::On_Engine_Init()
 				Vec2i pos2 = Vec2i(object2->GetX(),object2->GetY());
 				auto animsquelette = Animation::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie_walk.txt", Vec2i(40, 40), pos2, 0.03f);
 				cam->addObjectToCamera(animsquelette);
-				auto bodysquelette = animsquelette->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
+				bodysquelette = animsquelette->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 				mechantBody.emplace_back(bodysquelette);
 				bodysquelette->SetAngularDamping(1000.f);
 				animsquelette->ToggleRotationAttachement(false);
@@ -99,6 +99,7 @@ void Game::On_Engine_Init()
 				Vec2i pos1 = Vec2i(object1->GetX(),object1->GetY());
 				auto animbonus = Animation::Create("assets/bonus/bonus.png", "assets/bonus/bonus.txt", Vec2i(20, 20), pos1, 0.03f);
 				cam->addObjectToCamera(animbonus);
+				bodybonus= animbonus->Physicalize(Physics2D::BodyParams{ 0, 0 }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0, 0));
 			}
 		}
 	}
@@ -145,6 +146,7 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 
 		}
 	}
+	
 };
 
 void Game::On_Engine_Quit() 
@@ -155,23 +157,13 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
-	/*auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
-	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
-	auto coinbody = map->getGroupManager().getBodiesByName("test");
-	bool isACoin = map->getGroupManager().isBodyInLayer(bodyA, "coins") || map->getGroupManager().isBodyInLayer(bodyB, "coins");
-	if (isACoin) {
-		if (bodyB == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
-		}
-		else if (bodyA == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
-		}
-	}*/
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
 	bool isARedSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 2) || map->isBodyPartOfTileset(bodyB, "misc2", 2);
 	bool isAGreenSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 1) || map->isBodyPartOfTileset(bodyB, "misc2", 1);
+	bool isAHeart = map -> isBodyPartOfTileset (bodyA ,"misc2", 5) || map -> isBodyPartOfTileset(bodyB , "misc2" , 5);
+	bool isAKey = map -> isBodyPartOfTileset (bodyA ,"sheet_key", 0) || map -> isBodyPartOfTileset(bodyB , "sheet_key" , 0);
 	if (isACoin) {
 		if (bodyB == body) {
 			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
@@ -222,7 +214,48 @@ void Game::OnCollision(b2Contact* contact)
 				TimerManager::CreateTimer([]() {anti_spam = false; }, 3000, 1, true);
 			}
 		}
+	}else if(isAHeart){
+	    if (bodyA == body){
+		LayerData* tileToDelete = bodyA -> getComponent<LayerData>();
+		if (tileToDelete != NULL) {
+			map->deleteTileInLayer(tileToDelete);
+			LogConsole(LogWarning, "Contact with a heart !");
+			//mettre compteur 
+		}
+		}else if (bodyB == body) {
+		  LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+		      if (tileToDelete != NULL) {
+			map->deleteTileInLayer(tileToDelete);
+			LogConsole(LogWarning, "Contact with a heart !");
+		      }
+		}
+	}else if(isAKey){
+	  if (bodyB == body){
+		LayerData* tileToDelete = bodyA -> getComponent<LayerData>();
+		if (tileToDelete != NULL) {
+			map->deleteTileInLayer(tileToDelete);
+			LogConsole(LogWarning, "Contact with a key !");
+		}
+		}else if (bodyA == body) {
+		  LayerData* tileToDelete = bodyA->getComponent<LayerData>();
+		      if (tileToDelete != NULL) {
+			map->deleteTileInLayer(tileToDelete);
+			LogConsole(LogWarning, "Contact with a key !");
+		      }
+		}
 	}
+	if (body==bodytortue){
+		LogConsole(LogWarning, "Contact with a turtel !");
+		printf("hello");
+	}
+	if (body==bodysquelette){
+		LogConsole(LogWarning, "Contact with a zombie !");
+	}
+	if (body==bodybonus){
+		LogConsole(LogWarning, "Contact with a bonus!");
+	}
+
+
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)
