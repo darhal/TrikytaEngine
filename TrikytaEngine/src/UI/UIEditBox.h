@@ -1,6 +1,7 @@
 #pragma once
 #include "Base/UIEditBoxBase.h"
 #include "core/Common/Color.h"
+#include "core/Common/Macros.hpp"
 #include <string>
 #include <SDL/SDL.h>
 
@@ -16,13 +17,14 @@ namespace UI {
 
 		EditBox(const std::string&, const std::string&, uint8, const Vec2i&, const Vec2i&,const Color&);
 		void buildWidget();
-		virtual void OnUIClick(Vec2i, bool) override;
+		virtual void OnUIClick(const Vec2i&, bool) override;
 		virtual void OnToggleEdit(bool) override;
 		inline virtual Vec2i getPos() override;
 		inline virtual Vec2i getSize() override;
 		virtual void PorcessEvents(SDL_Event&) override;
 		virtual void render(float dt) override;
-
+		REGISTER_EVENT(ON_EDITBOX_CHANGE, void(const char*));
+		REGISTER_EVENT(ON_EDITBOX_FOCUS, void(bool));
 	private:
 		Vec2i m_Size, m_Pos;
 		void UpdateText();

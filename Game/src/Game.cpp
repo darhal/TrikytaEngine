@@ -17,6 +17,7 @@
 #include <core/TiledMap/Tilesets.h>
 #include <core/Drawable/AnimationSet.hpp>
 #include <UI/UIButton.hpp>
+#include <UI/UIWidget.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -44,13 +45,14 @@ void Game::On_Engine_Init()
 	using namespace UI;
 	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(250, 500), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
 	btn->addEventHandler<ON_BUTTON_CLICK>(CALLBACK_2(Game::OnButtonClick, this));
-	
-	Console::AddCommandHandler("setanim", 
+	UI::Widget* widget = new UI::Widget("This is test", Vec2i(500, 250), Vec2i(150, 300), {0,0,0,200});
+
+	AddConsoleCommand("setanim", 
 		[=](const std::vector<std::string>& args) {
 			std::string anim_name = args.at(0);
 			anim->setAnimation(anim_name);
 		}
-	);
+	);	
 	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
 	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
 	bodyaa->SetFixedRotation(true);

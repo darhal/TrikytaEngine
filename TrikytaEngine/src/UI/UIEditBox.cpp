@@ -6,6 +6,7 @@
 #include "Events/UIEventHandler.h"
 #include "core/InputManager/InputManager.h"
 #include "core/Common/TrikytaEngine.h"
+#include "core/Common/Macros.hpp"
 
 using namespace UI;
 
@@ -68,13 +69,13 @@ void EditBox::PorcessEvents(SDL_Event& e)
 				m_InputText->m_Text = SDL_GetClipboardText();
 				EditBox::UpdateText();
 			}
-		}
-		else if (e.type == SDL_TEXTINPUT) { //Special text input event
+		}else if (e.type == SDL_TEXTINPUT) { //Special text input event
 			  //Not copy or pasting
 			if (!((e.text.text[0] == 'c' || e.text.text[0] == 'C') && (e.text.text[0] == 'v' || e.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL))
 			{
 				//Append character
 				m_InputText->m_Text += e.text.text;
+				TRIGGER_EVENT(ON_EDITBOX_CHANGE, e.text.text);
 				m_InputText->updateTextHelper();
 				EditBox::UpdateText();
 			}
@@ -93,7 +94,7 @@ void EditBox::UpdateText()
 	InputManager::getInputManager()->setCurosrPosition(getTextPos(), getTextSize());
 }
 
-void EditBox::OnUIClick(Vec2i pos, bool isDown)
+void EditBox::OnUIClick(const Vec2i& pos, bool isDown)
 {
 
 }
@@ -141,6 +142,7 @@ void EditBox::OnToggleEdit(bool isEdit)
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			SDL_SetRenderDrawColor(r, 10, 206, 250, sartingAlpha - i*4);
 		}
+		TRIGGER_EVENT(ON_EDITBOX_FOCUS, isEdit);
 	}else{
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -153,6 +155,7 @@ void EditBox::OnToggleEdit(bool isEdit)
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
+		TRIGGER_EVENT(ON_EDITBOX_FOCUS, isEdit);
 	}
 	SDL_SetRenderTarget(r, NULL);
 };

@@ -84,3 +84,7 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 	typename std::enable_if<EventType == __event__, bool>::type = true> \
 	void addEventHandler(Func&& func){m_##__event__##_Callbacks.push_back(std::function<__func_sig__>(std::forward<Func>(func)));}\
 
+#define TRIGGER_EVENT(__event__, ...) \
+		for (const auto& __callBackItr__ : m_##__event__##_Callbacks) { \
+			__callBackItr__(##__VA_ARGS__); \
+		} \

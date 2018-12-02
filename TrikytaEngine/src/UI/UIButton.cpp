@@ -3,6 +3,7 @@
 #include "UIManager.h"
 #include "UI/UIText.h"
 #include "core/Common/TrikytaEngine.h"
+#include "core/Common/Macros.hpp"
 
 using namespace UI;
 
@@ -11,7 +12,7 @@ Button::Button(const std::string& p_text, Font* font, const Vec2i& p_pos, const 
 	Manager::addElement(this, true);
 
 	m_BtnText = Text::createText(p_text, font, p_pos, text_color, false);
-	m_BtnText->setPosition(p_pos + (p_size) / 2 - m_BtnText->getSize() / 2);
+	m_BtnText->setPosition((p_size - m_BtnText->getSize()) / 2);
 	m_Pos = p_pos;
 	m_Size = p_size;
 	Button::buildWidget();
@@ -20,7 +21,6 @@ Button::Button(const std::string& p_text, Font* font, const Vec2i& p_pos, const 
 void Button::buildWidget()
 {
 	auto r = ENGINE->getRenderer();
-	int onClickedEffectAmount = 10;
 	m_WidgetBounderies = SDL_Rect{ m_Pos.x, m_Pos.y, m_Size.x, m_Size.y };
 	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
 	int padding = 1;
@@ -34,6 +34,7 @@ void Button::buildWidget()
 		widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 		SDL_RenderDrawRect(r, &widgetBounderies);
 	}
+	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
 }
 
@@ -43,11 +44,10 @@ void Button::render(float dt)
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureBlendMode(widget_texture, SDL_BLENDMODE_BLEND);
 	SDL_RenderCopy(r, widget_texture, NULL, &m_WidgetBounderies);
-	m_BtnText->render(dt);
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
 
-void Button::OnUIClick(Vec2i pos, bool is_down)
+void Button::OnUIClick(const Vec2i& pos, bool is_down)
 {
 	auto r = ENGINE->getRenderer();
 	SDL_SetRenderTarget(r, widget_texture);
@@ -65,9 +65,7 @@ void Button::OnUIClick(Vec2i pos, bool is_down)
 			SDL_SetRenderDrawColor(r, 0, 0, 0, sartingAlpha - i * 4);
 		}
 
-		for (const auto& onBtnClickCallback : m_ON_BUTTON_CLICK_Callbacks) {
-			onBtnClickCallback(pos, is_down);
-		}
+		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, is_down);
 	}else {
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -80,15 +78,14 @@ void Button::OnUIClick(Vec2i pos, bool is_down)
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
-	
-		for (const auto& onBtnClickCallback : m_ON_BUTTON_CLICK_Callbacks) {
-			onBtnClickCallback(pos, is_down);
-		}
+
+		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, is_down);
 	}
+	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
 }
 
-void Button::OnMouseHover(Vec2i pos, bool isHover)
+void Button::OnMouseHover(const Vec2i& pos, bool isHover)
 {
 	auto r = ENGINE->getRenderer();
 	SDL_SetRenderTarget(r, widget_texture);
@@ -105,6 +102,7 @@ void Button::OnMouseHover(Vec2i pos, bool isHover)
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			SDL_SetRenderDrawColor(r, 0, 0, 0, sartingAlpha - i * 4);
 		}
+		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, isHover);
 	}else {
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -117,7 +115,9 @@ void Button::OnMouseHover(Vec2i pos, bool isHover)
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
+		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, isHover);
 	}
+	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
 }
 

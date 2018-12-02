@@ -6,7 +6,7 @@
 
 using namespace UI;
 
-void EditBoxBase::OnUIFocus(bool isFocus, Vec2i pMouseClick)
+void EditBoxBase::OnUIFocus(bool isFocus, const Vec2i& pMouseClick)
 {
 	IsEditActive = isFocus;
 	if (isFocus) {

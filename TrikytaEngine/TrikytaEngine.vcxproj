@@ -207,6 +207,7 @@
     <ClCompile Include="src\UI\Events\UIEventHandler.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
+    <ClCompile Include="src\UI\UIWidget.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
     <ClCompile Include="src\utils\SDL2_framerate.cpp" />
     <ClCompile Include="src\utils\SDL2_gfxPrimitives.c" />
@@ -366,6 +367,7 @@
     <ClInclude Include="src\UI\Events\UIEventHandler.h" />
     <ClInclude Include="src\UI\UIManager.h" />
     <ClInclude Include="src\UI\UIText.h" />
+    <ClInclude Include="src\UI\UIWidget.hpp" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives.h" />
     <ClInclude Include="src\utils\SDL2_gfxPrimitives_font.h" />

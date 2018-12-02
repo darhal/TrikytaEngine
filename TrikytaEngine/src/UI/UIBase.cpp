@@ -11,7 +11,7 @@ Base::Base()
 	m_IsVsisible = true;
 }
 
-bool Base::IsInBox(Vec2i mouseClick, Vec2i minPos, Vec2i maxPos)
+bool Base::IsInBox(const Vec2i& mouseClick, const Vec2i& minPos, const Vec2i& maxPos)
 {
 	return (mouseClick.x >= minPos.x && mouseClick.y >= minPos.y) && (mouseClick.x <= maxPos.x && mouseClick.y <= maxPos.y);
 }

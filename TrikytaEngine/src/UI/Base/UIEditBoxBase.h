@@ -8,7 +8,7 @@ namespace UI
 	class EditBoxBase : public Base
 	{
 	public:
-		virtual void OnUIFocus(bool, Vec2i) override;
+		virtual void OnUIFocus(bool, const Vec2i&) override;
 		virtual void OnToggleEdit(bool) {}
 		bool IsEditActive = false;
 		UI::Text* getText() { return m_InputText; }

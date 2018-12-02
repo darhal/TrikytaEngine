@@ -5,7 +5,7 @@
 #include <sstream>
 #include <algorithm>
 
-ConsoleCommandField::ConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
+ConsoleCommandField::ConsoleCommandField(std::string p_Text, const Vec2i& p_Pos, const Color& p_Color)
 	: ConsoleText(p_Text, p_Pos, p_Color)
 {
 	//m_CmdHistroy.reserve(8);
@@ -145,7 +145,7 @@ void ConsoleCommandField::AddCommandHandler(const std::string& p_Cmd, CmdFunc p_
 	m_CmdData[p_Cmd].m_CmdFunction = p_FuncHandlerconst;
 }
 
-void ConsoleCommandField::OnUIClick(Vec2i, bool)
+void ConsoleCommandField::OnUIClick(const Vec2i&, bool)
 {
 
 };
@@ -155,7 +155,7 @@ void ConsoleCommandField::render(float dt)
 	InputManager::getInputManager()->DrawCursor(dt);
 }
 
-void ConsoleCommandField::OnUIFocus(bool isFocus, Vec2i mouseClick)
+void ConsoleCommandField::OnUIFocus(bool isFocus, const Vec2i& mouseClick)
 {
 	UI::EditBoxBase::OnUIFocus(isFocus, mouseClick);
 	if (isFocus) {
@@ -165,7 +165,7 @@ void ConsoleCommandField::OnUIFocus(bool isFocus, Vec2i mouseClick)
 	}
 };
 
-Vec2i ConsoleCommandField::getTextSize(){return ConsoleText::getSize();};
+Vec2i ConsoleCommandField::getTextSize(){ return ConsoleText::getSize();};
 Vec2i ConsoleCommandField::getTextPos(){return ConsoleText::getPosition();};
 Vec2i ConsoleCommandField::getSize(){return ConsoleText::getSize();};
 Vec2i ConsoleCommandField::getPos(){return ConsoleText::getPosition();};

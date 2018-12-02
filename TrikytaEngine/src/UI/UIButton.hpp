@@ -18,13 +18,13 @@ namespace UI
 		}
 
 		Button(const std::string&, Font*, const Vec2i&, const Vec2i&, const Color&);
-		virtual void OnUIClick(Vec2i, bool) override;
-		virtual void OnUIFocus(bool, Vec2i) {};
+		virtual void OnUIClick(const Vec2i&, bool) override;
+		virtual void OnUIFocus(bool, const Vec2i&) {};
 		virtual Vec2i getPos() { return m_Pos; };
 		virtual Vec2i getSize() { return m_Size; };
 		virtual void render(float) override;
 		virtual void PorcessEvents(SDL_Event& e) override;
-		virtual void OnMouseHover(Vec2i, bool);
+		virtual void OnMouseHover(const Vec2i&, bool);
 	private:
 		class Text* m_BtnText = nullptr;
 		Vec2i m_Pos;
@@ -36,5 +36,6 @@ namespace UI
 		void buildWidget();
 
 		REGISTER_EVENT(ON_BUTTON_CLICK, void(const Vec2i&, bool));
+		REGISTER_EVENT(ON_BUUTON_HOVER, void(const Vec2i&, bool));
 	};
 }

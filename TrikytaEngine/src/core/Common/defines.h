@@ -105,6 +105,7 @@ enum Events
 #define CALLBACK_6(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5,std::placeholders::_6,##__VA_ARGS__)
 
 #define AddEventHandler(__event__, ...) EventManager::GetEventManager()->addEventHandler<Events::__event__>(##__VA_ARGS__);
+#define AddConsoleCommand Console::AddCommandHandler
 
 typedef signed char        int8;
 typedef short              int16;
