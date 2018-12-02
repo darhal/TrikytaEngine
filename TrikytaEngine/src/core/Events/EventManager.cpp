@@ -24,7 +24,7 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 			if (p_Event.type == SDL_KEYDOWN && p_Event.key.keysym.sym == SDLK_DOLLAR) {
 				Console::getConsole()->Activate(!Console::getConsole()->IsActive());
 			}
-			for (auto inputCallbackFunc : m_InputCallbacks) { 
+			for (auto inputCallbackFunc : m_ON_KEYBOARD_INPUT_Callbacks) {
 				inputCallbackFunc(p_Event.key.keysym.sym, p_Event.type);
 			}
 			LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
@@ -34,7 +34,7 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 			);
 		}
 		if (p_Event.type == SDL_MOUSEBUTTONDOWN || p_Event.type == SDL_MOUSEBUTTONUP || p_Event.type == SDL_MOUSEWHEEL) {
-			for (auto mouseClickCallbackFunc : m_MouseClickCallbacks) {
+			for (auto mouseClickCallbackFunc : m_ON_MOUSE_CLICK_Callbacks) {
 				Vec2i ClickMousePosition(p_Event.button.x, p_Event.button.y);
 				mouseClickCallbackFunc(p_Event.type, p_Event.button.button, ClickMousePosition);
 			}
@@ -46,7 +46,7 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 			);
 		}
 		if (p_Event.type == SDL_MOUSEMOTION) {
-			for (auto mouseMoveCallbackFunc : m_MouseMoveCallbacks) {
+			for (auto mouseMoveCallbackFunc : m_ON_MOUSE_MOVE_Callbacks) {
 				Vec2i LastMousePosition(p_Event.motion.x, p_Event.motion.y);
 				mouseMoveCallbackFunc(LastMousePosition);
 			}
@@ -63,7 +63,7 @@ void EventManager::HandleSDLEvents(SDL_Event& p_Event, EngineInstance* p_Engine)
 
 void EventManager::HandleOnEngineLoadEvents()
 {
-	for (auto onEngineLoadCallback : m_OnEngineLoadCallbacks) {
+	for (auto onEngineLoadCallback : m_ON_ENGINE_LOAD_Callbacks) {
 		onEngineLoadCallback();
 	}
 	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
@@ -75,7 +75,7 @@ void EventManager::HandleOnEngineLoadEvents()
 
 void EventManager::HandleOnEnginePreInitEvents()
 {
-	for (auto onEnginePreInitCallback : m_OnEnginePreInitCallbacks) {
+	for (auto onEnginePreInitCallback : m_ON_ENGINE_PRE_INIT_Callbacks) {
 		onEnginePreInitCallback();
 	}
 	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions
@@ -87,7 +87,7 @@ void EventManager::HandleOnEnginePreInitEvents()
 
 void EventManager::HandleOnEngineRenderEvents(float dt)
 {
-	for (auto onEngineRenderCallback : m_OnEngineRenderCallbacks) {
+	for (auto onEngineRenderCallback : m_ON_ENGINE_RENDER_Callbacks) {
 		onEngineRenderCallback(dt);
 	}
 	LuaEngine::LuaEvents::GetLuaEventMnager()->CallLuaEventFunctions

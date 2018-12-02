@@ -43,7 +43,8 @@ void Game::On_Engine_Init()
 		Vec2i(250, 250), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
 	using namespace UI;
 	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(250, 500), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
-
+	btn->addEventHandler<ON_BUTTON_CLICK>(CALLBACK_2(Game::OnButtonClick, this));
+	
 	Console::AddCommandHandler("setanim", 
 		[=](const std::vector<std::string>& args) {
 			std::string anim_name = args.at(0);
@@ -55,13 +56,19 @@ void Game::On_Engine_Init()
 	bodyaa->SetFixedRotation(true);
 	cam->addObjectToCamera(aa);*/
 	//EVENT TESTING!!
-	EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
-	EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
+	//EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
+	EventManager::GetEventManager()->addEventHandler<ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
+	AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(Game::On_Input, this));
 	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
 
+
+void Game::OnButtonClick(const Vec2i& pos, bool is_down) 
+{
+	LogTerminal("Button clicked Pos=(%d, %d) bool = %d", pos.x, pos.y, is_down);
+}
 
 void Game::On_Engine_Render(float /*dt*/)
 {

@@ -64,6 +64,10 @@ void Button::OnUIClick(Vec2i pos, bool is_down)
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			SDL_SetRenderDrawColor(r, 0, 0, 0, sartingAlpha - i * 4);
 		}
+
+		for (const auto& onBtnClickCallback : m_ON_BUTTON_CLICK_Callbacks) {
+			onBtnClickCallback(pos, is_down);
+		}
 	}else {
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -75,6 +79,10 @@ void Button::OnUIClick(Vec2i pos, bool is_down)
 		for (int i = padding; i >= 0; i--) {
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
+		}
+	
+		for (const auto& onBtnClickCallback : m_ON_BUTTON_CLICK_Callbacks) {
+			onBtnClickCallback(pos, is_down);
 		}
 	}
 	SDL_SetRenderTarget(r, NULL);

@@ -21,6 +21,8 @@ public:
 	void OnClick(unsigned int, int, Vec2i);
 	void OnMouseMove(Vec2i);
 
+	void OnButtonClick(const Vec2i& pos, bool is_down);
+
 	class Sprite* obj;
 	class AnimationSet* anim;
 	class UI::Text* text;

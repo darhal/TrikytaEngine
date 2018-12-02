@@ -1,9 +1,19 @@
 #pragma once
-#include "core/Common/Vec2.h"
+#include <map>
+#include <vector>
+#include "core/Common/defines.h"
 
 union SDL_Event;
-
 namespace UI {
+
+	union callbacksType
+	{
+		std::function<void(const Vec2i&, bool)> mouseCallBack;
+		callbacksType() {}
+		callbacksType(const callbacksType& o): mouseCallBack(o.mouseCallBack){}
+		~callbacksType() {};
+	};
+
 	class Base
 	{
 	public:
@@ -23,5 +33,8 @@ namespace UI {
 		bool m_IsFocus;
 		bool m_IsVsisible;
 	private:
+		friend class Button;
+		friend class EditBox;
+		friend class Text;
 	};
 }

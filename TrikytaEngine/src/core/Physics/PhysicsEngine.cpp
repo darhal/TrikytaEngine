@@ -45,6 +45,7 @@ PhysicsWorld::PhysicsWorld(const PhysicsEngineParams& p_Params) :
 		}
 		Log("Creating World: %p ", m_World)
 	}
+	this->AddContactListener();
 }
 
 void PhysicsWorld::DestroyBody(PhysicsBody* body) {

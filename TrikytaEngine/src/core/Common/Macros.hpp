@@ -76,3 +76,11 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 	public: const static unsigned int getType() {return __component_type__;} \
 			int getComponentType() { return m_ComponentType; } \
 
+
+#define REGISTER_EVENT(__event__, __func_sig__)\
+	private : std::vector<std::function<__func_sig__>> m_##__event__##_Callbacks; \
+	public :	\
+	template <Events EventType, typename Func, \
+	typename std::enable_if<EventType == __event__, bool>::type = true> \
+	void addEventHandler(Func&& func){m_##__event__##_Callbacks.push_back(std::function<__func_sig__>(std::forward<Func>(func)));}\
+

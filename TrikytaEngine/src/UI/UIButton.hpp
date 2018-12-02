@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include "core/Common/Vec2.h"
 #include "core/Common/Color.h"
+#include "core/Common/Macros.hpp"
 
 class Font;
 
@@ -33,5 +34,7 @@ namespace UI
 		bool m_IsHover;
 	private:
 		void buildWidget();
+
+		REGISTER_EVENT(ON_BUTTON_CLICK, void(const Vec2i&, bool));
 	};
 }
