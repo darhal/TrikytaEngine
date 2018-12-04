@@ -244,18 +244,13 @@ void Game::OnCollision(b2Contact* contact)
 		      }
 		}
 	}
-	if (body==bodytortue){
+	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end()){
+		LogConsole(LogWarning, "Contact with a turtel !");
+		printf("hello");
+	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end()){
 		LogConsole(LogWarning, "Contact with a turtel !");
 		printf("hello");
 	}
-	if (body==bodysquelette){
-		LogConsole(LogWarning, "Contact with a zombie !");
-	}
-	if (body==bodybonus){
-		LogConsole(LogWarning, "Contact with a bonus!");
-	}
-
-
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)
