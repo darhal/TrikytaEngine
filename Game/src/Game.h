@@ -29,7 +29,6 @@ public:
 	class Physics2D::PhysicsBody* body2;
 	class Physics2D::PhysicsBody* bodytortue;
 	class Physics2D::PhysicsBody* bodysquelette;
-	class Physics2D::PhysicsBody* bodybonus;
 	class TiledMap* map;
 	std::vector<Physics2D::PhysicsBody*> mechantBody;
 };

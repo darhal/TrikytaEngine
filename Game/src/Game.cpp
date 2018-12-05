@@ -54,7 +54,12 @@ void Game::On_Engine_Init()
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
-
+	int po=0;
+	for (int i =0; i<4;i++){
+	auto animCoeur =Animation::Create("assets/bonus/02_heart.png","assets/bonus/02_heart.txt",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0), 0.03f);
+	po=po+22;
+	}
+	auto animPiece =Animation::Create("assets/PNG/Gold/Gold_1.png","assets/PNG/piece.txt",Vec2i(25, 22), Vec2i(20, 0), 0.03f);
 
 
 	
@@ -93,15 +98,6 @@ void Game::On_Engine_Init()
 
 
 		} 
-		if (objectGroup->GetName()=="bonus"){
-			for (int k = 0; k<objectGroup->GetNumObjects(); k++){
-				const Tmx::Object* object1 = objectGroup->GetObject(k);
-				Vec2i pos1 = Vec2i(object1->GetX(),object1->GetY());
-				auto animbonus = Animation::Create("assets/bonus/bonus.png", "assets/bonus/bonus.txt", Vec2i(20, 20), pos1, 0.03f);
-				cam->addObjectToCamera(animbonus);
-				bodybonus= animbonus->Physicalize(Physics2D::BodyParams{ 0, 0 }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0, 0));
-			}
-		}
 	}
 	auto t = TimerManager::CreateTimer(CALLBACK_0(Game::ManagerMechant,this), 1000, 0, true);
 	//EVENT TESTING!!
@@ -157,13 +153,15 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
+	int compteurCoeur=3;
+	int compteurPiece=0;
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
 	bool isARedSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 2) || map->isBodyPartOfTileset(bodyB, "misc2", 2);
 	bool isAGreenSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 1) || map->isBodyPartOfTileset(bodyB, "misc2", 1);
 	bool isAHeart = map -> isBodyPartOfTileset (bodyA ,"misc2", 5) || map -> isBodyPartOfTileset(bodyB , "misc2" , 5);
-	bool isAKey = map -> isBodyPartOfTileset (bodyA ,"sheet_key", 0) || map -> isBodyPartOfTileset(bodyB , "sheet_key" , 0);
+	bool isAKey = map -> isBodyPartOfTileset (bodyA ,"sheet_key", 0) || map -> isBodyPartOfTileset(bodyB , "sheet_key" , 0); 
 	if (isACoin) {
 		if (bodyB == body) {
 			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
@@ -171,12 +169,15 @@ void Game::OnCollision(b2Contact* contact)
 				map->deleteTileInLayer(tileToDelete);
 				LogConsole(LogWarning, "Contact with a coin !");
 			}
+			compteurPiece++;
+
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->deleteTileInLayer(tileToDelete);
 				LogConsole(LogWarning, "Contact with a coin !");
 			}
+			compteurPiece++;
 		}
 	}else if (isARedSwitch && !anti_spam) {
 		if (bodyB == body) {
@@ -220,15 +221,20 @@ void Game::OnCollision(b2Contact* contact)
 		if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
 			LogConsole(LogWarning, "Contact with a heart !");
-			//mettre compteur 
+			if(compteurCoeur<3){
+				compteurCoeur++;
+			}
 		}
 		}else if (bodyB == body) {
 		  LayerData* tileToDelete = bodyA->getComponent<LayerData>();
 		      if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
 			LogConsole(LogWarning, "Contact with a heart !");
-		      }
-		}
+				if(compteurCoeur<3){
+				compteurCoeur++;
+			}
+		 }
+		}	
 	}else if(isAKey){
 	  if (bodyB == body){
 		LayerData* tileToDelete = bodyA -> getComponent<LayerData>();
@@ -244,12 +250,15 @@ void Game::OnCollision(b2Contact* contact)
 		      }
 		}
 	}
-	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end()){
-		LogConsole(LogWarning, "Contact with a turtel !");
-		printf("hello");
-	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end()){
-		LogConsole(LogWarning, "Contact with a turtel !");
-		printf("hello");
+	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end())){
+		LogConsole(LogWarning, "Contact with a mechant!");
+		compteurCoeur=compteurCoeur-1;
+	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end())){
+		LogConsole(LogWarning, "Contact with a mechant !");
+		compteurCoeur=compteurCoeur-1;
+	}
+	if (compteurCoeur==0){
+		LogConsole(LogWarning, "game over");
 	}
 }
 
