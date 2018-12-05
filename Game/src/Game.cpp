@@ -21,6 +21,9 @@ Camera* cam;
 bool moveleft = true; 
 bool anti_spam = false;
 
+int compteurCoeur=3;
+int compteurPiece=0;
+int compteurKey = 0;
 void Game::On_Engine_Pre_Init()  
 { 
 	LogTerminal("Trikyta Engine Pre-initializing. ");
@@ -56,6 +59,9 @@ void Game::On_Engine_Init()
 	body->SetAngularDamping(1000.f);
 	int po=0;
 	for (int i =0; i<4;i++){
+		if (compteurCoeur==2){
+			i++;
+		}
 	auto animCoeur =Animation::Create("assets/bonus/02_heart.png","assets/bonus/02_heart.txt",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0), 0.03f);
 	po=po+22;
 	}
@@ -153,8 +159,7 @@ void Game::On_Engine_Quit()
 
 void Game::OnCollision(b2Contact* contact)
 {
-	int compteurCoeur=3;
-	int compteurPiece=0;
+	
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);
@@ -167,17 +172,19 @@ void Game::OnCollision(b2Contact* contact)
 			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->deleteTileInLayer(tileToDelete);
+				compteurPiece++;
+			    printf("%d \n" , compteurPiece);
 				LogConsole(LogWarning, "Contact with a coin !");
 			}
-			compteurPiece++;
 
 		}else if (bodyA == body) {
 			LayerData* tileToDelete = bodyB->getComponent<LayerData>();
 			if (tileToDelete != NULL) {
 				map->deleteTileInLayer(tileToDelete);
+				compteurPiece++;
+				printf("%d \n" , compteurPiece);
 				LogConsole(LogWarning, "Contact with a coin !");
 			}
-			compteurPiece++;
 		}
 	}else if (isARedSwitch && !anti_spam) {
 		if (bodyB == body) {
@@ -222,6 +229,7 @@ void Game::OnCollision(b2Contact* contact)
 			map->deleteTileInLayer(tileToDelete);
 			LogConsole(LogWarning, "Contact with a heart !");
 			if(compteurCoeur<3){
+				LogConsole(LogWarning , "Incrémentation");
 				compteurCoeur++;
 			}
 		}
@@ -240,26 +248,39 @@ void Game::OnCollision(b2Contact* contact)
 		LayerData* tileToDelete = bodyA -> getComponent<LayerData>();
 		if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
+			compteurKey++;
+			printf("%d \n",compteurKey);
 			LogConsole(LogWarning, "Contact with a key !");
 		}
 		}else if (bodyA == body) {
 		  LayerData* tileToDelete = bodyA->getComponent<LayerData>();
 		      if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
+			compteurKey++;
+			printf("%d \n",compteurKey);
 			LogConsole(LogWarning, "Contact with a key !");
-		      }
+		    }
 		}
 	}
 	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end())){
 		LogConsole(LogWarning, "Contact with a mechant!");
-		compteurCoeur=compteurCoeur-1;
+		if(compteurCoeur > 0  ){
+			compteurCoeur=compteurCoeur-1;
+		}
+		LogConsole(LogWarning , "Décrémentation");		
 	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end())){
 		LogConsole(LogWarning, "Contact with a mechant !");
 		compteurCoeur=compteurCoeur-1;
+		LogConsole(LogWarning , "Décrémentation");
+	}
+	if (compteurCoeur < 0){
+		compteurCoeur = 0;
 	}
 	if (compteurCoeur==0){
 		LogConsole(LogWarning, "game over");
+		//afficher game over et arreter le jeu 
 	}
+	
 }
 
 void Game::OnCollisionEnd(b2Contact* contact)
