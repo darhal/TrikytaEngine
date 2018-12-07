@@ -5,18 +5,20 @@
 
 using namespace UI;
 
-Widget::Widget(const std::string& title, const Vec2i& pos, const Vec2i& size, const Color& color): m_Pos(pos), m_Size(size), m_Color(color), m_Title(title)
+Widget::Widget(const std::string& title, const Vec2i& pos, const Vec2i& size): 
+	m_Pos(pos), m_Size(size), m_Title(title)
 {
-	Widget::buildWidget();
+	//Widget::buildWidget();
 }
 
 
-Widget::Widget(const Vec2i& pos, const Vec2i& size, const Color& color): m_Pos(pos), m_Size(size), m_Color(color), m_Title("")
+Widget::Widget(const Vec2i& pos, const Vec2i& size): 
+	m_Pos(pos), m_Size(size), m_Title("")
 {
-	Widget::buildWidget();
+	//Widget::buildWidget();
 }
 
-void Widget::buildWidget()
+void Widget::buildWidget(Font* font, const Color& windowColor, const Color& contourColor, const Color& topColor, const Color& titleColor)
 {
 	Manager::addElement(this, true);
 	auto r = ENGINE->getRenderer();
@@ -26,16 +28,16 @@ void Widget::buildWidget()
 	auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
 	SDL_SetRenderTarget(r, widget_texture);
 	SDL_RenderClear(r);
-	SDL_SetRenderDrawColor(r, m_Color.r, m_Color.g, m_Color.b, m_Color.a);
+	SDL_SetRenderDrawColor(r, windowColor.r, windowColor.g, windowColor.b, windowColor.a);
 	SDL_RenderFillRect(r, &widgetBounderies);
 
-	SDL_SetRenderDrawColor(r, 255-m_Color.r, 255-m_Color.g, 255-m_Color.b, m_Color.a);
-	auto title = Text::createText(m_Title, Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(0,0), m_Color, false);
-	auto titleBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2,  title->getSize().y*2 - padding * 2 };
-	title->setPosition((Vec2i(titleBounderies.w, titleBounderies.h) - title->getSize())/2);
+	SDL_SetRenderDrawColor(r, topColor.r, topColor.g, topColor.b, topColor.a);
+	m_TitleText = Text::createText(m_Title, font, Vec2i(0,0), titleColor, false);
+	auto titleBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, int(m_TitleText->getSize().y*1.2f) - padding * 2 };
+	m_TitleText->setPosition((Vec2i(titleBounderies.w, titleBounderies.h) - m_TitleText->getSize())/2);
 	SDL_RenderFillRect(r, &titleBounderies);
-	title->render(0.f);
-	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+	m_TitleText->render(0.f);
+	SDL_SetRenderDrawColor(r, contourColor.r, contourColor.g, contourColor.b, contourColor.a);
 	for (int i = padding; i >= 0; i--) {
 		widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 		SDL_RenderDrawRect(r, &widgetBounderies);
@@ -43,16 +45,65 @@ void Widget::buildWidget()
 	SDL_SetRenderTarget(r, NULL);
 }
 
-void Widget::render(float /*dt*/)
+void Widget::Configure(const WidgetParam& config)
+{
+	buildWidget(config.font, config.windowColor, config.contourColor, config.topColor, config.titleColor);
+}
+
+void Widget::PorcessEvents(SDL_Event& e)
+{
+	Base::PorcessEvents(e);
+	ManageWidgetMovment(e);
+}
+
+void Widget::ManageWidgetMovment(SDL_Event& e)
+{
+	if (e.type == SDL_MOUSEBUTTONDOWN && Base::IsInBox(Vec2i(e.button.x, e.button.y), Vec2i(m_WidgetBounderies.x, m_WidgetBounderies.y),
+		Vec2i(m_WidgetBounderies.w + m_WidgetBounderies.x, m_WidgetBounderies.y + int(m_TitleText->getSize().y*1.2f))))
+	{
+		m_IsClicked = true;
+		m_ClickedPosition = Vec2i(m_WidgetBounderies.x, m_WidgetBounderies.y) - Vec2i(e.button.x, e.button.y);
+	}
+	else if (e.type == SDL_MOUSEBUTTONUP && m_IsClicked) {
+		m_IsClicked = false;
+	}
+	else if (e.type == SDL_MOUSEMOTION && m_IsClicked) {
+		setPos(Vec2i(e.motion.x, e.motion.y) + m_ClickedPosition);
+	}
+}
+
+void Widget::render(float dt)
 {
 	auto r = ENGINE->getRenderer();
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureBlendMode(widget_texture, SDL_BLENDMODE_BLEND);
 	SDL_RenderCopy(r, widget_texture, NULL, &m_WidgetBounderies);
 	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
+	for (Base* itr : m_Elements) {
+		itr->render(dt);
+	}
 }
 
 void Widget::OnUIClick(const ::Vec2i& pos, bool is_down)
 {
 
+}
+
+void Widget::setPos(const Vec2i& pos)
+{
+	Vec2i posDiff = Vec2i(m_WidgetBounderies.x-pos.x, m_WidgetBounderies.y - pos.y);
+	m_WidgetBounderies.x = pos.x;
+	m_WidgetBounderies.y = pos.y;
+	for (Base* uiElemnt : m_Elements){
+		Vec2i uipos = uiElemnt->getPos();
+		uiElemnt->setPos(uipos-posDiff);
+	}
+}
+
+void Widget::AddElement(Base* uiElement)
+{
+	Manager::removeElement(uiElement, true);
+	m_Elements.emplace_back(uiElement);
+	Vec2i pos = uiElement->getPos();
+	uiElement->setPos(pos + Vec2i(m_WidgetBounderies.x, m_WidgetBounderies.y));
 }

@@ -24,8 +24,8 @@ Camera* cam;
 bool anti_spam = false;
 AnimationSet* aa;
 
-void Game::On_Engine_Pre_Init()  
-{ 
+void Game::On_Engine_Pre_Init()
+{
 	LogTerminal("Trikyta Engine Pre-initializing. ");
 };
 
@@ -40,19 +40,24 @@ void Game::On_Engine_Init()
 	anim->ToggleRotationAttachement(false);
 	body->SetAngularDamping(1000.f);
 	anim->setAnimation("Idle");
-	auto editBox = UI::EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
-		Vec2i(250, 250), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
-	using namespace UI;
-	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(250, 500), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
-	btn->addEventHandler<ON_BUTTON_CLICK>(CALLBACK_2(Game::OnButtonClick, this));
-	UI::Widget* widget = new UI::Widget("This is test", Vec2i(500, 250), Vec2i(150, 300), {0,0,0,200});
 
-	AddConsoleCommand("setanim", 
+	using namespace UI;
+	auto editBox = EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
+		Vec2i(50, 50), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
+	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(50, 100), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
+	Widget* widget = new Widget("This is test", Vec2i(500, 250), Vec2i(300, 300));
+	Font* font = Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 18);
+	font->setTextStyle(Font::Style::BOLD);
+	widget->Configure(WidgetParam{ font , {1, 179, 188, 200}, {0, 0, 0, 255}, {0, 84, 89, 200}, {0,0,0,255} });
+	widget->AddElement(btn);
+	widget->AddElement(editBox);
+
+	AddConsoleCommand("setanim",
 		[=](const std::vector<std::string>& args) {
 			std::string anim_name = args.at(0);
 			anim->setAnimation(anim_name);
 		}
-	);	
+	);
 	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
 	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
 	bodyaa->SetFixedRotation(true);
@@ -61,20 +66,22 @@ void Game::On_Engine_Init()
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(Game::On_Input, this));
+	//AddEventHandler(ON_MOUSE_CLICK, CALLBACK_3(Game::OnClick, this));
+	//AddEventHandler(ON_MOUSE_MOVE, CALLBACK_1(Game::OnMouseMove, this));
 	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
 	EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_CLICK>(CALLBACK_3(Game::OnClick, this));*/
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_MOUSE_MOVE>(CALLBACK_1(Game::OnMouseMove, this));
 };
 
 
-void Game::OnButtonClick(const Vec2i& pos, bool is_down) 
+void Game::OnButtonClick(const Vec2i& pos, bool is_down)
 {
 	LogTerminal("Button clicked Pos=(%d, %d) bool = %d", pos.x, pos.y, is_down);
 }
 
 void Game::On_Engine_Render(float /*dt*/)
 {
-	// Offset the player quad by the camera position 
+	// Offset the player quad by the camera position
 	bool b = true;
 	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
 	if (b)
@@ -82,7 +89,7 @@ void Game::On_Engine_Render(float /*dt*/)
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
-{ 
+{
 	if (p_KeyState == SDL_KEYDOWN) {
 		if (p_Key == SDLK_RIGHT) {
 			Vec2f v = body->GetLinearVelocity();
@@ -103,9 +110,9 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			body->SetLinearVelocity(v);
 			anim->setAnimation("Jump");
 		}else if (p_Key == SDLK_DOWN) {
-			aa->setAnimation("Idle");
+			//aa->setAnimation("Idle");
 		}else if (p_Key == SDLK_c) {
-			aa->setAnimation("Attack");
+			//aa->setAnimation("Attack");
 		}
 	}else if (p_KeyState == SDL_KEYUP) {
 		if (p_Key == SDLK_RIGHT || p_Key == SDLK_LEFT) {
@@ -119,26 +126,14 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 	}
 };
 
-void Game::On_Engine_Quit() 
-{ 
+void Game::On_Engine_Quit()
+{
 	EngineInstance::On_Engine_Quit();
-	Log("Leaving game! "); 
+	Log("Leaving game! ");
 };
 
 void Game::OnCollision(b2Contact* contact)
 {
-	/*auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
-	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
-	auto coinbody = map->getGroupManager().getBodiesByName("test");
-	bool isACoin = map->getGroupManager().isBodyInLayer(bodyA, "coins") || map->getGroupManager().isBodyInLayer(bodyB, "coins");
-	if (isACoin) {
-		if (bodyB == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
-		}
-		else if (bodyA == body) {
-			LogConsole(LogWarning, "Contact with a coin !");
-		}
-	}*/
 	auto bodyA = contact->GetFixtureA()->GetPhysicsBody();
 	auto bodyB = contact->GetFixtureB()->GetPhysicsBody();
 	bool isACoin = map->isBodyPartOfTileset(bodyA, "misc2", 3) || map->isBodyPartOfTileset(bodyB, "misc2", 3);

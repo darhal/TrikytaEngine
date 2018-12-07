@@ -22,6 +22,7 @@ namespace UI {
 		virtual void OnUIFocus(bool, const ::Vec2i&) = 0;
 		virtual Vec2i getPos() = 0;
 		virtual Vec2i getSize() = 0;
+		virtual void setPos(const Vec2i&) {};
 		virtual void render(float) {};
 		virtual void setVisible(bool p_Visible);
 		virtual bool isVisible();

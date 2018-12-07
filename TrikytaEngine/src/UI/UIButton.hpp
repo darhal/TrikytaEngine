@@ -25,6 +25,8 @@ namespace UI
 		virtual void render(float) override;
 		virtual void PorcessEvents(SDL_Event& e) override;
 		virtual void OnMouseHover(const Vec2i&, bool);
+
+		void setPos(const Vec2i&) override;
 	private:
 		class Text* m_BtnText = nullptr;
 		Vec2i m_Pos;

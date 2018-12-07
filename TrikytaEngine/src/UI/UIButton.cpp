@@ -136,3 +136,10 @@ void Button::PorcessEvents(SDL_Event& e)
 	}
 	Base::PorcessEvents(e);
 }
+
+void Button::setPos(const Vec2i& pos)
+{
+	m_WidgetBounderies.x = pos.x;
+	m_WidgetBounderies.y = pos.y;
+	m_Pos = pos;
+}

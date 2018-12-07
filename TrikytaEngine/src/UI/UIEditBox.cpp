@@ -114,7 +114,7 @@ void EditBox::render(float dt)
 		Color color = Color(10, 206, 250, 220);
 		SDL_SetRenderDrawColor(r, color.r, color.g, color.b, color.a);
 		for (int i = editPadding; i >= 0; i--) {
-			widgetBounderies = SDL_Rect{ widgetBounderies.x + 1, widgetBounderies.x + 1, widgetBounderies.w - 2, widgetBounderies.h - 2 };
+			widgetBounderies = SDL_Rect{ widgetBounderies.x + 1, widgetBounderies.y + 1, widgetBounderies.w - 2, widgetBounderies.h - 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			color.a -= i * 17;
 			color.b -= i * 17;
@@ -159,6 +159,14 @@ void EditBox::OnToggleEdit(bool isEdit)
 	}
 	SDL_SetRenderTarget(r, NULL);
 };
+
+void EditBox::setPos(const Vec2i& pos)
+{
+	m_Pos = pos;
+	m_InputText->setPosition(m_Pos + (Vec2i(10, m_Size.y) / 2) - Vec2i(0, m_InputText->getSize().y) / 2);
+	m_WidgetBounderies.x = pos.x;
+	m_WidgetBounderies.y = pos.y;
+}
 
 /*
 	m_WidgetBounderies = SDL_Rect{m_Pos.x, m_Pos.y, m_Size.x, m_Size.y};

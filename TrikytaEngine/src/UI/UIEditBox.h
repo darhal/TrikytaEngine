@@ -9,7 +9,9 @@ namespace UI {
 	class Text;
 
 	class EditBox : public EditBoxBase
-	{
+	{	
+		REGISTER_EVENT(ON_EDITBOX_CHANGE, void(const char*));
+		REGISTER_EVENT(ON_EDITBOX_FOCUS, void(bool));
 	public:
 		static EditBox* createEditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, const Vec2i& p_Pos, const Vec2i& p_Size,const Color& p_Color) {
 			return new EditBox(p_Text, p_Font, p_TextSize, p_Pos, p_Size, p_Color);
@@ -23,8 +25,7 @@ namespace UI {
 		inline virtual Vec2i getSize() override;
 		virtual void PorcessEvents(SDL_Event&) override;
 		virtual void render(float dt) override;
-		REGISTER_EVENT(ON_EDITBOX_CHANGE, void(const char*));
-		REGISTER_EVENT(ON_EDITBOX_FOCUS, void(bool));
+		void setPos(const Vec2i&) override;
 	private:
 		Vec2i m_Size, m_Pos;
 		void UpdateText();
