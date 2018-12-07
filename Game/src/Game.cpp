@@ -59,11 +59,8 @@ void Game::On_Engine_Init()
 	body->SetAngularDamping(1000.f);
 	int po=0;
 	for (int i =0; i<4;i++){
-		if (compteurCoeur==2){
-			i++;
-		}
-	auto animCoeur =Animation::Create("assets/bonus/02_heart.png","assets/bonus/02_heart.txt",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0), 0.03f);
-	po=po+22;
+		auto animCoeur =Animation::Create("assets/bonus/02_heart.png","assets/bonus/02_heart.txt",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0), 0.03f);
+		po=po+22;
 	}
 	auto animPiece =Animation::Create("assets/PNG/Gold/Gold_1.png","assets/PNG/piece.txt",Vec2i(25, 22), Vec2i(20, 0), 0.03f);
 
@@ -167,6 +164,8 @@ void Game::OnCollision(b2Contact* contact)
 	bool isAGreenSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 1) || map->isBodyPartOfTileset(bodyB, "misc2", 1);
 	bool isAHeart = map -> isBodyPartOfTileset (bodyA ,"misc2", 5) || map -> isBodyPartOfTileset(bodyB , "misc2" , 5);
 	bool isAKey = map -> isBodyPartOfTileset (bodyA ,"sheet_key", 0) || map -> isBodyPartOfTileset(bodyB , "sheet_key" , 0); 
+	bool isADoor = map -> isBodyPartOfTileset(bodyA,"misc",62) || map -> isBodyPartOfTileset(bodyB,"misc",61);
+	bool isEpine = map -> isBodyPartOfTileset(bodyA,"misc",47) || map -> isBodyPartOfTileset(bodyB,"misc",47);
 	if (isACoin) {
 		if (bodyB == body) {
 			LayerData* tileToDelete = bodyA->getComponent<LayerData>();
@@ -261,6 +260,17 @@ void Game::OnCollision(b2Contact* contact)
 			LogConsole(LogWarning, "Contact with a key !");
 		    }
 		}
+	}else if (isADoor){
+		if (compteurKey==3){
+			if(bodyB==body){
+				LogConsole(LogWarning,"you win");
+			}
+			else if(body==bodyA){
+				LogConsole(LogWarning,"you win");
+			}
+		}
+	}else if (isEpine){
+		compteurCoeur--; 
 	}
 	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end())){
 		LogConsole(LogWarning, "Contact with a mechant!");
@@ -273,12 +283,10 @@ void Game::OnCollision(b2Contact* contact)
 		compteurCoeur=compteurCoeur-1;
 		LogConsole(LogWarning , "Décrémentation");
 	}
-	if (compteurCoeur < 0){
-		compteurCoeur = 0;
-	}
 	if (compteurCoeur==0){
 		LogConsole(LogWarning, "game over");
-		//afficher game over et arreter le jeu 
+		free(map);
+		free(body);
 	}
 	
 }
