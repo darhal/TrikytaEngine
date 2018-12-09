@@ -83,7 +83,7 @@ void Progressbar::setProgress(int p)
 }
 
 //TODO: fix it with setting the max to 100 and divide it till it hit progress in the param
-void Progressbar::setProgress(int p, Color&& starting_color, const Color& ending_color, int step)
+void Progressbar::setProgress(int p, Color&& starting_color, Color&& ending_color, int step)
 {
 	p = (p < 0) ? 0 : (p > 100) ? 100 : p; // p is clamped between 0 and 100
 	if (m_Progress == p) {
@@ -102,17 +102,19 @@ void Progressbar::setProgress(int p, Color&& starting_color, const Color& ending
 		SDL_RenderDrawRect(r, &widgetBounderies);
 	}
 	
-	
-	widgetBounderies = SDL_Rect{ padding, padding, 0,  m_Size.y - padding * 2 };
-	int maxx = int((float(p) / 100.f)*(m_Size.x - padding * 2));
-	for (int i = 0; i < step; i++) {
-		widgetBounderies.w = (widgetBounderies.w + (maxx / step) < maxx) ? widgetBounderies.w + (maxx / step) : maxx-(widgetBounderies.w + (maxx / step));
-		widgetBounderies.w += maxx / step;
-		widgetBounderies.x += maxx / step;
-		starting_color.interpolate(ending_color, i);
-		LogTerminal("Color{%d, %d, %d, %d}", starting_color.r, starting_color.g, starting_color.b, starting_color.a);
-		SDL_SetRenderDrawColor(r, starting_color.r, starting_color.g, starting_color.b, starting_color.a);
-		SDL_RenderFillRect(r, &widgetBounderies);
+	if (p != 0) {
+		bool isFirstColor = true;
+		widgetBounderies = SDL_Rect{ padding, padding, 0,  m_Size.y - padding * 2 };
+		int max = int((float(p) / 100.f)*(m_Size.x - padding * 2));
+		int step_adv = int((float(step) / 100.f)*(m_Size.x - padding * 2));
+		while ((widgetBounderies.x + widgetBounderies.w) - step_adv < max) {
+			widgetBounderies.w = step_adv;
+			isFirstColor ? SDL_SetRenderDrawColor(r, starting_color.r, starting_color.g, starting_color.b, starting_color.a) :
+				SDL_SetRenderDrawColor(r, ending_color.r, ending_color.g, ending_color.b, ending_color.a);
+			SDL_RenderFillRect(r, &widgetBounderies);
+			isFirstColor = !isFirstColor;
+			widgetBounderies.x += widgetBounderies.w;
+		}
 	}
 
 	if (m_ProgressbarText != nullptr) {

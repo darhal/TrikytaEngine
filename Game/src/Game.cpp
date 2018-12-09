@@ -54,17 +54,18 @@ void Game::On_Engine_Init()
 	widget->AddElement(btn);
 	widget->AddElement(editBox);
 	
-	auto pb = new Progressbar(Vec2i(10, 150), Vec2i(25*8, 30), Color(0, 0, 0, 200), Color(98, 204, 239, 255), "Loading...");
+	auto pb = new Progressbar(Vec2i(10, 150), Vec2i(25 * 8, 30), Color(0, 0, 0, 200), Color(98, 204, 239, 255), "Loading...", Color{0,0,0,255}, Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 18));
 	widget->AddElement(pb);
-	editBox->addEventHandler<ON_EDITBOX_CHANGE>([=](const char* c) {pb->setProgress(pb->getProgress() - 5); });
+	editBox->addEventHandler<ON_EDITBOX_CHANGE>([=](const char* c) {pb->setProgress(pb->getProgress() - 5, Color{ 0, 174, 255, 200 }, Color{ 183, 232, 255, 200 }, 5); });
 	btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i& pos, bool is_down)
 		{
-			LogTerminal("Button clicked Pos=(%d, %d) bool = %d", pos.x, pos.y, is_down);
 			if (is_down) {
-				pb->setProgress(pb->getProgress() + 5, Color{ 98, 204, 239, 200}, Color{ 98, 204, 239, 255 }, 5);
+				LogTerminal("------------------------");
 			}
 		}
 	);
+
+	TimerManager::CreateTimer([=]() {pb->setProgress(pb->getProgress() + 5, Color{ 252, 0, 46, 200 }, Color{ 252, 103, 130, 200 }, 5); }, 1000, 20, true);
 	
 	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
 	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));

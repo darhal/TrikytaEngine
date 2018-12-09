@@ -20,7 +20,7 @@ namespace UI
 		Vec2i getSize() { return m_Size; };
 
 		void setProgress(int);
-		void setProgress(int, Color&&, const Color&, int);
+		void setProgress(int, Color&&, Color&&, int);
 		int getProgress() { return m_Progress; }
 	protected:
 
