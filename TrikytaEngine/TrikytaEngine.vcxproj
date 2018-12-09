@@ -206,6 +206,7 @@
     <ClCompile Include="src\UI\UIEditBox.cpp" />
     <ClCompile Include="src\UI\Events\UIEventHandler.cpp" />
     <ClCompile Include="src\UI\UIManager.cpp" />
+    <ClCompile Include="src\UI\UIProgressbar.cpp" />
     <ClCompile Include="src\UI\UIText.cpp" />
     <ClCompile Include="src\UI\UIWidget.cpp" />
     <ClCompile Include="src\utils\SDL2_framerate.c" />
@@ -366,6 +367,7 @@
     <ClInclude Include="src\UI\UIEditBox.h" />
     <ClInclude Include="src\UI\Events\UIEventHandler.h" />
     <ClInclude Include="src\UI\UIManager.h" />
+    <ClInclude Include="src\UI\UIProgressbar.hpp" />
     <ClInclude Include="src\UI\UIText.h" />
     <ClInclude Include="src\UI\UIWidget.hpp" />
     <ClInclude Include="src\utils\SDL2_framerate.h" />

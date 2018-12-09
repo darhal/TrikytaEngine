@@ -8,29 +8,31 @@ using namespace UI;
 Widget::Widget(const std::string& title, const Vec2i& pos, const Vec2i& size): 
 	m_Pos(pos), m_Size(size), m_Title(title)
 {
-	//Widget::buildWidget();
+	Manager::addElement(this, true);
+	auto r = ENGINE->getRenderer();
+	m_WidgetBounderies = SDL_Rect{ m_Pos.x, m_Pos.y, m_Size.x, m_Size.y };
+	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
 }
 
 
 Widget::Widget(const Vec2i& pos, const Vec2i& size): 
 	m_Pos(pos), m_Size(size), m_Title("")
 {
-	//Widget::buildWidget();
-}
-
-void Widget::buildWidget(Font* font, const Color& windowColor, const Color& contourColor, const Color& topColor, const Color& titleColor)
-{
 	Manager::addElement(this, true);
 	auto r = ENGINE->getRenderer();
 	m_WidgetBounderies = SDL_Rect{ m_Pos.x, m_Pos.y, m_Size.x, m_Size.y };
 	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
+}
+
+void Widget::buildWidget(Font* font, const Color& windowColor, const Color& contourColor, const Color& topColor, const Color& titleColor)
+{
+	auto r = ENGINE->getRenderer();
 	int padding = 1;
 	auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
 	SDL_SetRenderTarget(r, widget_texture);
 	SDL_RenderClear(r);
 	SDL_SetRenderDrawColor(r, windowColor.r, windowColor.g, windowColor.b, windowColor.a);
 	SDL_RenderFillRect(r, &widgetBounderies);
-
 	SDL_SetRenderDrawColor(r, topColor.r, topColor.g, topColor.b, topColor.a);
 	m_TitleText = Text::createText(m_Title, font, Vec2i(0,0), titleColor, false);
 	auto titleBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, int(m_TitleText->getSize().y*1.2f) - padding * 2 };

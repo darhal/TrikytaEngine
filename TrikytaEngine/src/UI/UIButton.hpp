@@ -24,7 +24,7 @@ namespace UI
 		virtual Vec2i getSize() { return m_Size; };
 		virtual void render(float) override;
 		virtual void PorcessEvents(SDL_Event& e) override;
-		virtual void OnMouseHover(const Vec2i&, bool);
+		virtual void OnUIMouseHover(const Vec2i&, bool) override;
 
 		void setPos(const Vec2i&) override;
 	private:
@@ -36,8 +36,5 @@ namespace UI
 		bool m_IsHover;
 	private:
 		void buildWidget();
-
-		REGISTER_EVENT(ON_BUTTON_CLICK, void(const Vec2i&, bool));
-		REGISTER_EVENT(ON_BUUTON_HOVER, void(const Vec2i&, bool));
 	};
 }

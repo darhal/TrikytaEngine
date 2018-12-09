@@ -92,8 +92,9 @@ enum Events
 	//UI EVENTS
 	ON_EDITBOX_CHANGE = 11,
 	ON_EDITBOX_FOCUS = 12,
-	ON_BUTTON_CLICK = 13,
-	ON_BUUTON_HOVER = 14,
+	ON_UI_CLICK = 13,
+	ON_UI_FOCUS = 14,
+	ON_UI_HOVER = 15,
 };
 
 #define CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)

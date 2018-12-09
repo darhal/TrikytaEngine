@@ -18,6 +18,8 @@
 #include <core/Drawable/AnimationSet.hpp>
 #include <UI/UIButton.hpp>
 #include <UI/UIWidget.hpp>
+#include <UI/UIManager.h>
+#include <UI/UIProgressbar.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -43,21 +45,27 @@ void Game::On_Engine_Init()
 
 	using namespace UI;
 	auto editBox = EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
-		Vec2i(50, 50), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
-	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(50, 100), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
+		Vec2i(10, 50), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
+	auto btn = Button::createButton("Click Me", Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 16), Vec2i(10, 100), Vec2i(25 * 5, 30), Color{ 255,255,255, 255 });
 	Widget* widget = new Widget("This is test", Vec2i(500, 250), Vec2i(300, 300));
 	Font* font = Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 18);
 	font->setTextStyle(Font::Style::BOLD);
-	widget->Configure(WidgetParam{ font , {1, 179, 188, 200}, {0, 0, 0, 255}, {0, 84, 89, 200}, {0,0,0,255} });
+	widget->Configure(WidgetParam{ font , {200, 200, 200, 220}, {232, 163, 25, 255}, {232, 62, 73, 200}, {0,0,0,255} });
 	widget->AddElement(btn);
 	widget->AddElement(editBox);
-
-	AddConsoleCommand("setanim",
-		[=](const std::vector<std::string>& args) {
-			std::string anim_name = args.at(0);
-			anim->setAnimation(anim_name);
+	
+	auto pb = new Progressbar(Vec2i(10, 150), Vec2i(25*8, 30), Color(0, 0, 0, 200), Color(98, 204, 239, 255), "Loading...");
+	widget->AddElement(pb);
+	editBox->addEventHandler<ON_EDITBOX_CHANGE>([=](const char* c) {pb->setProgress(pb->getProgress() - 5); });
+	btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i& pos, bool is_down)
+		{
+			LogTerminal("Button clicked Pos=(%d, %d) bool = %d", pos.x, pos.y, is_down);
+			if (is_down) {
+				pb->setProgress(pb->getProgress() + 5, Color{ 98, 204, 239, 200}, Color{ 98, 204, 239, 255 }, 5);
+			}
 		}
 	);
+	
 	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
 	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
 	bodyaa->SetFixedRotation(true);
@@ -66,6 +74,7 @@ void Game::On_Engine_Init()
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(Game::On_Input, this));
+	AddConsoleCommand("setanim", [=](const std::vector<std::string>& args) {std::string anim_name = args.at(0); anim->setAnimation(anim_name); });
 	//AddEventHandler(ON_MOUSE_CLICK, CALLBACK_3(Game::OnClick, this));
 	//AddEventHandler(ON_MOUSE_MOVE, CALLBACK_1(Game::OnMouseMove, this));
 	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));

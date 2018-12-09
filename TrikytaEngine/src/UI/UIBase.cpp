@@ -25,14 +25,30 @@ void Base::PorcessEvents(SDL_Event& e)
 		{
 			if (!m_IsFocus && e.type == SDL_MOUSEBUTTONDOWN) {
 				OnUIFocus(!m_IsFocus, mc);
+				TRIGGER_EVENT(ON_UI_FOCUS, !m_IsFocus, mc);
 			}
 			m_IsFocus = true;
 			OnUIClick(mc - getPos(), e.type == SDL_MOUSEBUTTONDOWN ? true : false);
+			TRIGGER_EVENT(ON_UI_CLICK, mc - getPos(), e.type == SDL_MOUSEBUTTONDOWN ? true : false);
 		}else{
 			if (m_IsFocus && e.type == SDL_MOUSEBUTTONDOWN) {
 				OnUIFocus(!m_IsFocus, mc);
+				TRIGGER_EVENT(ON_UI_FOCUS, !m_IsFocus, mc);
 			}
 			m_IsFocus = false;
+		}
+	}else if (e.type == SDL_MOUSEMOTION) {
+		Vec2i maxPos = getSize() + getPos();
+		auto mc = Vec2i(e.motion.x, e.motion.y);
+		if (!m_IsHover && IsInBox(mc, getPos(), maxPos)) {
+			m_IsHover = true;
+			TRIGGER_EVENT(ON_UI_HOVER, mc - getPos(), m_IsHover);
+			OnUIMouseHover(mc - getPos(), m_IsHover);
+		}
+		else if (m_IsHover && !IsInBox(mc, getPos(), maxPos)) {
+			m_IsHover = false;
+			TRIGGER_EVENT(ON_UI_HOVER, mc - getPos(), m_IsHover);
+			OnUIMouseHover(mc - getPos(), m_IsHover);
 		}
 	}
 }

@@ -13,4 +13,11 @@ struct Color {
 	bool isVisible(){
 		return  a != 0;
 	}
+
+	void interpolate(const Color& color, int fraction) {
+		r = (color.r - r) * fraction + r;
+		g = (color.g - g) * fraction + g;
+		b = (color.b - b) * fraction + b;
+		a = (color.a - a) * fraction + a;
+	}
 };

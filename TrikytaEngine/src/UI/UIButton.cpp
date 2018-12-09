@@ -64,8 +64,6 @@ void Button::OnUIClick(const Vec2i& pos, bool is_down)
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			SDL_SetRenderDrawColor(r, 0, 0, 0, sartingAlpha - i * 4);
 		}
-
-		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, is_down);
 	}else {
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -78,14 +76,12 @@ void Button::OnUIClick(const Vec2i& pos, bool is_down)
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
-
-		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, is_down);
 	}
 	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
 }
 
-void Button::OnMouseHover(const Vec2i& pos, bool isHover)
+void Button::OnUIMouseHover(const Vec2i& pos, bool isHover)
 {
 	auto r = ENGINE->getRenderer();
 	SDL_SetRenderTarget(r, widget_texture);
@@ -102,7 +98,6 @@ void Button::OnMouseHover(const Vec2i& pos, bool isHover)
 			SDL_RenderDrawRect(r, &widgetBounderies);
 			SDL_SetRenderDrawColor(r, 0, 0, 0, sartingAlpha - i * 4);
 		}
-		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, isHover);
 	}else {
 		int padding = 1;
 		auto widgetBounderies = SDL_Rect{ padding, padding, m_Size.x - padding * 2, m_Size.y - padding * 2 };
@@ -115,7 +110,6 @@ void Button::OnMouseHover(const Vec2i& pos, bool isHover)
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
-		TRIGGER_EVENT(ON_BUTTON_CLICK, pos, isHover);
 	}
 	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
@@ -123,17 +117,6 @@ void Button::OnMouseHover(const Vec2i& pos, bool isHover)
 
 void Button::PorcessEvents(SDL_Event& e)
 {
-	if (e.type == SDL_MOUSEMOTION) {
-		Vec2i maxPos = getSize() + getPos();
-		auto mc = Vec2i(e.motion.x, e.motion.y);
-		if (!m_IsHover && IsInBox(mc, getPos(), maxPos)){
-			m_IsHover = true;
-			OnMouseHover(mc-getPos(), m_IsHover);
-		}else if (m_IsHover && !IsInBox(mc, getPos(), maxPos)){
-			m_IsHover = false;
-			OnMouseHover(mc - getPos(), m_IsHover);
-		}
-	}
 	Base::PorcessEvents(e);
 }
 
