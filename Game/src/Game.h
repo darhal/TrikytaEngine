@@ -6,7 +6,7 @@ struct ENGINE_CONFIG;
 class Game : public EngineInstance
 {
 public:
-	Game(ENGINE_CONFIG& p_Config) :
+	Game(const ENGINE_CONFIG& p_Config) :
 		EngineInstance(p_Config)
 	{}
 
@@ -23,7 +23,7 @@ public:
 	void ManagerMechant();
 
 	class Sprite* obj;
-	class Animation* anim;
+	class AnimationSet* anim;
 	class UI::Text* text;
 	class Physics2D::PhysicsBody* body;
 	class Physics2D::PhysicsBody* body2;

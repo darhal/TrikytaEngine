@@ -2,7 +2,7 @@
 
 std::map<std::string, Font*> Font::m_Font_Map;
 
-Font* Font::createOrGetFont(std::string p_FontPath, uint8 p_Size)
+Font* Font::createOrGetFont(const std::string& p_FontPath, uint8 p_Size)
 {
 	if (!m_Font_Map.empty() && m_Font_Map[p_FontPath] != nullptr && m_Font_Map[p_FontPath]->getSize() == p_Size) {
 		m_Font_Map[p_FontPath]->m_NumberOfUse++;
@@ -15,7 +15,7 @@ Font* Font::createOrGetFont(std::string p_FontPath, uint8 p_Size)
 	return _font;
 }
 
-Font::Font(std::string p_FontPath, uint8 p_Size):
+Font::Font(const std::string& p_FontPath, uint8 p_Size):
 	m_FontPath(p_FontPath), m_Size(p_Size), m_NumberOfUse(1)
 {
 	m_Font = TTF_OpenFont((m_FontPath).c_str(), p_Size);

@@ -87,7 +87,7 @@ namespace Physics2D {
 
 	class PhysicsBody : public Object {
 	protected:
-		PhysicsBody(b2Body* p_Body, BodyType p_BodyType, BodyShape p_Shape, BodyParams p_BodyParams) :
+		PhysicsBody(b2Body* p_Body, const BodyType& p_BodyType, const BodyShape& p_Shape, const BodyParams& p_BodyParams) :
 			m_Body(p_Body), m_BodyType(p_BodyType), m_Shape(p_Shape), m_BodyParams(p_BodyParams)
 		{
 			m_Body->m_physicsBody = this;
@@ -97,9 +97,9 @@ namespace Physics2D {
 		
 		static PhysicsBody* CreateBody
 		(
-			PhysicsWorld* p_World, BodyType p_BodyType,
-			BodyShape p_Shape, BodyParams p_BodyParams,
-			Vec2f p_Position, std::vector<Vec2f> p_Dimentions
+			PhysicsWorld* p_World, const BodyType& p_BodyType,
+			const BodyShape& p_Shape, const BodyParams& p_BodyParams,
+			const Vec2f& p_Position, const std::vector<Vec2f>& p_Dimentions
 		);
 		~PhysicsBody() 
 		{

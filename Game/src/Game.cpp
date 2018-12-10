@@ -15,15 +15,17 @@
 #include <core/Camera/Camera.h>
 #include <core/Physics/Joints.h>
 #include <core/TiledMap/Tilesets.h>
+#include <core/Drawable/AnimationSet.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
 bool moveleft = true; 
 bool anti_spam = false;
-
 int compteurCoeur=3;
 int compteurPiece=0;
 int compteurKey = 0;
+Sprite* coeurs[4];
+UI::Text* pieceScore;
 void Game::On_Engine_Pre_Init()  
 { 
 	LogTerminal("Trikyta Engine Pre-initializing. ");
@@ -52,17 +54,25 @@ void Game::On_Engine_Init()
 	cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
 	cam->addObjectToCamera(map);
-	anim = Animation::Create("assets/anim_pack.png", "assets/anim_pack.a", Vec2i(256/5, 217/5), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
+	anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256/5, 217/5), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 	cam->addObjectToCamera(anim);
 	anim->ToggleRotationAttachement(false);
+	anim->setAnimation("Idle");
 	body->SetAngularDamping(1000.f);
 	int po=0;
 	for (int i =0; i<4;i++){
-		auto animCoeur =Animation::Create("assets/bonus/02_heart.png","assets/bonus/02_heart.txt",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0), 0.03f);
+		auto Coeur =Sprite::Create("assets/bonus/02_heart.png",Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth()-po, 0));
 		po=po+22;
+		coeurs[i]=Coeur;
 	}
-	auto animPiece =Animation::Create("assets/PNG/Gold/Gold_1.png","assets/PNG/piece.txt",Vec2i(25, 22), Vec2i(20, 0), 0.03f);
+
+	
+	
+	auto Piece =Sprite::Create("assets/PNG/Gold/Gold_1.png",Vec2i(25, 22), Vec2i(20, 0));
+	char buffer[256];
+	sprintf(buffer,"Score: %d", compteurPiece);
+	 pieceScore =UI::Text::createText(buffer,"Engine_Assets/fonts/DroidSans.ttf",18,Vec2i(45,0),{255,255,255,255});
 
 
 	
@@ -129,22 +139,36 @@ void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)
 			v.x = 50.f;
 			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::NONE);
+			anim->setAnimation("Run");
 		}else if (p_Key == SDLK_LEFT) {
 			Vec2f v = body->GetLinearVelocity();
 			v.x = -50.f;
 			body->SetLinearVelocity(v);
 			anim->Flip(FLIPTYPE::HORIZONTAL);
+			anim->setAnimation("Run");
 		}else if (p_Key == SDLK_UP) {
 			//body->ApplyLinearImpulse(Vec2f(0, body->GetMass() * -1000.f), body->GetWorldCenter(), false);
 			Vec2f v = body->GetLinearVelocity();
 			v.y = -50.f;
 			body->SetLinearVelocity(v);
+			anim->setAnimation("Jump");
 		}else if (p_Key == SDLK_DOWN) {
 			
 		}else if (p_Key == SDLK_c) {
 
 		}
 	}
+	else if (p_KeyState == SDL_KEYUP) {
+		if (p_Key == SDLK_RIGHT || p_Key == SDLK_LEFT) {
+			Vec2f v = body->GetLinearVelocity();
+			v.x = 0.f;
+			body->SetLinearVelocity(v);
+			anim->setAnimation("Idle");
+		}else if (p_Key == SDLK_UP) {
+			anim->setAnimation("Fall");
+		}
+	}
+	;;;;;;;;;;;;;;
 	
 };
 
@@ -172,8 +196,10 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->deleteTileInLayer(tileToDelete);
 				compteurPiece++;
-			    printf("%d \n" , compteurPiece);
-				LogConsole(LogWarning, "Contact with a coin !");
+				char buffer[256];
+				sprintf(buffer,"Score: %d", compteurPiece);
+	 			pieceScore->updateText(buffer);
+
 			}
 
 		}else if (bodyA == body) {
@@ -181,8 +207,9 @@ void Game::OnCollision(b2Contact* contact)
 			if (tileToDelete != NULL) {
 				map->deleteTileInLayer(tileToDelete);
 				compteurPiece++;
-				printf("%d \n" , compteurPiece);
-				LogConsole(LogWarning, "Contact with a coin !");
+				char buffer[256];
+				sprintf(buffer,"Score: %d", compteurPiece);
+	 			pieceScore->updateText(buffer);
 			}
 		}
 	}else if (isARedSwitch && !anti_spam) {
@@ -230,6 +257,8 @@ void Game::OnCollision(b2Contact* contact)
 			if(compteurCoeur<3){
 				LogConsole(LogWarning , "Incrémentation");
 				compteurCoeur++;
+				coeurs[compteurCoeur]->setRender(true); 
+
 			}
 		}
 		}else if (bodyB == body) {
@@ -239,6 +268,7 @@ void Game::OnCollision(b2Contact* contact)
 			LogConsole(LogWarning, "Contact with a heart !");
 				if(compteurCoeur<3){
 				compteurCoeur++;
+				coeurs[compteurCoeur]->setRender(true); 
 			}
 		 }
 		}	
@@ -270,23 +300,30 @@ void Game::OnCollision(b2Contact* contact)
 			}
 		}
 	}else if (isEpine){
-		compteurCoeur--; 
+		if (compteurCoeur>0){
+		coeurs[compteurCoeur]->setRender(false); 
+		compteurCoeur--;}
 	}
 	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end())){
-		LogConsole(LogWarning, "Contact with a mechant!");
-		if(compteurCoeur > 0  ){
-			compteurCoeur=compteurCoeur-1;
-		}
-		LogConsole(LogWarning , "Décrémentation");		
+		if (compteurCoeur>0){
+		LogConsole(LogWarning, "Contact with a mechant!");	
+			coeurs[compteurCoeur]->setRender(false); 
+			compteurCoeur--;	}	
 	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end())){
+		if (compteurCoeur>0){
 		LogConsole(LogWarning, "Contact with a mechant !");
-		compteurCoeur=compteurCoeur-1;
-		LogConsole(LogWarning , "Décrémentation");
+		coeurs[compteurCoeur]->setRender(false); 
+		compteurCoeur--;}
 	}
 	if (compteurCoeur==0){
 		LogConsole(LogWarning, "game over");
-		free(map);
-		free(body);
+		auto gameover=Sprite::Create("assets/gameover.png", Vec2i(500, 500),Vec2i(ENGINE->GetScreenWidth() / 2,ENGINE->GetScreenHeight() / 2));
+		/*free(bodysquelette);
+		free(anim);
+		free(bodytortue);
+		free(cam);
+		free(map);*/
+		
 	}
 	
 }

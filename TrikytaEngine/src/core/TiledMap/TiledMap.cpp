@@ -148,7 +148,7 @@ void TiledMap::render(float dt)
 		SDL_RenderCopyEx(r, m_Texture, &m_SourceDrawCoord, &m_DestinationDrawCoord, m_Angle, &m_RotationCenter, m_Flip);
 	}
 	renderAnimations(dt);
-	SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
+	//SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_NONE);
 }
 
 bool TiledMap::LoadTilesets()

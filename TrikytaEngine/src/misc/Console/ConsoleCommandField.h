@@ -16,15 +16,18 @@ struct CommandData
 class ConsoleCommandField : public UI::EditBoxBase, public ConsoleText
 {
 public:
-	static ConsoleCommandField* createConsoleCommandField(std::string p_Text, Vec2i p_Pos, Color p_Color)
+	static ConsoleCommandField* createConsoleCommandField(std::string p_Text, const Vec2i& p_Pos, const Color& p_Color)
 	{
 		return new ConsoleCommandField(p_Text, p_Pos, p_Color);
 	}
 
-	virtual void OnUIClick(Vec2i, bool) override;
-	virtual void OnUIFocus(bool, Vec2i) override;
-	inline virtual Vec2i getPos() override;
+	virtual void OnUIClick(const Vec2i&, bool) override;
+	virtual void OnUIFocus(bool, const Vec2i&) override;
+	inline virtual Vec2i getTextPos() override;
+	inline virtual Vec2i getTextSize() override;
+
 	inline virtual Vec2i getSize() override;
+	inline virtual Vec2i getPos() override;
 
 	virtual void render(float) override;
 	void ProcessEventHelper(SDL_Event&);
@@ -33,7 +36,7 @@ public:
 	void AddCommandHandler(const std::string&, CmdFunc);
 	~ConsoleCommandField();
 protected:
-	ConsoleCommandField(std::string, Vec2i, Color);
+	ConsoleCommandField(std::string, const Vec2i&, const Color&);
 private:
 	std::map<std::string, CommandData> m_CmdData;
 	std::deque<std::string> m_CmdHistroy;

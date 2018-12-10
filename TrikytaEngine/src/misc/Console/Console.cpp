@@ -67,7 +67,7 @@ void Console::outputConsole(std::string p_Text, Color p_Color, bool p_ShowTime)
 void Console::initConsoleCommandField()
 {
 	m_CommandField = ConsoleCommandField::createConsoleCommandField(">", Vec2i(START_POS_X+15, m_StartPos), { 255,255,255,255});
-	m_CommandField->setPosition(Vec2i(START_POS_X+15, m_StartPos - m_CommandField->getSize().y));
+	m_CommandField->setPosition(Vec2i(START_POS_X+15, m_StartPos - m_CommandField->getTextSize().y));
 }
 
 void Console::removeConsoleMessage()

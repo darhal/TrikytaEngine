@@ -140,7 +140,7 @@ void EngineInstance::EngineLogic()
 void EngineInstance::Render() 
 {
 	std::chrono::time_point<std::chrono::system_clock> TimeNow = std::chrono::system_clock::now();
-	std::chrono::duration<float> dt = (TimeNow.time_since_epoch() - LastTick.time_since_epoch()); // i think this is in seconds
+	std::chrono::duration<float> dt = (TimeNow.time_since_epoch() - LastTick.time_since_epoch()); 
 	float dtf = dt.count();
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 	On_Engine_Render(dtf);

@@ -3,7 +3,7 @@
 #include "core/Common/Color.h"
 using namespace UI;
 
-Text::Text(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, Vec2i p_Pos, Color p_Color, int p_FontStyle, bool p_IsRegister) :
+Text::Text(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, const Vec2i& p_Pos, const Color& p_Color, int p_FontStyle, bool p_IsRegister) :
 	Drawable(p_Pos, Vec2i(0, 0), p_IsRegister),
 	m_Text(p_Text),
 	m_FontPath(p_Font),
@@ -11,7 +11,19 @@ Text::Text(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSiz
 	m_Color(p_Color),
 	m_Scale(1),
 	m_BGColor(0, 0, 0, 0),
-	m_Style(p_FontStyle)
+	m_Style(p_FontStyle),
+	m_Font(nullptr)
+{
+	init();
+}
+
+Text::Text(const std::string& p_Text, Font* p_Font, const Vec2i& p_Pos, const Color& p_Color, bool p_IsRegister) :
+	Drawable(p_Pos, Vec2i(0, 0), p_IsRegister),
+	m_Text(p_Text),
+	m_Color(p_Color),
+	m_Scale(1),
+	m_BGColor(0, 0, 0, 0),
+	m_Font(p_Font)
 {
 	init();
 }
@@ -23,9 +35,8 @@ Text::~Text()
 
 bool Text::init()
 {
-	m_Font = Font::createOrGetFont(m_FontPath, m_TextSize);
-	if (m_Font == NULL) {
-		LogInfoConsole("ERROR: loading font path %s", m_FontPath.c_str());
+	if (m_Font == nullptr) {
+		m_Font = Font::createOrGetFont(m_FontPath, m_TextSize);
 	}
 	m_Font->setTextStyle(m_Style);
 	SDL_Surface* textSurface;

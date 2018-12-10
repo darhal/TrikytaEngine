@@ -10,9 +10,14 @@ namespace UI {
 	class Text : public Drawable
 	{
 	public:
-		static Text* createText(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, Vec2i p_Pos, Color p_Color, int p_FontStyle = Font::Style::NORMAL, bool p_Register = true)
+		static Text* createText(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, const Vec2i& p_Pos,const Color& p_Color, int p_FontStyle = Font::Style::NORMAL, bool p_Register = true)
 		{
 			return new Text(p_Text, p_Font, p_TextSize, p_Pos, p_Color, p_FontStyle, p_Register);
+		}
+
+		static Text* createText(const std::string& p_Text, Font* p_Font, const Vec2i& p_Pos,const Color& p_Color, bool p_Register = true)
+		{
+			return new Text(p_Text, p_Font, p_Pos, p_Color, p_Register);
 		}
 
 		~Text();
@@ -26,7 +31,8 @@ namespace UI {
 		void setTextStyle(int);
 		Font* getFont() {return m_Font;}
 	protected:
-		Text(const std::string&, const std::string&, uint8, Vec2i, Color, int = Font::Style::NORMAL, bool=true);
+		Text(const std::string&, const std::string&, uint8, const Vec2i&, const Color&, int = Font::Style::NORMAL, bool=true);
+		Text(const std::string&, Font*,const Vec2i&, const Color&, bool = true);
 		virtual bool init() override;
 		void updateTextHelper();
 	private:

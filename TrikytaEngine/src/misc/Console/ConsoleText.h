@@ -7,7 +7,7 @@
 class ConsoleText
 {
 public:
-	static ConsoleText* createText(std::string p_Text, Vec2i p_Pos, Color p_Color)
+	static ConsoleText* createText(const std::string& p_Text, const Vec2i& p_Pos, const Color& p_Color)
 	{
 		return new ConsoleText(p_Text, p_Pos, p_Color);
 	}
@@ -22,8 +22,8 @@ public:
 	void updateTextHelper();
 	void setColor(Color);
 protected:
-	ConsoleText(std::string, Vec2i, Color);
-	bool init(std::string, Vec2i, Color);
+	ConsoleText(const std::string&, const Vec2i&, const Color&);
+	bool init(const std::string&, const Vec2i&, const Color&);
 
 	std::string m_Text;
 private:

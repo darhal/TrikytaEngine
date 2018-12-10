@@ -41,7 +41,7 @@ public:
 
 	void removeComponent(Component* component);
 	void getComponents(std::vector<Component*>&);
-	const Component* getComponent(int compType);
+	const Component* getComponent(unsigned int compType);
 
 	void setRender(bool isVisible);
 
@@ -57,7 +57,7 @@ protected:
 	bool m_AutoClearComponent;
 	Object* m_Parent = nullptr;
 	std::vector<Object*>* m_Childrens;
-	std::map<int, void*> m_Components; // components !
+	std::map<unsigned int, void*> m_Components; // components !
 private:
 
 };

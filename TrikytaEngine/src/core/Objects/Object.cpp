@@ -65,7 +65,7 @@ void Object::attachTo(Object* obj, Vec2f p_Offset)
 	m_Parent = obj;
 }
 
-const Component* Object::getComponent(int compType)
+const Component* Object::getComponent(unsigned int compType)
 {
 	if (m_Components[compType]) {
 		return static_cast<Component*>(m_Components[compType]);
