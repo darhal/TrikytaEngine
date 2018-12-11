@@ -69,7 +69,7 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 
 #define TRIGGER_EVENT(__event__, ...) \
 		for (const auto& __callBackItr__ : m_##__event__##_Callbacks) { \
-			__callBackItr__(##__VA_ARGS__); \
+			__callBackItr__(__VA_ARGS__); \
 		} \
 
 #define ADD_COMPONENT(__component_type__)\

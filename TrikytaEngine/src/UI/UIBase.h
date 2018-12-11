@@ -34,6 +34,7 @@ namespace UI {
 		virtual bool isVisible();
 		bool isFocus() { return m_IsFocus; }
 		bool isHover() { return m_IsHover; }
+		void Enable(bool);
 		static bool IsInBox(const ::Vec2i&, const ::Vec2i&, const ::Vec2i&);
 	protected:
 		Base();

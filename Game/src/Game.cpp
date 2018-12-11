@@ -20,6 +20,7 @@
 #include <UI/UIWidget.hpp>
 #include <UI/UIManager.h>
 #include <UI/UIProgressbar.hpp>
+#include <UI/UIImage.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -67,6 +68,24 @@ void Game::On_Engine_Init()
 
 	TimerManager::CreateTimer([=]() {pb->setProgress(pb->getProgress() + 5, Color{ 252, 0, 46, 200 }, Color{ 252, 103, 130, 200 }, 5); }, 1000, 20, true);
 	
+	auto image = new Image("assets/button/play.png", Vec2i(10, 200), Vec2i(701/8, 701/8));
+	widget->AddElement(image);
+	image->addEventHandler<ON_UI_CLICK>([=](const Vec2i& pos, bool is_click) {
+		if (is_click) {
+			image->ChangeTexture("assets/button/play_click.png");
+		}else {
+			image->ChangeTexture("assets/button/play_hover.png");
+		}
+	});
+	image->addEventHandler<ON_UI_HOVER>([=](const Vec2i& pos, bool is_hover) {
+		if (is_hover) {
+			image->ChangeTexture("assets/button/play_hover.png");
+		}
+		else {
+			image->ChangeTexture("assets/button/play.png");
+		}
+	});
+
 	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
 	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
 	bodyaa->SetFixedRotation(true);

@@ -69,3 +69,8 @@ bool Base::isVisible()
 { 
 	return m_IsVsisible; 
 };
+
+void Base::Enable(bool isEnable)
+{
+	isEnable ? Manager::addElement(this, false) : Manager::removeElement(this, false);
+}
