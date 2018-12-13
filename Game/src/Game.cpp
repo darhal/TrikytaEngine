@@ -36,7 +36,46 @@ void Game::On_Engine_Pre_Init()
 
 void Game::On_Engine_Init()
 {
-	cam = Camera::CreateCamera();
+	auto menu_background = Sprite::Create("assets/gui/background1.png", Vec2i(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()), Vec2i(0, 0));
+	Music* music = new Music("assets/gui/main_theme.mp3");
+	music->Play(-1);
+	auto level_selector_btn = new UI::Image("assets/gui/level_selector1.png", Vec2i(200, 200), Vec2i(64, 64));
+	level_selector_btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i&, bool is_click) {is_click ? level_selector_btn->ChangeTexture("assets/gui/level_selector3.png") : level_selector_btn->ChangeTexture("assets/gui/level_selector2.png"); });
+	level_selector_btn->addEventHandler<ON_UI_HOVER>([=](const Vec2i&, bool is_hover) {is_hover ? level_selector_btn->ChangeTexture("assets/gui/level_selector2.png") : level_selector_btn->ChangeTexture("assets/gui/level_selector1.png"); });
+	auto settings_btn = new UI::Image("assets/gui/settings1.png", Vec2i(200+74+64, 200), Vec2i(64, 64));
+	settings_btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i&, bool is_click) {is_click ? settings_btn->ChangeTexture("assets/gui/settings3.png") : settings_btn->ChangeTexture("assets/gui/settings2.png"); });
+	settings_btn->addEventHandler<ON_UI_HOVER>([=](const Vec2i&, bool is_hover) {is_hover ? settings_btn->ChangeTexture("assets/gui/settings2.png") : settings_btn->ChangeTexture("assets/gui/settings1.png"); });
+	auto mute_btn = new UI::Image("assets/gui/mute1.png", Vec2i(200 + (74 + 64) * 2, 200), Vec2i(64, 64));
+	auto unmute_btn = new UI::Image("assets/gui/unmute1.png", Vec2i(200 + (74 + 64) * 2, 200), Vec2i(64, 64));
+	unmute_btn->setVisible(false);
+	mute_btn->addEventHandler<ON_UI_HOVER>([=](const Vec2i&, bool is_hover) {is_hover ? mute_btn->ChangeTexture("assets/gui/mute2.png") : mute_btn->ChangeTexture("assets/gui/mute1.png"); });
+	mute_btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i&, bool is_click) {
+		if (is_click) {
+			mute_btn->ChangeTexture("assets/gui/mute3.png");
+		}else {
+			if (music->IsPlaying()) {
+				music->Stop(FADE, 40);
+				TimerManager::CreateTimer([=]() {unmute_btn->setVisible(true); mute_btn->setVisible(false); }, 50, 1, true);
+				mute_btn->ChangeTexture("assets/gui/mute1.png");
+			}
+		}
+	});
+	unmute_btn->addEventHandler<ON_UI_HOVER>([=](const Vec2i&, bool is_hover) {is_hover ? unmute_btn->ChangeTexture("assets/gui/unmute2.png") : unmute_btn->ChangeTexture("assets/gui/unmute1.png"); });
+	unmute_btn->addEventHandler<ON_UI_CLICK>([=](const Vec2i&, bool is_click) {
+		if (is_click) {
+			unmute_btn->ChangeTexture("assets/gui/unmute3.png");
+		}else {
+			if (music->IsStopped()) {
+				music->Play(-1);
+				TimerManager::CreateTimer([=]() {unmute_btn->setVisible(false); mute_btn->setVisible(true); }, 50, 1, true);
+				unmute_btn->ChangeTexture("assets/gui/unmute1.png");
+			}
+		}
+	});
+	
+
+
+	/*cam = Camera::CreateCamera();
 	map = TiledMap::Create("assets/example/maps/map/map.tmx");
 	cam->addObjectToCamera(map);
 	anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256/7, 217/7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
@@ -95,10 +134,6 @@ void Game::On_Engine_Init()
 		}
 	});
 
-	/*aa = AnimationSet::Create("assets/chars/fzombie_female.png", "assets/chars/fzombie.txt", Vec2i(521 / 7, 576 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f);
-	auto bodyaa = aa->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.f, 0.f));
-	bodyaa->SetFixedRotation(true);
-	cam->addObjectToCamera(aa);*/
 	//EVENT TESTING!!
 	//EventManager::GetEventManager()->addEventHandler<Events::ON_KEYBOARD_INPUT>(CALLBACK_2(Game::On_Input, this));
 	EventManager::GetEventManager()->addEventHandler<ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
@@ -132,7 +167,7 @@ void Game::On_Engine_Init()
 		double p = std::stod(pos.c_str());
 		music->setPosition(p);
 		LogConsole(LogInfo, "Set position to %f", p);
-	});
+	});*/
 	//AddEventHandler(ON_MOUSE_CLICK, CALLBACK_3(Game::OnClick, this));
 	//AddEventHandler(ON_MOUSE_MOVE, CALLBACK_1(Game::OnMouseMove, this));
 	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
@@ -149,10 +184,10 @@ void Game::OnButtonClick(const Vec2i& pos, bool is_down)
 void Game::On_Engine_Render(float /*dt*/)
 {
 	// Offset the player quad by the camera position
-	bool b = true;
+	/*bool b = true;
 	Vec2i pos = Vec2i((int)body->GetPosition().x, (int)body->GetPosition().y) - Vec2i(cam->getCameraSize().x/2, cam->getCameraSize().y/2);
 	if (b)
-		cam->setCameraPosition(pos);
+		cam->setCameraPosition(pos);*/
 };
 
 void Game::On_Input(SDL_Keycode p_Key, unsigned int p_KeyState)

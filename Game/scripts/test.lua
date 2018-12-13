@@ -85,7 +85,7 @@ end
 -- I MADE AN ERROR HERE!
 
 function onScriptStart()
-	outputConsole("Script restarted !!", "warning")
+	--outputConsole("Script restarted !!", "warning")
 end
 
 
@@ -97,7 +97,7 @@ function OnEngineLoad()
 	--flipSpriteVertical(ground, false)
 	--flipSpriteVertical(ground, false)
 	--createBody({type="Dynamic", shape="Polygon"}, {mass=1,friction=1,restitution=0,sensor=false},550, 250,{34,50, 90, 120, -5, 250, 23, 80, 30, 56})
-	local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
+	--local background = createSprite("assets/background.png", WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0)
 	--map = Map.createMap("assets/example/maps/map2.tmx")
 	--map = Map.createMap("assets/example/example.tmx")
 	--outputConsole("Map is "..tostring(map), "Warning")
@@ -146,7 +146,7 @@ function OnEngineLoad()
 	--deleteSprite(a)
 	--deleteSprite(a)
 	--
-	AddEventHandler("OnKeyboardInput", OnKeyboardInput)
+	--AddEventHandler("OnKeyboardInput", OnKeyboardInput)
 	--AddEventHandler("OnMouseClick", OnMouseClick)
 	--AddEventHandler("OnMouseMove", OnMouseMove)
 	--AddEventHandler("OnEngineRender", OnRender1)
@@ -162,4 +162,4 @@ end
 --AddEventHandler("OnEnginePreInit", OnPreInit) -- NOT WORKING FOR THIS VERSION!
 
 --class Sprite *__cdecl Sprite::Create(const class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > &,struct Vec2<int>,struct Vec2<int>)
-onScriptStart()
+--onScriptStart()
