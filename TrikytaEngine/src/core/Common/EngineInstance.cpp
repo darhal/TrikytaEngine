@@ -1,5 +1,6 @@
 #include <map>
 #include <chrono>
+#include <SDL/SDL_mixer.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 #include "EngineInstance.h"
@@ -13,6 +14,7 @@
 #include "core/Common/defines.h"
 #include "UI/UIManager.h"
 #include "core/InputManager/InputManager.h"
+#include "sound/SoundManager.hpp"
 
 //#include <GL/glew.h>
 /*
@@ -60,13 +62,6 @@ bool EngineInstance::Init()
 		return false;
 	}
 	
-	// Create an OpenGL context associated with the window.
-	//SDL_GLContext glcontext = SDL_GL_CreateContext(m_Window);
-	//SetOpenGLAttributes();
-
-	// Once finished with OpenGL functions, the SDL_GLContext can be deleted.
-	//SDL_GL_DeleteContext(glcontext);
-
 	m_PrimarySurface = SDL_GetWindowSurface(m_Window);
 
 	if ((m_Renderer = SDL_CreateRenderer(m_Window, -1, SDL_RENDERER_ACCELERATED)) == NULL) {
@@ -80,12 +75,21 @@ bool EngineInstance::Init()
 		LogTerminal("Unable to init SDL_image: %s", IMG_GetError());
 		return false;
 	}
-	TTF_Init();
+	if (TTF_Init() == -1) { // Initialize SDL_ttf
+		LogTerminal("Unable to init TTF_Init: %s", TTF_GetError());
+		return false;
+	};
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) { //Initialize SDL_mixer
+		LogTerminal("Unable to init SDL_mixer: %s", Mix_GetError());
+		return false;
+	}
+	
 	SDL_SetRenderDrawColor(m_Renderer, 0x00, 0x00, 0x00, 0xFF);
 	LogTerminal("__________________________________________________________________________");
 	UI::Manager::InitManager();
 	Console::InitConsole();
 	InputManager::initInputManager()->ActivateInput(false); // init and desactivate!
+	SoundManager::init();
 	LogInfoConsole("Engine is ready...");
 	
 	const Physics2D::PhysicsEngineParams phyParams = {{ m_EngineConfig.PHYSICS_WORLD_GRAVITY_X, m_EngineConfig.PHYSICS_WORLD_GRAVITY_Y }, m_EngineConfig.PHYSICS_TIME_STEP,
@@ -160,6 +164,7 @@ void EngineInstance::On_Engine_Quit()
 {
 	IMG_Quit();
 	TTF_Quit();
+	Mix_CloseAudio();
 	SDL_Quit();
 }
 

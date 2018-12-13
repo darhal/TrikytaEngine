@@ -72,14 +72,13 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 			__callBackItr__(__VA_ARGS__); \
 		} \
 
-#define ADD_COMPONENT(__component_type__)\
-	enum {__component_type__=COMPILE_TIME_CRC32_STR(#__component_type__)};	\
+#define TRIGGER_EVENT_WITH_TARGET(__event__, __obj__,...) \
+		for (const auto& __callBackItr__ : __obj__->m_##__event__##_Callbacks) { \
+			__callBackItr__(__VA_ARGS__); \
+		} \
 
-#define REGISTER_COMPONENT(__class__, __component_type__)\
-	private: const static unsigned int m_ComponentType = __component_type__; \
-	public: const static unsigned int getType() {return __component_type__;} \
-			int getComponentType() { return m_ComponentType; } \
-
+#define ADD_EVENTS(...)\
+	enum Events {__VA_ARGS__};	\
 
 #define REGISTER_EVENT(__event__, __func_sig__)\
 	private : std::vector<std::function<__func_sig__>> m_##__event__##_Callbacks; \
@@ -87,4 +86,12 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 	template <Events EventType, typename Func, \
 	typename std::enable_if<EventType == __event__, bool>::type = true> \
 	void addEventHandler(Func&& func){m_##__event__##_Callbacks.push_back(std::function<__func_sig__>(std::forward<Func>(func)));}\
+
+#define ADD_COMPONENT(__component_type__)\
+	enum {__component_type__=COMPILE_TIME_CRC32_STR(#__component_type__)};	\
+
+#define REGISTER_COMPONENT(__class__, __component_type__)\
+	private: const static unsigned int m_ComponentType = __component_type__; \
+	public: const static unsigned int getType() {return __component_type__;} \
+			int getComponentType() { return m_ComponentType; } \
 

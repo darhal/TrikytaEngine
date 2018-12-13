@@ -73,29 +73,41 @@ struct ENGINE_CONFIG
 
 enum Events
 {
-	//INPUT EVENTS
+	//INPUT EVENTS:
 	ON_KEYBOARD_INPUT = 1,
 	ON_MOUSE_CLICK = 2,
 	ON_MOUSE_MOVE = 3,
 
-	//Physics EVENTS
+	//Physics EVENTS:
 	ON_COLLISION_START = 4,
 	ON_COLLISION_END = 5,
 	ON_COLLISION_PRE_SOLVE = 6,
 	ON_COLLISION_POST_SOLVE = 7,
 
-	//Engine EVENTS
+	//Engine EVENTS:
 	ON_ENGINE_LOAD = 8,
 	ON_ENGINE_PRE_INIT = 9,
 	ON_ENGINE_RENDER = 10,
 
-	//UI EVENTS
+	//UI EVENTS:
 	ON_EDITBOX_CHANGE = 11,
 	ON_EDITBOX_FOCUS = 12,
 	ON_UI_CLICK = 13,
 	ON_UI_FOCUS = 14,
 	ON_UI_HOVER = 15,
+
+	//Sound Events:
+	ON_SOUND_FINISH = 16,
 };
+
+/*enum class Events
+{
+	ON_KEYBOARD_INPUT, ON_MOUSE_CLICK, ON_MOUSE_MOVE,  //INPUT EVENTS:
+	ON_COLLISION_START, ON_COLLISION_END, ON_COLLISION_PRE_SOLVE, ON_COLLISION_POST_SOLVE, //Physics EVENTS:
+	ON_ENGINE_LOAD, ON_ENGINE_PRE_INIT, ON_ENGINE_RENDER, //Engine EVENTS:
+	ON_EDITBOX_CHANGE, ON_EDITBOX_FOCUS, ON_UI_CLICK, ON_UI_FOCUS, ON_UI_HOVER, //UI EVENTS:
+	ON_SOUND_FINISH, //Sound Events:
+};*/
 
 #define CALLBACK_0(__selector__,__target__, ...) std::bind(&__selector__,__target__, ##__VA_ARGS__)
 #define CALLBACK_1(__selector__,__target__, ...) std::bind(&__selector__,__target__, std::placeholders::_1, ##__VA_ARGS__)

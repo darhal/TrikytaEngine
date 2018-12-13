@@ -200,6 +200,9 @@
     <ClCompile Include="src\misc\Console\ConsoleCommands.cpp" />
     <ClCompile Include="src\misc\Console\ConsoleText.cpp" />
     <ClCompile Include="src\misc\Font.cpp" />
+    <ClCompile Include="src\sound\Music.cpp" />
+    <ClCompile Include="src\sound\SoundEffect.cpp" />
+    <ClCompile Include="src\sound\SoundManager.cpp" />
     <ClCompile Include="src\UI\Base\UIEditBoxBase.cpp" />
     <ClCompile Include="src\UI\UIBase.cpp" />
     <ClCompile Include="src\UI\UIButton.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="src\utils\SDL2_rotozoom.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\includes\SDL\SDL_ttf.h" />
     <ClInclude Include="src\core\Camera\Camera.h" />
     <ClInclude Include="libs\includes\SDL\begin_code.h" />
     <ClInclude Include="libs\includes\SDL\close_code.h" />
@@ -362,6 +366,10 @@
     <ClInclude Include="src\misc\Console\ConsoleCommands.h" />
     <ClInclude Include="src\misc\Console\ConsoleText.h" />
     <ClInclude Include="src\misc\Font.h" />
+    <ClInclude Include="src\sound\Music.hpp" />
+    <ClInclude Include="src\sound\SoundBase.hpp" />
+    <ClInclude Include="src\sound\SoundEffect.hpp" />
+    <ClInclude Include="src\sound\SoundManager.hpp" />
     <ClInclude Include="src\UI\Base\UIEditBoxBase.h" />
     <ClInclude Include="src\UI\UIBase.h" />
     <ClInclude Include="src\UI\UIButton.hpp" />

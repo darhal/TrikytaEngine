@@ -21,6 +21,8 @@
 #include <UI/UIManager.h>
 #include <UI/UIProgressbar.hpp>
 #include <UI/UIImage.hpp>
+#include <sound/SoundEffect.hpp>
+#include <sound/Music.hpp>
 
 //UI::EditBox* editBox;
 Camera* cam;
@@ -44,6 +46,13 @@ void Game::On_Engine_Init()
 	body->SetAngularDamping(1000.f);
 	anim->setAnimation("Idle");
 
+	//Sound tests:
+	SoundEffect* clickEffect = new SoundEffect("assets/medium.wav");
+	Music* music = new Music("assets/main_theme.mp3");
+	music->Play(0);
+	music->addEventHandler<ON_SOUND_FINISH>([]() {LogTerminal("Sound finished!"); });
+
+	//UI TESTS:
 	using namespace UI;
 	auto editBox = EditBox::createEditBox("Enter your name", "Engine_Assets/fonts/DroidSans.ttf", 16,
 		Vec2i(10, 50), Vec2i(25*8, 30),Color{ 255,255,255, 255 });
@@ -54,7 +63,6 @@ void Game::On_Engine_Init()
 	widget->Configure(WidgetParam{ font , {200, 200, 200, 220}, {232, 163, 25, 255}, {232, 62, 73, 200}, {0,0,0,255} });
 	widget->AddElement(btn);
 	widget->AddElement(editBox);
-	
 	auto pb = new Progressbar(Vec2i(10, 150), Vec2i(25 * 8, 30), Color(0, 0, 0, 200), Color(98, 204, 239, 255), "Loading...", Color{0,0,0,255}, Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 18));
 	widget->AddElement(pb);
 	editBox->addEventHandler<ON_EDITBOX_CHANGE>([=](const char* c) {pb->setProgress(pb->getProgress() - 5, Color{ 0, 174, 255, 200 }, Color{ 183, 232, 255, 200 }, 5); });
@@ -72,6 +80,7 @@ void Game::On_Engine_Init()
 	widget->AddElement(image);
 	image->addEventHandler<ON_UI_CLICK>([=](const Vec2i& pos, bool is_click) {
 		if (is_click) {
+			clickEffect->Play(0);
 			image->ChangeTexture("assets/button/play_click.png");
 		}else {
 			image->ChangeTexture("assets/button/play_hover.png");
@@ -95,6 +104,35 @@ void Game::On_Engine_Init()
 	EventManager::GetEventManager()->addEventHandler<ON_COLLISION_START>(CALLBACK_1(Game::OnCollision, this));
 	AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(Game::On_Input, this));
 	AddConsoleCommand("setanim", [=](const std::vector<std::string>& args) {std::string anim_name = args.at(0); anim->setAnimation(anim_name); });
+	AddConsoleCommand("setvol", [=](const std::vector<std::string>& args)
+	{
+		std::string vol = args.at(0);
+		int v = std::stoi(vol.c_str());
+		music->setVolume(v);
+		LogConsole(LogInfo, "Setting volume to %d", music->getVolume());
+	});
+	AddConsoleCommand("pause", [=](const std::vector<std::string>& args)
+	{
+		music->Pause();
+		LogConsole(LogInfo, "Music paused");
+	});
+	AddConsoleCommand("resume", [=](const std::vector<std::string>& args)
+	{
+		music->Resume();
+		LogConsole(LogInfo, "Music playing");
+	});
+	AddConsoleCommand("rewind", [=](const std::vector<std::string>& args)
+	{
+		music->Rewind();
+		LogConsole(LogInfo, "Music rewinded");
+	});
+	AddConsoleCommand("setposition", [=](const std::vector<std::string>& args)
+	{
+		std::string pos = args.at(0);
+		double p = std::stod(pos.c_str());
+		music->setPosition(p);
+		LogConsole(LogInfo, "Set position to %f", p);
+	});
 	//AddEventHandler(ON_MOUSE_CLICK, CALLBACK_3(Game::OnClick, this));
 	//AddEventHandler(ON_MOUSE_MOVE, CALLBACK_1(Game::OnMouseMove, this));
 	/*EventManager::GetEventManager()->addEventHandler<Events::ON_COLLISION_END>(CALLBACK_1(Game::OnCollisionEnd, this));
