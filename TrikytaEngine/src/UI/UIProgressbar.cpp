@@ -116,7 +116,7 @@ void Progressbar::setProgress(int p, Color&& starting_color, Color&& ending_colo
 			widgetBounderies.x += widgetBounderies.w;
 		}
 	}
-
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
 	if (m_ProgressbarText != nullptr) {
 		m_ProgressbarText->render(0.f);
 	}

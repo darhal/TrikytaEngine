@@ -109,3 +109,11 @@ void Widget::AddElement(Base* uiElement)
 	Vec2i pos = uiElement->getPos();
 	uiElement->setPos(pos + Vec2i(m_WidgetBounderies.x, m_WidgetBounderies.y));
 }
+
+void Widget::setVisible(bool p_Visible)
+{
+	Base::setVisible(p_Visible);
+	for (Base* uiElemnt : m_Elements) {
+		uiElemnt->setVisible(p_Visible);
+	}
+}

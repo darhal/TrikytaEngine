@@ -28,10 +28,12 @@ namespace UI
 		virtual Vec2i getPos() { return m_Pos; };
 		virtual Vec2i getSize() { return m_Size; };
 		virtual void PorcessEvents(SDL_Event&) override;
+		virtual void setVisible(bool p_Visible) override;
 		void setPos(const Vec2i&) override;
 		void Configure(const WidgetParam&);
 
 		void AddElement(Base* uiElement);
+		inline const std::vector<Base*>& GetElements(){return m_Elements; };
 	private:
 		void buildWidget(Font*, const Color& = Color{124,124,124,255}, const Color& = {0, 0, 0, 255}, const Color& = { 66, 206, 244, 255 }, const Color& = {0, 0, 0, 255});
 		void ManageWidgetMovment(SDL_Event&);

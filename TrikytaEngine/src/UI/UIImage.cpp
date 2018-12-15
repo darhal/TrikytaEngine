@@ -54,3 +54,8 @@ void Image::ChangeTexture(const std::string& imagePath)
 	}
 	SDL_FreeSurface(TempSurface);
 }
+
+void Image::SetColor(const Color& color)
+{
+	SDL_SetTextureColorMod(m_Texture, color.r, color.g, color.b);
+}

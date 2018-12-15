@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Common/EngineInstance.h"
+#include "GUI/GUIManager.hpp"
 
 struct ENGINE_CONFIG;
 
@@ -7,26 +8,13 @@ class Game : public EngineInstance
 {
 public:
 	Game(const ENGINE_CONFIG& p_Config) :
-		EngineInstance(p_Config)
+		EngineInstance(p_Config), GUI_Manager(nullptr)
 	{}
 
 	void On_Engine_Pre_Init() override;
 	void On_Engine_Init() override;
 	void On_Engine_Render(float) override;
 	void On_Engine_Quit() override;
-
-	void On_Input(int, unsigned int);
-	void OnCollision(class b2Contact*);
-	void OnCollisionEnd(class b2Contact*);
-	void OnClick(unsigned int, int, Vec2i);
-	void OnMouseMove(Vec2i);
-
-	void OnButtonClick(const Vec2i& pos, bool is_down);
-
-	class Sprite* obj;
-	class AnimationSet* anim;
-	class UI::Text* text;
-	class Physics2D::PhysicsBody* body;
-	class Physics2D::PhysicsBody* body2;
-	class TiledMap* map;
+private:
+	GUIManager* GUI_Manager;
 };

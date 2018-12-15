@@ -4,7 +4,7 @@
 using namespace UI;
 
 Text::Text(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSize, const Vec2i& p_Pos, const Color& p_Color, int p_FontStyle, bool p_IsRegister) :
-	Drawable(p_Pos, Vec2i(0, 0), p_IsRegister),
+	Drawable(p_Pos, Vec2i(0, 0), false),
 	m_Text(p_Text),
 	m_FontPath(p_Font),
 	m_TextSize(p_TextSize),
@@ -18,7 +18,7 @@ Text::Text(const std::string& p_Text, const std::string& p_Font, uint8 p_TextSiz
 }
 
 Text::Text(const std::string& p_Text, Font* p_Font, const Vec2i& p_Pos, const Color& p_Color, bool p_IsRegister) :
-	Drawable(p_Pos, Vec2i(0, 0), p_IsRegister),
+	Drawable(p_Pos, Vec2i(0, 0), false),
 	m_Text(p_Text),
 	m_Color(p_Color),
 	m_Scale(1),

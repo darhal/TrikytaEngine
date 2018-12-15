@@ -1,4 +1,38 @@
 #pragma once
+#include <algorithm>
+#include <vector>
+#include <functional>
+
+//https://stackoverflow.com/questions/9065081/how-do-i-get-the-argument-types-of-a-function-pointer-in-a-variadic-template-cla
+//https://stackoverflow.com/questions/20833453/comparing-stdfunctions-for-equality
+/*template<typename T, typename... U>
+size_t getAddress(std::function<T(U...)> f) {
+	typedef T(fnType)(U...);
+	fnType ** fnPointer = f.template target<fnType*>();
+	return (size_t)*fnPointer;
+}*/
+
+/*template<typename T>
+struct getAddress;
+
+template<typename T, typename... U>
+struct getAddress<std::function<T(U...)>>
+{
+	static const size_t nargs = sizeof...(U);
+
+	typedef T result_type;
+
+	template <size_t i>
+	struct arg{
+		typedef typename std::tuple_element<i, std::tuple<U...>>::type type;
+	};
+
+	static size_t GetAdress(std::function<result_type(U...)> f) {
+		typedef T(fnType)(U...);
+		fnType ** fnPointer = f.template target<fnType*>();
+		return (size_t)*fnPointer;
+	}
+};*/
 
 //Source: https://stackoverflow.com/questions/2111667/compile-time-string-hashing
 
@@ -86,6 +120,11 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 	template <Events EventType, typename Func, \
 	typename std::enable_if<EventType == __event__, bool>::type = true> \
 	void addEventHandler(Func&& func){m_##__event__##_Callbacks.push_back(std::function<__func_sig__>(std::forward<Func>(func)));}\
+	template <Events EventType, \
+	typename std::enable_if<EventType == __event__, bool>::type = true> \
+	void clearAllEventHandlers(){\
+		m_##__event__##_Callbacks.clear(); \
+	}\
 
 #define ADD_COMPONENT(__component_type__)\
 	enum {__component_type__=COMPILE_TIME_CRC32_STR(#__component_type__)};	\
@@ -95,3 +134,12 @@ constexpr unsigned int crc32<size_t(-1)>(const char * str)
 	public: const static unsigned int getType() {return __component_type__;} \
 			int getComponentType() { return m_ComponentType; } \
 
+	/*template <Events EventType, typename Func, \
+	typename std::enable_if<EventType == __event__, bool>::type = true> \
+	void removeEventHandler(Func&& func){\
+		for (auto itr : m_##__event__##_Callbacks){ \
+			if (getAddress<Func>(itr) == getAddress<Func>(func)) { \
+				m_##__event__##_Callbacks.erase(itr); \
+			}\
+		} \
+	}\*/

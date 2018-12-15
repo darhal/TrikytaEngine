@@ -3,7 +3,7 @@
 #include "UIBase.h"
 #include <SDL/SDL.h>
 #include <core/Common/Vec2.h>
-
+#include <core/Common/Color.h>
 
 namespace UI
 {
@@ -21,6 +21,7 @@ namespace UI
 		virtual void setPos(const Vec2i& pos) { m_Pos = pos; m_WidgetBounderies.x = pos.x; m_WidgetBounderies.y = pos.y; };
 		void buildWidget(const std::string&);
 		void ChangeTexture(const std::string&);
+		void SetColor(const Color&);
 	protected:
 
 	private:
