@@ -6,7 +6,7 @@
 
 GameManager::GameManager(GUIManager* GUI_Manager) : m_GUIManager(GUI_Manager)
 {
-	
+	GameManager::InitGame();
 }
 
 void GameManager::InitGame()
