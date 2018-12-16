@@ -107,8 +107,6 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 		m_LoadingMenu->AddProgress(5);
 	}, 4150, 1);
 
-
-
 	TimerManager::CreateTimer([=]() {
 		auto Piece = Sprite::Create("assets/PNG/Gold/Gold_1.png", Vec2i(25, 22), Vec2i(20, 0), false);
 		char buffer[256];
@@ -250,8 +248,8 @@ void PlayGame::Collision(b2Contact* contact)
 				if (compteurCoeur < 3) {
 					LogConsole(LogWarning, "Incrémentation");
 					compteurCoeur++;
-					coeurs[compteurCoeur]->setRender(true);
-
+					//coeurs[compteurCoeur]->setRender(true);
+					ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
 				}
 			}
 		}
@@ -262,7 +260,8 @@ void PlayGame::Collision(b2Contact* contact)
 				LogConsole(LogWarning, "Contact with a heart !");
 				if (compteurCoeur < 3) {
 					compteurCoeur++;
-					coeurs[compteurCoeur]->setRender(true);
+					//coeurs[compteurCoeur]->setRender(true);
+					ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
 				}
 			}
 		}
@@ -301,7 +300,8 @@ void PlayGame::Collision(b2Contact* contact)
 	}
 	else if (isEpine) {
 		if (compteurCoeur > 0) {
-			coeurs[compteurCoeur]->setRender(false);
+			//coeurs[compteurCoeur]->setRender(false);
+			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}
@@ -309,7 +309,8 @@ void PlayGame::Collision(b2Contact* contact)
 		if (compteurCoeur > 0) {
 			anim->Flip(FLIPTYPE::NONE);
 			anim->setAnimation("Dead");
-			coeurs[compteurCoeur]->setRender(false);
+			//coeurs[compteurCoeur]->setRender(false);
+			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}
@@ -317,7 +318,8 @@ void PlayGame::Collision(b2Contact* contact)
 		if (compteurCoeur > 0) {
 			anim->Flip(FLIPTYPE::NONE);
 			anim->setAnimation("Dead");
-			coeurs[compteurCoeur]->setRender(false);
+			//coeurs[compteurCoeur]->setRender(false);
+			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}
