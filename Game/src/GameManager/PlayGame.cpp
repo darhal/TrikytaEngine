@@ -51,6 +51,7 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 	m_Background = Sprite::Create("assets/background.png", Vec2i(ENGINE->GetScreenWidth(), (ENGINE->GetScreenHeight())), Vec2i(0,0), false);
 	m_ObjectsCreated.emplace_back(m_Background);
 	cam = Camera::CreateCamera();
+	cam->setCameraPosition(Vec2i(0, 0));
 	m_LoadingMenu->AddProgress(5);
 
 	TimerManager::CreateTimer([=]() { 
