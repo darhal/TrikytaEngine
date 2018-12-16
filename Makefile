@@ -26,7 +26,7 @@ COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 INCLUDES = -I $(SRC_PATH)/TrikytaEngine/libs/includes/ -I $(SRC_PATH)/TrikytaEngine/src/ -I $(SRC_PATH)/PhysicsEngine/ -I $(SRC_PATH)/PhysicsEngine/PhysicsEngine/Core/ -I $(SRC_PATH)/Libraries/src/ -I $(SRC_PATH)/Libraries/src/TinyXML -I $(SRC_PATH)/Libraries/src/zlib -I $(SRC_PATH)/LuaBinds/src/ -I $(SRC_PATH)/LuaBinds/lua/include/ -I $(SRC_PATH)/Game/src/
 # Space-separated pkg-config libraries used by this project
 LIBS = `sdl2-config --libs --cflags` -LLinuxLibs/ -lSDL2 -LLinuxLibs/ -lSDL2_image -LLinuxLibs/ -lSDL2_ttf -lSDL2_mixer -LLinuxLibs/ -llua -LLinuxLibs/ -lz -lm
-#`sdl2-config --libs --cflags` -LLinuxLibs/ -lSDL2main -LLinuxLibs/ -lSDL_ttf -LLinuxLibs/ -lSDL2_image
+
 .PHONY: default_target
 default_target: release
 
