@@ -42,7 +42,6 @@ void GameManager::BeginPlay()
 		m_GUIManager->bgManager.QueueClear();
 		m_GUIManager->MuteMusic(true);
 		m_GUIManager->GoTo(NO_MENU);
-		FREE(m_LoadingMenu); m_GUIManager->m_CurrentMenu = nullptr; 
 		for (auto itr : m_Game->m_ObjectsCreated) {
 			ObjectHandler::SetObjectSleeping(itr, true);
 		};
@@ -51,6 +50,7 @@ void GameManager::BeginPlay()
 		AddEventHandler(ON_ENGINE_RENDER, CALLBACK_1(PlayGame::Render, m_Game));
 		AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(PlayGame::On_Input, m_Game));
 		LogConsole(LogInfo, "Game begin good luck!");
-	}, 1000, 1);
+		FREE(m_LoadingMenu); m_GUIManager->m_CurrentMenu = nullptr;
+	}, 1500, 1);
 }
 

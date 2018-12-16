@@ -41,6 +41,7 @@ void LoadingMenu::BuildLoadingMenu()
 void LoadingMenu::AddProgress(int p)
 {
 	if (m_ProgressBar == nullptr) { return; }
+	LogTerminal("Progress : %d", m_ProgressBar->getProgress());
 	m_ProgressBar->setProgress(m_ProgressBar->getProgress() + p, Color{ 249, 67, 103, 255 }, Color{ 249, 0, 49, 255 }, 1);
 	if (m_ProgressBar != nullptr && m_ProgressBar->getProgress() >= 100) {
 		GUI_Manager->m_GameManager->BeginPlay();
@@ -50,6 +51,5 @@ void LoadingMenu::AddProgress(int p)
 
 LoadingMenu::~LoadingMenu()
 {
-	m_ProgressBar->setVisible(false);
 	FREE(m_ProgressBar);
 }

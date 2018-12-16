@@ -28,6 +28,7 @@ PlayGame::PlayGame(GameManager* m) : m_GameManager(m)
 	compteurKey = 0;
 	cam = nullptr;
 	body = nullptr;
+	m_ReadToStartGame = false;
 }
 
 PlayGame::~PlayGame()
@@ -121,8 +122,7 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 		m_ObjectsCreated.emplace_back(Piece);
 	}, 5150, 1);
 
-	bool add1 = false;
-	TimerManager::CreateTimer([&]() {
+	TimerManager::CreateTimer([=]() {
 	for (int i = 0; i < map->getMap()->GetNumObjectGroups(); ++i)
 	{
 		// Get an object group.
@@ -141,10 +141,6 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 				animtortue->ToggleRotationAttachement(false);
 				m_ObjectsCreated.emplace_back(animtortue);
 			}
-			if (!add1) {
-				m_LoadingMenu->AddProgress(10);
-				add1 = true;
-			}
 		}
 		if (objectGroup->GetName() == "squelette") {
 			for (int m = 0; m < objectGroup->GetNumObjects(); ++m) {
@@ -161,8 +157,13 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 			}
 		}
 	}
+	m_ReadToStartGame = true;
+	TimerManager::CreateTimer([m_LoadingMenu]() {
+		if (m_LoadingMenu != nullptr) {
+			m_LoadingMenu->AddProgress(25); 
+		} 
+		}, 600, 1);
 	}, 5150, 1);
-	TimerManager::CreateTimer([=]() {m_LoadingMenu->AddProgress(15); }, 6000, 1);
 	m_Timer = TimerManager::CreateTimer(CALLBACK_0(PlayGame::ManagerMechant, this), 1000, 0, true);
 }
 

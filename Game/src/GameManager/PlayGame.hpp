@@ -33,5 +33,6 @@ private:
 	std::vector<Physics2D::PhysicsBody*> mechantBody;
 	bool anti_spam;
 	class Timer* m_Timer;
+	bool m_ReadToStartGame;
 protected:
 };
