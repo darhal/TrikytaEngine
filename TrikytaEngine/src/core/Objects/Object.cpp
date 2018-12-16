@@ -38,11 +38,10 @@ void Object::setRender(bool isVisible)
 {
 	if (isVisible && !m_IsRender) {
 		ObjectHandler::SetObjectSleeping(this, isVisible);
-		m_IsRender = isVisible;
 	}else if(!isVisible && m_IsRender) {
 		ObjectHandler::SetObjectSleeping(this, isVisible);
-		m_IsRender = isVisible;
 	}
+	m_IsRender = isVisible;
 }
 
 void Object::render(float /*dt*/)

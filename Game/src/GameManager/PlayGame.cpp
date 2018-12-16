@@ -248,8 +248,8 @@ void PlayGame::Collision(b2Contact* contact)
 				if (compteurCoeur < 3) {
 					LogConsole(LogWarning, "Incrémentation");
 					compteurCoeur++;
-					//coeurs[compteurCoeur]->setRender(true);
-					ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
+					coeurs[compteurCoeur]->setRender(true);
+					//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
 				}
 			}
 		}
@@ -260,8 +260,8 @@ void PlayGame::Collision(b2Contact* contact)
 				LogConsole(LogWarning, "Contact with a heart !");
 				if (compteurCoeur < 3) {
 					compteurCoeur++;
-					//coeurs[compteurCoeur]->setRender(true);
-					ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
+					coeurs[compteurCoeur]->setRender(true);
+					//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
 				}
 			}
 		}
@@ -300,8 +300,8 @@ void PlayGame::Collision(b2Contact* contact)
 	}
 	else if (isEpine) {
 		if (compteurCoeur > 0) {
-			//coeurs[compteurCoeur]->setRender(false);
-			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
+			coeurs[compteurCoeur]->setRender(false);
+			//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}
@@ -309,8 +309,8 @@ void PlayGame::Collision(b2Contact* contact)
 		if (compteurCoeur > 0) {
 			anim->Flip(FLIPTYPE::NONE);
 			anim->setAnimation("Dead");
-			//coeurs[compteurCoeur]->setRender(false);
-			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
+			coeurs[compteurCoeur]->setRender(false);
+			//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}
@@ -318,8 +318,8 @@ void PlayGame::Collision(b2Contact* contact)
 		if (compteurCoeur > 0) {
 			anim->Flip(FLIPTYPE::NONE);
 			anim->setAnimation("Dead");
-			//coeurs[compteurCoeur]->setRender(false);
-			ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
+			coeurs[compteurCoeur]->setRender(false);
+			//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], false);
 			compteurCoeur--;
 		}
 	}

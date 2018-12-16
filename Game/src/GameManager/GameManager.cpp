@@ -43,7 +43,8 @@ void GameManager::BeginPlay()
 		m_GUIManager->MuteMusic(true);
 		m_GUIManager->GoTo(NO_MENU);
 		for (auto itr : m_Game->m_ObjectsCreated) {
-			ObjectHandler::SetObjectSleeping(itr, true);
+			//ObjectHandler::SetObjectSleeping(itr, true);
+			itr->setRender(true);
 		};
 		ENGINE->AllowPhysicsStepping(true);
 		AddEventHandler(ON_COLLISION_START, CALLBACK_1(PlayGame::Collision, m_Game));
