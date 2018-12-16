@@ -16,50 +16,41 @@
 #include <core/Physics/PhysicsEngine.h>
 #include <core/Objects/ObjectHandler.h>
 #include <core/Drawable/AnimationSet.hpp>
+#include "PlayGame.hpp"
+#include <UI/UIBase.h>
+#include <UI/UIManager.h>
 
 GameManager::GameManager(GUIManager* GUI_Manager, LoadingMenu* lm) : m_GUIManager(GUI_Manager), m_LoadingMenu(lm)
 {
-	TimerManager::CreateTimer([&]() {GameManager::InitGame(); }, 50, 1);
+	m_Game = new PlayGame(this);
+}
+
+GameManager::~GameManager()
+{
+	FREE(m_Game);
 }
 
 void GameManager::InitGame()
 {
 	if (m_LoadingMenu == nullptr) { return; }
-	cam = Camera::CreateCamera();
-	m_LoadingMenu->AddProgress(10);
-	TimerManager::CreateTimer([=]() { 
-		map = TiledMap::Create("assets/map/map.tmx", false); 
-		map->setRender(false);
-		cam->addObjectToCamera(map);
-		m_LoadingMenu->AddProgress(75);
-	}, 150, 1);
-	TimerManager::CreateTimer([=]() {
-		anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256 / 7, 217 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f, false);
-		anim->setRender(false);
-		cam->addObjectToCamera(anim);
-		m_LoadingMenu->AddProgress(20);
-	}, 2400, 1);
-	TimerManager::CreateTimer([=]() {
-		auto body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
-		m_LoadingMenu->AddProgress(14);
-		anim->ToggleRotationAttachement(false);
-		body->SetAngularDamping(1000.f);
-		anim->setAnimation("Idle");
-		m_LoadingMenu->AddProgress(1);
-	}, 2800, 1);
-	
+	m_Game->Init(m_LoadingMenu);
 }
 
 void GameManager::BeginPlay()
 {
 	TimerManager::CreateTimer([&]() {
-		ENGINE->AllowPhysicsStepping(true);
 		m_GUIManager->bgManager.QueueClear();
 		m_GUIManager->MuteMusic(true);
 		m_GUIManager->GoTo(NO_MENU);
 		FREE(m_LoadingMenu); m_GUIManager->m_CurrentMenu = nullptr; 
-		map->setRender(true);
-		anim->setRender(true);
+		for (auto itr : m_Game->m_ObjectsCreated) {
+			ObjectHandler::SetObjectSleeping(itr, true);
+		};
+		ENGINE->AllowPhysicsStepping(true);
+		AddEventHandler(ON_COLLISION_START, CALLBACK_1(PlayGame::Collision, m_Game));
+		AddEventHandler(ON_ENGINE_RENDER, CALLBACK_1(PlayGame::Render, m_Game));
+		AddEventHandler(ON_KEYBOARD_INPUT, CALLBACK_2(PlayGame::On_Input, m_Game));
+		LogConsole(LogInfo, "Game begin good luck!");
 	}, 1000, 1);
 }
 

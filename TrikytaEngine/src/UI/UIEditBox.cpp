@@ -7,6 +7,8 @@
 #include "core/InputManager/InputManager.h"
 #include "core/Common/TrikytaEngine.h"
 #include "core/Common/Macros.hpp"
+#include "Events/UIEventHandler.h"
+
 
 using namespace UI;
 
@@ -19,6 +21,14 @@ EditBox::EditBox(const std::string& p_Text, const std::string& p_Font, uint8 p_T
 	m_Pos = p_Pos;
 	m_Size = p_Size;
 	EditBox::buildWidget();
+}
+
+
+EditBox::~EditBox() {
+	//setVisible(false);
+	SDL_DestroyTexture(widget_texture);
+	FREE(m_InputText);
+	//UI::Manager::getEventManager()->BlockEvents(false);
 }
 
 void EditBox::buildWidget()

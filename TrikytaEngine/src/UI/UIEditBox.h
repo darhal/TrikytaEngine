@@ -18,6 +18,7 @@ namespace UI {
 		}
 
 		EditBox(const std::string&, const std::string&, uint8, const Vec2i&, const Vec2i&,const Color&);
+		~EditBox();
 		void buildWidget();
 		virtual void OnUIClick(const Vec2i&, bool) override;
 		virtual void OnToggleEdit(bool) override;

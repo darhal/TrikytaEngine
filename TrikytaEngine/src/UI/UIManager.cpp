@@ -29,6 +29,11 @@ Manager::ObjectsVec& Manager::getUIContainer()
 	return getManager()->m_UIContainer;
 }
 
+Manager::ObjectsVec& Manager::GetQueueToDelete()
+{
+	return getManager()->m_QueueToRemove;
+}
+
 Manager::ObjectsVec& Manager::getUIRenderableContainer()
 {
 	return getManager()->m_UIRenderableContainer;
@@ -55,6 +60,7 @@ void Manager::removeElement(Base* p_UiObj, bool isRenderable)
 	if (isRenderable) {
 		Manager::getUIRenderableContainer().remove(p_UiObj);
 	}else {
+		//GetQueueToDelete().push_back(p_UiObj);
 		Manager::getUIContainer().remove(p_UiObj);
 	}
 }

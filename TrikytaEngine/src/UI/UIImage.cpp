@@ -2,6 +2,7 @@
 #include <core/Common/TrikytaEngine.h>
 #include "UIManager.h"
 #include <SDL/SDL_image.h>
+#include "Events/UIEventHandler.h"
 
 using namespace UI;
 
@@ -10,6 +11,14 @@ Image::Image(const std::string& imagePath, const Vec2i& p_Pos, const Vec2i& p_Si
 	Manager::addElement(this, true);
 	buildWidget(imagePath);
 	m_WidgetBounderies = SDL_Rect{ m_Pos.x, m_Pos.y, m_Size.x, m_Size.y };
+}
+
+Image::~Image()
+{
+	//setVisible(false);
+	SDL_DestroyTexture(m_Texture);
+	m_Texture = nullptr;
+	//UI::Manager::getEventManager()->BlockEvents(false);
 }
 
 void Image::buildWidget(const std::string& imagePath)

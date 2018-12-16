@@ -17,6 +17,8 @@ namespace UI
 			return new Button(text, font, pos, size, color);;
 		}
 
+
+		~Button();
 		Button(const std::string&, Font*, const Vec2i&, const Vec2i&, const Color&);
 		virtual void OnUIClick(const Vec2i&, bool) override;
 		virtual void OnUIFocus(bool, const Vec2i&) {};

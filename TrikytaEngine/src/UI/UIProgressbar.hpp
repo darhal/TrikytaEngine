@@ -18,7 +18,7 @@ namespace UI
 		virtual void render(float) override;		
 		Vec2i getPos() { return m_Pos; };
 		Vec2i getSize() { return m_Size; };
-
+		~Progressbar();
 		void setProgress(int);
 		void setProgress(int, Color&&, Color&&, int);
 		int getProgress() { return m_Progress; }

@@ -153,18 +153,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\GameManager\GameManager.hpp" />
+    <ClInclude Include="src\GameManager\PlayGame.hpp" />
     <ClInclude Include="src\GUI\Background.hpp" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GUI\BaseMenu.hpp" />
     <ClInclude Include="src\GUI\GUIManager.hpp" />
+    <ClInclude Include="src\GUI\InGameMenu.hpp" />
     <ClInclude Include="src\GUI\LoadingMenu.hpp" />
     <ClInclude Include="src\GUI\MainMenu.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameManager\GameManager.cpp" />
+    <ClCompile Include="src\GameManager\PlayGame.cpp" />
     <ClCompile Include="src\GUI\Background.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GUI\GUIManager.cpp" />
+    <ClCompile Include="src\GUI\InGameMenu.cpp" />
     <ClCompile Include="src\GUI\LoadingMenu.cpp" />
     <ClCompile Include="src\GUI\MainMenu.cpp" />
     <ClCompile Include="src\main.cpp" />

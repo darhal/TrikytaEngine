@@ -2,6 +2,7 @@
 #include "UIManager.h"
 #include <SDL/SDL.h>
 #include "core/Common/defines.h"
+#include "Events/UIEventHandler.h"
 
 using namespace UI;
 
@@ -55,6 +56,7 @@ void Base::PorcessEvents(SDL_Event& e)
 
 void Base::setVisible(bool p_Visible) 
 { 
+	UI::Manager::getEventManager()->BlockEvents(true);
 	if (p_Visible) {
 		Manager::addElement(this, true); //Activate Render
 		Manager::addElement(this, false); //Activate Events
@@ -63,6 +65,7 @@ void Base::setVisible(bool p_Visible)
 		Manager::removeElement(this, false); //Remove Events
 	}
 	m_IsVsisible = p_Visible; 
+	UI::Manager::getEventManager()->BlockEvents(false);
 };
 
 bool Base::isVisible() 
@@ -74,3 +77,9 @@ void Base::Enable(bool isEnable)
 {
 	isEnable ? Manager::addElement(this, false) : Manager::removeElement(this, false);
 }
+
+Base::~Base() 
+{
+	Manager::removeElement(this, true);
+	Manager::removeElement(this, false);
+};

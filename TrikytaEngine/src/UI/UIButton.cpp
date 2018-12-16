@@ -4,6 +4,7 @@
 #include "UI/UIText.h"
 #include "core/Common/TrikytaEngine.h"
 #include "core/Common/Macros.hpp"
+#include "Events/UIEventHandler.h"
 
 using namespace UI;
 
@@ -29,12 +30,13 @@ void Button::buildWidget()
 	SDL_RenderClear(r);
 	SDL_SetRenderDrawColor(r, 0, 0, 0, 180);
 	SDL_RenderFillRect(r, &widgetBounderies);
-	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 	for (int i = padding; i >= 0; i--) {
 		widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 		SDL_RenderDrawRect(r, &widgetBounderies);
 	}
 	m_BtnText->render(0.f);
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
 	SDL_SetRenderTarget(r, NULL);
 }
 
@@ -105,11 +107,12 @@ void Button::OnUIMouseHover(const Vec2i& pos, bool isHover)
 		SDL_SetRenderDrawColor(r, 0, 0, 0, 180);
 		SDL_RenderFillRect(r, &widgetBounderies);
 		int sartingAlpha = 200;
-		SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 		for (int i = padding; i >= 0; i--) {
 			widgetBounderies = SDL_Rect{ widgetBounderies.x - 1, widgetBounderies.x - 1, widgetBounderies.w + 2, widgetBounderies.h + 2 };
 			SDL_RenderDrawRect(r, &widgetBounderies);
 		}
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
 	}
 	m_BtnText->render(0.f);
 	SDL_SetRenderTarget(r, NULL);
@@ -125,4 +128,12 @@ void Button::setPos(const Vec2i& pos)
 	m_WidgetBounderies.x = pos.x;
 	m_WidgetBounderies.y = pos.y;
 	m_Pos = pos;
+}
+
+Button::~Button()
+{
+	//setVisible(false);
+	SDL_DestroyTexture(widget_texture);
+	FREE(m_BtnText);
+	//UI::Manager::getEventManager()->BlockEvents(false);
 }

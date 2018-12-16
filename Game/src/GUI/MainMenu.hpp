@@ -24,5 +24,4 @@ private:
 	Vec2i m_MousePos;
 	std::string buttonsInfo[5] = { "Play", "Select a level", "Settings", "Mute music", "Credits" };
 	UI::Widget* m_Widget;
-	class SoundEffect* m_ClickEffect;
 };

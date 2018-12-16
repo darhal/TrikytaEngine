@@ -2,6 +2,7 @@
 #include "UIText.h"
 #include "core/Common/TrikytaEngine.h"
 #include "UIManager.h"
+#include "Events/UIEventHandler.h"
 
 using namespace UI;
 
@@ -14,7 +15,6 @@ Widget::Widget(const std::string& title, const Vec2i& pos, const Vec2i& size):
 	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
 }
 
-
 Widget::Widget(const Vec2i& pos, const Vec2i& size): 
 	m_Pos(pos), m_Size(size), m_Title("")
 {
@@ -22,6 +22,18 @@ Widget::Widget(const Vec2i& pos, const Vec2i& size):
 	auto r = ENGINE->getRenderer();
 	m_WidgetBounderies = SDL_Rect{ m_Pos.x, m_Pos.y, m_Size.x, m_Size.y };
 	widget_texture = SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_WidgetBounderies.w, m_WidgetBounderies.h);
+}
+
+Widget::~Widget()
+{
+	//setVisible(false);
+	for (auto itr : m_Elements){
+		FREE(itr);
+	}
+	FREE(m_TitleText);
+	SDL_DestroyTexture(widget_texture);
+	widget_texture = nullptr; 
+	//UI::Manager::getEventManager()->BlockEvents(false);
 }
 
 void Widget::buildWidget(Font* font, const Color& windowColor, const Color& contourColor, const Color& topColor, const Color& titleColor)

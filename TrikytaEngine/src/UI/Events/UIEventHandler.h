@@ -10,26 +10,10 @@ namespace UI {
 	public:
 		using Events = ::Events;
 		static EventHandler* InitEventManager();
-
+		EventHandler() :m_BlockProcess(false) {};
+		void BlockEvents(bool);
 		void processEvents(SDL_Event&);
-
-		typedef std::function<void(union SDL_Event&)> OnEditBoxChangeType;
-		/*template <Events EventType, typename Func,
-			typename std::enable_if<EventType == ON_EDITBOX_CHANGE, bool>::type = true>
-			void addEventHandler(Func&& func)
-		{
-			m_OnEditBoxChangeCallbacks.push_back(OnEditBoxChangeType(std::forward<Func>(func)));
-		}
-
-		template <Events EventType, typename Func,
-			typename std::enable_if<EventType == ON_EDITBOX_CHANGE, bool>::type = true>
-			void removeEventHandler(Func&& func)
-		{
-			//std::find(m_OnEditBoxChangeCallbacks->begin(), m_OnEditBoxChangeCallbacks->end(), OnEditBoxChangeType(std::forward<Func>(func)))
-			m_OnEditBoxChangeCallbacks.pop_back();
-		}*/
 	private:
-		//UI Events:
-		std::vector<OnEditBoxChangeType> m_OnEditBoxChangeCallbacks;
+		bool m_BlockProcess;
 	};
 }

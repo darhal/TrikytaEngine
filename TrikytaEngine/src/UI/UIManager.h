@@ -15,11 +15,13 @@ namespace UI {
 		static void removeElement(class Base*, bool);
 		static ObjectsVec& getUIRenderableContainer();
 		static void renderElements(float);
+		static ObjectsVec& GetQueueToDelete();
 	private:
 		Manager() {}
 		static Manager* _Manager;
 		static class EventHandler* _EventManager;
 		ObjectsVec m_UIContainer;
 		ObjectsVec m_UIRenderableContainer;
+		ObjectsVec m_QueueToRemove;
 	};
 }

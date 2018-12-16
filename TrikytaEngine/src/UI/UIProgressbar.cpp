@@ -3,6 +3,7 @@
 #include "UIText.h"
 #include <core/Common/TrikytaEngine.h>
 #include "misc/Font.h"
+#include "Events/UIEventHandler.h"
 
 using namespace UI;
 
@@ -122,4 +123,14 @@ void Progressbar::setProgress(int p, Color&& starting_color, Color&& ending_colo
 	}
 	SDL_SetRenderTarget(r, NULL);
 	m_Progress = p;
+}
+
+Progressbar::~Progressbar()
+{
+	SDL_DestroyTexture(widget_texture);
+	widget_texture = nullptr;
+	if (m_ProgressbarText != nullptr) {
+		FREE(m_ProgressbarText);
+	}
+	//UI::Manager::getEventManager()->BlockEvents(false);
 }

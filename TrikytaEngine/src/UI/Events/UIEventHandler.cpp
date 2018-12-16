@@ -9,9 +9,15 @@ EventHandler* EventHandler::InitEventManager()
 	return new EventHandler();
 }
 
+void EventHandler::BlockEvents(bool b)
+{
+	m_BlockProcess = b;
+}
+
 void EventHandler::processEvents(SDL_Event& e)
 {
 	for (auto obj : Manager::getUIContainer()) {
-		obj->PorcessEvents(e);
+		if (obj != nullptr)
+			obj->PorcessEvents(e);
 	}
 }

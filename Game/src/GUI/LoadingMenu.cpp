@@ -26,10 +26,13 @@ void LoadingMenu::BuildLoadingMenu()
 	using namespace UI;
 	m_ProgressBar = new Progressbar(Vec2i(10, 150), Vec2i(ENGINE->GetScreenWidth() - ENGINE->GetScreenWidth()/8, 45), Color(0, 0, 0, 200), Color(98, 204, 239, 255), "Loading...", Color{ 0,0,0,255 }, Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 28));
 	m_ProgressBar->setPos(Vec2i((ENGINE->GetScreenWidth() - m_ProgressBar->getSize().x) / 2, int(ENGINE->GetScreenHeight() - m_ProgressBar->getSize().y*1.3f)));
-	LogTerminal("Progressbar ready!");
+	//std::thread t;
 	if (m_ProgressBar != nullptr) {
 		ENGINE->AllowPhysicsStepping(false);
-		GUI_Manager->m_GameManager = new GameManager(GUI_Manager, this);
+		GUI_Manager->m_GameManager = new GameManager(GUI_Manager, this);	
+		GUI_Manager->m_GameManager->InitGame();
+		//t = std::thread(GUI_Manager->m_GameManager->InitGame);
+		//t.detach();
 	}else{
 		LogTerminal("Progress bar is nullptr");
 	}
@@ -38,11 +41,11 @@ void LoadingMenu::BuildLoadingMenu()
 void LoadingMenu::AddProgress(int p)
 {
 	if (m_ProgressBar == nullptr) { return; }
-	if (m_ProgressBar != nullptr && m_ProgressBar->getProgress() + p >= 100) {
+	m_ProgressBar->setProgress(m_ProgressBar->getProgress() + p, Color{ 249, 67, 103, 255 }, Color{ 249, 0, 49, 255 }, 1);
+	if (m_ProgressBar != nullptr && m_ProgressBar->getProgress() >= 100) {
 		GUI_Manager->m_GameManager->BeginPlay();
 		return;
 	}
-	m_ProgressBar->setProgress(m_ProgressBar->getProgress() + p, Color{ 249, 67, 103, 255 }, Color{ 249, 0, 49, 255 }, 1);
 }
 
 LoadingMenu::~LoadingMenu()

@@ -11,6 +11,7 @@
 #include "GUIManager.hpp"
 #include <sound/Music.hpp>
 #include <sound/SoundEffect.hpp>
+#include <core/Utility/TimerManager.h>
 
 MainMenu::MainMenu(GUIManager* GUI_Manager) : m_IsHover(false), BaseMenu(GUI_Manager)
 {
@@ -22,7 +23,6 @@ void MainMenu::BuildMainMenu()
 {
 	using namespace UI;
 	int spacement = 20;
-	m_ClickEffect = new SoundEffect("assets/gui/click_effect.wav");
 	Vec2i m_ButtonSize = Vec2i(int(214 / 1.5f), int(215 / 1.5f));
 	m_Widget = new Widget("Main Menu", Vec2i(50, 50), Vec2i((m_ButtonSize.x + spacement)*5, 220));
 	Font* font = Font::createOrGetFont("Engine_Assets/fonts/DroidSans.ttf", 24);
@@ -53,7 +53,7 @@ void MainMenu::BuildMainMenu()
 		{
 			if (is_click) {
 				button->SetColor(Color{ 0, 255, 208 });
-				m_ClickEffect->Play(0);
+				GUI_Manager->m_ClickEffect->Play(0);
 			}else {
 				button->SetColor(Color{ 249, 141, 0 });
 			}
@@ -111,7 +111,7 @@ void MainMenu::OnRootButtonClick(bool is_click)
 		}
 		GUI_Manager->MuteMusic(isPlaying);
 	}else if (m_HoverText == "Play") {
-		GUI_Manager->OnLeaveMenu(MAIN_MENU, LOADING_MENU);
+		TimerManager::CreateTimer([this]() {GUI_Manager->OnLeaveMenu(MAIN_MENU, LOADING_MENU); }, 100, 1);
 	}
 }
 
@@ -122,10 +122,6 @@ MainMenu::~MainMenu()
 	m_Widget->setVisible(false);
 	m_HoverBoxText->setVisible(false);
 	m_IsHover = false;
-	for(auto ui : m_Widget->GetElements()){
-		FREE(ui);
-	}
 	FREE(m_HoverBoxText);
 	FREE(m_Widget);
-	FREE(m_ClickEffect);
 }

@@ -7,22 +7,13 @@
 union SDL_Event;
 
 namespace UI {
-
-	union callbacksType
-	{
-		std::function<void(const Vec2i&, bool)> mouseCallBack;
-		callbacksType() {}
-		callbacksType(const callbacksType& o): mouseCallBack(o.mouseCallBack){}
-		~callbacksType() {};
-	};
-
 	class Base
 	{
 		REGISTER_EVENT(ON_UI_CLICK, void(const Vec2i&, bool));
 		REGISTER_EVENT(ON_UI_FOCUS, void(bool, const Vec2i&));
 		REGISTER_EVENT(ON_UI_HOVER, void(const Vec2i&, bool));
 	public:
-		virtual ~Base() {};
+		virtual ~Base();
 		virtual void PorcessEvents(SDL_Event&);
 		virtual void OnUIClick(const ::Vec2i&, bool) {};
 		virtual void OnUIFocus(bool, const ::Vec2i&) {};

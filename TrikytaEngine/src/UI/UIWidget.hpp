@@ -22,6 +22,7 @@ namespace UI
 	public:
 		Widget(const std::string&, const Vec2i&, const Vec2i&);
 		Widget(const Vec2i&, const Vec2i&);
+		~Widget();
 		virtual void render(float) override;
 		virtual void OnUIClick(const ::Vec2i&, bool);
 		virtual void OnUIFocus(bool, const ::Vec2i&) {};

@@ -11,7 +11,7 @@ namespace UI
 	{
 	public:
 		Image(const std::string&, const Vec2i&, const Vec2i& = Vec2i(0, 0));
-
+		~Image();
 		/*virtual void OnUIClick(const ::Vec2i&, bool);
 		virtual void OnUIFocus(bool, const ::Vec2i&);
 		virtual void OnUIMouseHover(const ::Vec2i&, bool);*/

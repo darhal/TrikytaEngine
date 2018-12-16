@@ -8,6 +8,7 @@ namespace UI
 	class EditBoxBase : public Base
 	{
 	public:
+		virtual ~EditBoxBase() {}
 		virtual void OnUIFocus(bool, const Vec2i&) override;
 		virtual void OnToggleEdit(bool) {}
 		bool IsEditActive = false;
