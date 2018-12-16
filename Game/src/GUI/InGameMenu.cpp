@@ -13,6 +13,7 @@
 #include <sound/Music.hpp>
 #include <sound/SoundEffect.hpp>
 #include <core/Utility/TimerManager.h>
+#include "../GameManager/GameManager.hpp"
 
 InGameMenu::InGameMenu(GUIManager* m, GameManager* gm) : BaseMenu(m), m_GameManager(gm)
 {

@@ -46,6 +46,9 @@ TiledMap::~TiledMap()
 	for (auto itr : m_LayerData) {
 		FREE(itr->tiledLayerData);
 	}
+	for (auto itr : m_cachedImmediateTiles) {
+		FREE(itr->tiledLayerData);
+	}
 	FREE(m_MapTilesets);
 	FREE(m_Map);
 }

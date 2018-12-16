@@ -34,8 +34,10 @@ void GUIManager::ReInit()
 	bgManager.Add(Sprite::Create("assets/gui/background/game_background_3/layers/plant.png", Vec2i(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()), Vec2i(0, 0)), STATIC);
 	bgManager.Add(Sprite::Create("assets/gui/background/game_background_3/layers/clouds_1.png", Vec2i(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()), Vec2i(0, 0)), DYNAMIC);
 	bgManager.Add(Sprite::Create("assets/gui/background/game_background_3/layers/clouds_2.png", Vec2i(ENGINE->GetScreenWidth(), ENGINE->GetScreenHeight()), Vec2i(0, 0)), DYNAMIC);
-	m_MainMusic->Play(-1);
-	m_MainMusic->setVolume(50);
+	if (m_MainMusic->IsStopped()) {
+		m_MainMusic->Play(-1);
+		m_MainMusic->setVolume(50);
+	}
 }
 
 void GUIManager::Refresh(float dt)

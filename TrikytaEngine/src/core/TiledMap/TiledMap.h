@@ -42,6 +42,10 @@ struct MapPart
 		memcpy(&m_Coords, &p_Coords, sizeof(SDL_Rect));
 		memcpy(&m_InitPos, &p_InitPos, sizeof(Vec2i));
 	}
+	~MapPart() {
+		SDL_DestroyTexture(m_Texture);
+		m_Texture = NULL;
+	}
 	SDL_Texture* m_Texture;
 	SDL_Rect m_Coords;
 	Vec2i m_InitPos;

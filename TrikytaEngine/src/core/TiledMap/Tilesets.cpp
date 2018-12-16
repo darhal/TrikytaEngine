@@ -39,6 +39,7 @@ Tilesets::~Tilesets()
 		FREE(data.second->DestDraw);
 	}
 	SDL_DestroyTexture(m_ImageTexture);
+	m_ImageTexture = nullptr;
 }
 
 void Tilesets::LoadTilesets(TiledMap* p_Map)
