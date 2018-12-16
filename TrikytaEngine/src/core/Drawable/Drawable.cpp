@@ -23,6 +23,20 @@ Drawable::Drawable(const Vec2i& m_Pos, const Vec2i& p_Size, bool p_RegisterInHan
 {
 }
 
+Drawable::Drawable(bool p_RegisterInHandler) :
+	m_Position(Vec2i()), m_Size(Vec2i()),
+	m_NormalSize(Vec2i(0, 0)), m_DrawCoord(Vec2i(0, 0)),
+	m_DestinationDrawCoord(SDL_Rect{ m_Position.x, m_Position.y, m_Size.x, m_Size.y }),
+	m_SourceDrawCoord(SDL_Rect{ 0, 0, m_Size.x, m_Size.y }),
+	m_Angle(0.f),
+	m_RotationCenter(SDL_Point{ m_Size.x / 2, m_Size.y / 2 }),
+	m_Flip(SDL_RendererFlip::SDL_FLIP_NONE),
+	Object(p_RegisterInHandler),
+	m_ZOrder(0),
+	m_Camera(nullptr)
+{
+}
+
 Drawable::~Drawable()
 {
 	if (m_Body != nullptr)

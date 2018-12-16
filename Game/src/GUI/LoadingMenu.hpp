@@ -5,7 +5,8 @@
 class LoadingMenu : public BaseMenu
 {
 public:
-	LoadingMenu(class GUIManager*);
+	LoadingMenu(class GUIManager*); 
+	~LoadingMenu();
 	void BuildLoadingMenu();
 	void AddProgress(int);
 private:

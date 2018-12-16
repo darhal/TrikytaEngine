@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameManager\GameManager.hpp" />
     <ClInclude Include="src\GUI\Background.hpp" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GUI\BaseMenu.hpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\GUI\MainMenu.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameManager\GameManager.cpp" />
     <ClCompile Include="src\GUI\Background.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GUI\GUIManager.cpp" />

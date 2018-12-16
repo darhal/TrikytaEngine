@@ -101,6 +101,7 @@ bool EngineInstance::Init()
 	EventManager::GetEventManager()->HandleOnEngineLoadEvents(); // Handle this events on the manager
 	On_Engine_Init(); // CALL INIT
 
+	m_IsUpdatePhysics = true;
 	LogInfoConsole("Engine is active and rendering!");
 	m_EngineState = true;
 	
@@ -155,9 +156,15 @@ void EngineInstance::Render()
 	UI::Manager::renderElements(dtf); // render Ui Elements
 	EventManager::GetEventManager()->HandleOnEngineRenderEvents(dtf);
 	Console::getConsole()->Draw(dtf); // draw console
-	Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
+	if (m_IsUpdatePhysics)
+		Physics2D::PhysicsEngine::GetPhysicsWorld()->update(dtf); // update physics
 	SDL_RenderPresent(m_Renderer);
 	LastTick = std::chrono::system_clock::now();
+}
+
+void EngineInstance::AllowPhysicsStepping(bool is_allowed)
+{
+	m_IsUpdatePhysics = is_allowed;
 }
 
 void EngineInstance::On_Engine_Quit()

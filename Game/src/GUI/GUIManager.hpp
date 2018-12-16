@@ -7,7 +7,7 @@ enum UI_MENUS
 	LOADING_MENU,
 	INGAME_MENU,
 	LEVEL_MENU,
-	NONE,
+	NO_MENU,
 };
 
 class GUIManager
@@ -26,4 +26,5 @@ public:
 private:
 	class Music* m_MainMusic;
 	class BaseMenu* m_CurrentMenu;
+	friend class GameManager;
 };

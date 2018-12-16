@@ -84,6 +84,7 @@ public:
 	~Drawable();
 protected:
 	Drawable(const Vec2i& m_Pos = Vec2i(0, 0), const Vec2i& p_Size = Vec2i(0, 0), bool p_RegisterInHandler=true);
+	Drawable(bool p_RegisterInHandler = true);
 
 	inline void updateRenderPosition(Vec2i p_pos)
 	{

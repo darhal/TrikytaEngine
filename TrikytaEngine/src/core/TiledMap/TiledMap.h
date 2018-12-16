@@ -50,7 +50,7 @@ struct MapPart
 class TiledMap: public Drawable
 {
 public:
-	static TiledMap* Create(std::string);
+	static TiledMap* Create(std::string, bool=true);
 
 	bool init();
 	virtual void render(float) override;
@@ -79,7 +79,7 @@ public:
 	void addTileToLayer(Tilesets* tile_set, int id, const std::string& layer_name, Vec2i pos);
 	Tilesets* getTilset(const std::string& tileset_name);
 protected:
-	TiledMap(Tmx::Map*, std::string&);
+	TiledMap(Tmx::Map*, std::string&, bool=true);
 private:
 	Tmx::Map* m_Map;
 	std::string m_AssetsPath;

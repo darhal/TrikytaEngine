@@ -8,7 +8,7 @@
 enum SoundType{
 	EFFECT,
 	MUSIC,
-	NONE,
+	BASE,
 };
 
 enum MusicStatus
@@ -30,7 +30,7 @@ public:
 	bool IsStopped();
 	const MusicStatus& getStatus();
 protected:
-	SoundBase(const SoundType& type=NONE) {
+	SoundBase(const SoundType& type= BASE) {
 		SoundManager::GetSoundManager()->add(this);
 		m_Channel = -128;
 		m_Type = type;

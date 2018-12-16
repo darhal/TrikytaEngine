@@ -19,7 +19,7 @@ int PrintMapInfo(Tmx::Map* map);//delete this later!
 
 LayerData::~LayerData() { FREE(tiledLayerData); }
 
-TiledMap* TiledMap::Create(std::string p_Filename) 
+TiledMap* TiledMap::Create(std::string p_Filename, bool r) 
 {
 	Tmx::Map* map = new Tmx::Map();
 	map->ParseFile(p_Filename);
@@ -33,10 +33,10 @@ TiledMap* TiledMap::Create(std::string p_Filename)
 	// Find assets path:
 	auto const pos = p_Filename.find_last_of('/');
 	p_Filename = p_Filename.substr(0, pos+1);
-	return new TiledMap(map, p_Filename);
+	return new TiledMap(map, p_Filename, r);
 }
 
-TiledMap::TiledMap(Tmx::Map* p_Map,std::string& p_AssetsPath) : m_Map(p_Map), m_AssetsPath(p_AssetsPath), m_Group(m_Map)
+TiledMap::TiledMap(Tmx::Map* p_Map, std::string& p_AssetsPath, bool r) : m_Map(p_Map), m_AssetsPath(p_AssetsPath), m_Group(m_Map), Drawable(r)
 {
 	TiledMap::init();
 }

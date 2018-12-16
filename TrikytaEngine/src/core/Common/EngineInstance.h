@@ -44,6 +44,7 @@ public:
 
 	const int GetScreenWidth() const { return (int)m_EngineConfig.WINDOW_WIDTH; }
 	const int GetScreenHeight() const { return (int)m_EngineConfig.WINDOW_HEIGHT; }
+	void AllowPhysicsStepping(bool = true);
 	const SDL_RendererInfo& getRenderInfo() { return m_RenderInfo; }
 private:
 	const struct ENGINE_CONFIG& m_EngineConfig;
@@ -53,5 +54,6 @@ private:
 	SDL_Renderer* m_Renderer;
 	SDL_Surface* m_PrimarySurface;
 	SDL_RendererInfo m_RenderInfo;
+	bool m_IsUpdatePhysics;
 	std::chrono::time_point<std::chrono::system_clock> LastTick;
 };
