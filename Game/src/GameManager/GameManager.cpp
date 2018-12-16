@@ -38,7 +38,7 @@ void GameManager::InitGame()
 		anim->setRender(false);
 		cam->addObjectToCamera(anim);
 		m_LoadingMenu->AddProgress(20);
-	}, 1000, 1);
+	}, 2400, 1);
 	TimerManager::CreateTimer([=]() {
 		auto body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 		m_LoadingMenu->AddProgress(14);
@@ -46,18 +46,20 @@ void GameManager::InitGame()
 		body->SetAngularDamping(1000.f);
 		anim->setAnimation("Idle");
 		m_LoadingMenu->AddProgress(1);
-	}, 1600, 1);
+	}, 2800, 1);
 	
 }
 
 void GameManager::BeginPlay()
 {
-	ENGINE->AllowPhysicsStepping(true);
-	m_GUIManager->bgManager.QueueClear();
-	m_GUIManager->MuteMusic(true);
-	m_GUIManager->GoTo(NO_MENU);
-	TimerManager::CreateTimer([&]() {FREE(m_LoadingMenu); m_GUIManager->m_CurrentMenu = nullptr; }, 300, 1);
-	map->setRender(true);
-	anim->setRender(true);
+	TimerManager::CreateTimer([&]() {
+		ENGINE->AllowPhysicsStepping(true);
+		m_GUIManager->bgManager.QueueClear();
+		m_GUIManager->MuteMusic(true);
+		m_GUIManager->GoTo(NO_MENU);
+		FREE(m_LoadingMenu); m_GUIManager->m_CurrentMenu = nullptr; 
+		map->setRender(true);
+		anim->setRender(true);
+	}, 1000, 1);
 }
 
