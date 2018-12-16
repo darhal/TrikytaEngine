@@ -38,7 +38,7 @@ void GameManager::InitGame()
 		anim->setRender(false);
 		cam->addObjectToCamera(anim);
 		m_LoadingMenu->AddProgress(20);
-	}, 2000, 1);
+	}, 1000, 1);
 	TimerManager::CreateTimer([=]() {
 		auto body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 		m_LoadingMenu->AddProgress(14);
@@ -46,7 +46,7 @@ void GameManager::InitGame()
 		body->SetAngularDamping(1000.f);
 		anim->setAnimation("Idle");
 		m_LoadingMenu->AddProgress(1);
-	}, 2600, 1);
+	}, 1600, 1);
 	
 }
 
