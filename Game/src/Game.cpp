@@ -26,6 +26,7 @@ int compteurPiece=0;
 int compteurKey = 0;
 Sprite* coeurs[4];
 UI::Text* pieceScore;
+UI::Text* keyScore;
 void Game::On_Engine_Pre_Init()  
 { 
 	LogTerminal("Trikyta Engine Pre-initializing. ");
@@ -52,7 +53,7 @@ void Game::ManagerMechant()
 void Game::On_Engine_Init()
 {
 	cam = Camera::CreateCamera();
-	map = TiledMap::Create("assets/example/maps/map/map.tmx");
+	map = TiledMap::Create("assets/example/maps/map/mapniveau2.tmx");
 	cam->addObjectToCamera(map);
 	anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256/5, 217/5), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2)-500), 0.03f);
 	body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
@@ -72,7 +73,11 @@ void Game::On_Engine_Init()
 	auto Piece =Sprite::Create("assets/PNG/Gold/Gold_1.png",Vec2i(25, 22), Vec2i(20, 0));
 	char buffer[256];
 	sprintf(buffer,"Score: %d", compteurPiece);
-	 pieceScore =UI::Text::createText(buffer,"Engine_Assets/fonts/DroidSans.ttf",18,Vec2i(45,0),{255,255,255,255});
+	pieceScore =UI::Text::createText(buffer,"Engine_Assets/fonts/DroidSans.ttf",18,Vec2i(45,0),{255,255,255,255});
+	auto Key= Sprite::Create("assets/key.png",Vec2i(25,22),Vec2i(ENGINE->GetScreenWidth() / 2,0));
+	sprintf(buffer,"%d", compteurKey,"/3");
+	keyScore =UI::Text::createText(buffer,"Engine_Assets/fonts/DroidSans.ttf",18,Vec2i((ENGINE->GetScreenWidth() / 2)+25,0),{255,255,255,255});
+
 
 
 	
@@ -278,16 +283,18 @@ void Game::OnCollision(b2Contact* contact)
 		if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
 			compteurKey++;
-			printf("%d \n",compteurKey);
-			LogConsole(LogWarning, "Contact with a key !");
+			char buffer[256];
+			sprintf(buffer,"%d", compteurKey,"/3");
+	 		keyScore->updateText(buffer);
 		}
 		}else if (bodyA == body) {
 		  LayerData* tileToDelete = bodyA->getComponent<LayerData>();
 		      if (tileToDelete != NULL) {
 			map->deleteTileInLayer(tileToDelete);
 			compteurKey++;
-			printf("%d \n",compteurKey);
-			LogConsole(LogWarning, "Contact with a key !");
+			char buffer[256];
+			sprintf(buffer,"%d", compteurKey,"/3");
+	 		keyScore->updateText(buffer);
 		    }
 		}
 	}else if (isADoor){
@@ -306,14 +313,24 @@ void Game::OnCollision(b2Contact* contact)
 	}
 	if ((body==bodyB) && (std::find(mechantBody.begin(), mechantBody.end(), bodyA) != mechantBody.end())){
 		if (compteurCoeur>0){
-		LogConsole(LogWarning, "Contact with a mechant!");	
+			anim->Flip(FLIPTYPE::NONE);
+			anim->setAnimation("Dead");	
 			coeurs[compteurCoeur]->setRender(false); 
-			compteurCoeur--;	}	
+			compteurCoeur--;
+			/*Vec2f v = body->GetLinearVelocity();
+			v.x=50.f;
+			body->SetLinearVelocity(v);*/
+				}	
 	}else if((body==bodyA) && (std::find(mechantBody.begin(), mechantBody.end(), bodyB) != mechantBody.end())){
 		if (compteurCoeur>0){
-		LogConsole(LogWarning, "Contact with a mechant !");
+		anim->Flip(FLIPTYPE::NONE);
+		anim->setAnimation("Dead");
 		coeurs[compteurCoeur]->setRender(false); 
-		compteurCoeur--;}
+		compteurCoeur--;
+		/*Vec2f v = body->GetLinearVelocity();
+		v.x=50.f;	
+		body->SetLinearVelocity(v);*/
+		}
 	}
 	if (compteurCoeur==0){
 		LogConsole(LogWarning, "game over");
