@@ -24,8 +24,7 @@ void TrikytaEngine::init(Game* _Engine)
 	TrikytaEngine::G_Engine = _Engine;
 	if (_Engine->Init()) {
 		_Engine->EngineLogic();
-	}
-	else {
+	}else {
 		LogTerminal("Error Initing the engine...");
 		exit(1);
 	}

@@ -68,7 +68,15 @@ void InGameMenu::OnRootButtonClick(bool is_click)
 		LogTerminal("Mute/Unmute pressed")
 		GUI_Manager->MuteMusic(!GUI_Manager->m_MainMusic->IsPlaying());
 	}else if (m_CurrentButton == "Exsit Game") {
-		
+		TimerManager::CreateTimer([=]() {
+			if (dynamic_cast<InGameMenu*>(GUI_Manager->m_CurrentMenu) != nullptr)
+			{
+				auto ptr = dynamic_cast<InGameMenu*>(GUI_Manager->m_CurrentMenu)->m_GameManager;
+				FREE(ptr);
+			}
+			FREE(GUI_Manager);
+			ENGINE->setEngineState(false);
+		}, 150, 1, true);
 	}else if (m_CurrentButton == "Leave level") {
 		GUI_Manager->OnLeaveMenu(INGAME_MENU, MAIN_MENU);
 	}

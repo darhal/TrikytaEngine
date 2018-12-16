@@ -140,6 +140,7 @@ void EngineInstance::EngineLogic()
 			SDL_Delay(m_EngineConfig.ACCELERATION_RATE);
 		}
 	}
+	EngineInstance::On_Engine_Quit();
 }
 
 void EngineInstance::Render() 
