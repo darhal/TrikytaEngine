@@ -53,6 +53,7 @@ TiledMap::~TiledMap()
 bool TiledMap::init() 
 {
 	m_Position = Vec2i(0,0);
+	m_LastPositionTranslated = Vec2i(0, 0);
 	m_Size = Vec2i(m_Map->GetWidth()*m_Map->GetTileWidth(), m_Map->GetHeight()*m_Map->GetTileHeight());
 	Vec2i MaxRenderTextureSize = Vec2i(ENGINE->getRenderInfo().max_texture_width, ENGINE->getRenderInfo().max_texture_height);
 	Vec2i maxGridSize = Vec2i(MaxRenderTextureSize.x - (MaxRenderTextureSize.x % m_Map->GetTileWidth()), MaxRenderTextureSize.y - (MaxRenderTextureSize.y % m_Map->GetTileHeight()));
@@ -246,7 +247,6 @@ void TiledMap::LoadMapIntoTexture()
 
 void TiledMap::setPosition(Vec2i pos)
 {
-	static Vec2i LastPositionTranslated = Vec2i(0, 0);
 	if (CameraUpdate) {
 		if (pos.x >= 0 && pos.x <= m_Size.x-m_DestinationDrawCoord.w) {
 			m_SourceDrawCoord.x = pos.x; // remove negative sign for the real source here source is used as Dest!
@@ -256,8 +256,8 @@ void TiledMap::setPosition(Vec2i pos)
 		}
 		for (auto& itr : m_cachedImmediateTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
-			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
-			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
+			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - m_LastPositionTranslated.x);
+			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - m_LastPositionTranslated.y);
 		}
 		/*for (auto& phyObj : m_allMapBodies) {
 			Vec2f old_transform = phyObj->GetTransform().p;
@@ -282,11 +282,11 @@ void TiledMap::setPosition(Vec2i pos)
 		}
 		for (auto& itr : m_cachedImmediateTiles) {
 			auto current_rect = itr->tiledLayerData->DestDraw;
-			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - LastPositionTranslated.x);
-			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - LastPositionTranslated.y);
+			itr->tiledLayerData->DestDraw->x = current_rect->x - (pos.x - m_LastPositionTranslated.x);
+			itr->tiledLayerData->DestDraw->y = current_rect->y - (pos.y - m_LastPositionTranslated.y);
 		}
 	}
-	LastPositionTranslated = pos;
+	m_LastPositionTranslated = pos;
 }
 
 void TiledMap::translateMap(Vec2i pos)

@@ -93,6 +93,7 @@ private:
 	//std::map<const std::string&, std::pair<const Tmx::TileLayer*, int>> m_LayerByName;
 	std::map<std::string, std::pair<const Tmx::TileLayer*, int>> m_LayerByName;
 	ObjectGroup m_Group;
+	Vec2i m_LastPositionTranslated;
 private:
 	bool LoadTilesets();
 	void LoadLayers();
