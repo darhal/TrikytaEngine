@@ -45,10 +45,11 @@ void GUIManager::Refresh(float dt)
 
 void GUIManager::MuteMusic(bool is_mute)
 {
-	if (is_mute)
+	if (is_mute) {
 		m_MainMusic->Stop();
-	else
+	}else {
 		m_MainMusic->Play(-1);
+	}
 }
 
 void GUIManager::OnLeaveMenu(UI_MENUS left, UI_MENUS Goto)

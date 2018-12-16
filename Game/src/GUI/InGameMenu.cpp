@@ -65,8 +65,7 @@ void InGameMenu::OnRootButtonClick(bool is_click)
 	if (m_CurrentButton == "Resume") {
 		TimerManager::CreateTimer([this]() {ShowMenu(false); }, 100, 1);
 	}else if (m_CurrentButton == "Mute/Unmute Music") {
-		LogTerminal("Mute/Unmute pressed")
-		GUI_Manager->MuteMusic(!GUI_Manager->m_MainMusic->IsPlaying());
+		GUI_Manager->MuteMusic(GUI_Manager->m_MainMusic->IsPlaying());
 	}else if (m_CurrentButton == "Exsit Game") {
 		TimerManager::CreateTimer([=]() {
 			if (dynamic_cast<InGameMenu*>(GUI_Manager->m_CurrentMenu) != nullptr)
