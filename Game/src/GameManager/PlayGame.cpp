@@ -174,7 +174,8 @@ void PlayGame::Collision(b2Contact* contact)
 	bool isAGreenSwitch = map->isBodyPartOfTileset(bodyA, "misc2", 1) || map->isBodyPartOfTileset(bodyB, "misc2", 1);
 	bool isAHeart = map->isBodyPartOfTileset(bodyA, "misc2", 5) || map->isBodyPartOfTileset(bodyB, "misc2", 5);
 	bool isAKey = map->isBodyPartOfTileset(bodyA, "sheet_key", 0) || map->isBodyPartOfTileset(bodyB, "sheet_key", 0);
-	bool isADoor = map->isBodyPartOfTileset(bodyA, "misc", 62) || map->isBodyPartOfTileset(bodyB, "misc", 61);
+	bool isADoor = map->isBodyPartOfTileset(bodyA, "misc", 62) || map->isBodyPartOfTileset(bodyA, "misc", 61) || map->isBodyPartOfTileset(bodyA, "misc", 60) || map->isBodyPartOfTileset(bodyA, "misc", 51) || map->isBodyPartOfTileset(bodyA, "misc", 50) || map->isBodyPartOfTileset(bodyA, "misc", 49);
+	bool isBDoor = map->isBodyPartOfTileset(bodyB, "misc", 62) || map->isBodyPartOfTileset(bodyB, "misc", 61) || map->isBodyPartOfTileset(bodyB, "misc", 60) || map->isBodyPartOfTileset(bodyB, "misc", 51) || map->isBodyPartOfTileset(bodyB, "misc", 50) || map->isBodyPartOfTileset(bodyB, "misc", 49);
 	bool isEpine = map->isBodyPartOfTileset(bodyA, "misc", 47) || map->isBodyPartOfTileset(bodyB, "misc", 47);
 	if (isACoin) {
 		if (bodyB == body) {
@@ -287,14 +288,20 @@ void PlayGame::Collision(b2Contact* contact)
 				keyScore->updateText(buffer);
 			}
 		}
-	}
-	else if (isADoor) {
+	}else if (isADoor || isBDoor) {
 		if (compteurKey == 3) {
 			if (bodyB == body) {
-				LogConsole(LogWarning, "you win");
-			}
-			else if (body == bodyA) {
-				LogConsole(LogWarning, "you win");
+				ClearAllEventHandlers(ON_COLLISION_START);
+				ClearAllEventHandlers(ON_ENGINE_RENDER);
+				ClearAllEventHandlers(ON_KEYBOARD_INPUT);
+				LogTerminal("You win!");
+				m_GameManager->m_GUIManager->OnLeaveMenu(INGAME_MENU, MAIN_MENU);
+			}else if (body == bodyA) {
+				ClearAllEventHandlers(ON_COLLISION_START);
+				ClearAllEventHandlers(ON_ENGINE_RENDER);
+				ClearAllEventHandlers(ON_KEYBOARD_INPUT);
+				LogTerminal("You win!");
+				m_GameManager->m_GUIManager->OnLeaveMenu(INGAME_MENU, MAIN_MENU);
 			}
 		}
 	}
@@ -325,6 +332,10 @@ void PlayGame::Collision(b2Contact* contact)
 	}
 	if (compteurCoeur == 0) {
 		LogConsole(LogWarning, "game over");
+		ClearAllEventHandlers(ON_COLLISION_START);
+		ClearAllEventHandlers(ON_ENGINE_RENDER);
+		ClearAllEventHandlers(ON_KEYBOARD_INPUT);
+		m_GameManager->m_GUIManager->OnLeaveMenu(INGAME_MENU, MAIN_MENU);
 	}
 }
 
