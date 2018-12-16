@@ -10,7 +10,7 @@ public:
 	PlayGame() : m_GameManager(nullptr){};
 	~PlayGame();
 	void Init(class LoadingMenu*);
-
+	void ManagerMechant();
 	void Collision(class b2Contact*);
 	void Render(float);
 	void On_Input(SDL_Keycode p_Key, unsigned int p_KeyState);
@@ -32,5 +32,6 @@ private:
 	UI::Text* keyScore;
 	std::vector<Physics2D::PhysicsBody*> mechantBody;
 	bool anti_spam;
+	class Timer* m_Timer;
 protected:
 };

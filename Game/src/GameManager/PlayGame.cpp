@@ -35,15 +35,32 @@ PlayGame::~PlayGame()
 	ClearAllEventHandlers(ON_COLLISION_START);
 	ClearAllEventHandlers(ON_ENGINE_RENDER);
 	ClearAllEventHandlers(ON_KEYBOARD_INPUT);
+	m_Timer->stop();
 	FREE(m_InGameMainMenu);
 	for (auto itr : m_ObjectsCreated) {
 		FREE(itr);
 	}
-	LogTerminal("Destroying elements!!");
-	for (auto itr : mechantBody) {
-		FREE(itr);
-	}
 	FREE(cam);
+}
+
+void PlayGame::ManagerMechant()
+{
+	float speedX = moveleft ? 25.f : -25.f;
+	if (moveleft) {
+		speedX = -25.f;
+		moveleft = false;
+	}
+	else {
+		speedX = 25.f;
+		moveleft = true;
+	}
+	for (auto& b : mechantBody) {
+		moveleft ?
+			dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::NONE) :
+			dynamic_cast<Drawable*>(b->getChildrens()->at(0))->Flip(FLIPTYPE::HORIZONTAL);
+		b->SetLinearVelocity(Vec2f(0.f, 0.f));
+		b->SetLinearVelocity(Vec2f(speedX, 0.f));
+	}
 }
 
 void PlayGame::Init(LoadingMenu* m_LoadingMenu)
@@ -146,7 +163,7 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 	}
 	}, 5150, 1);
 	TimerManager::CreateTimer([=]() {m_LoadingMenu->AddProgress(15); }, 6000, 1);
-
+	m_Timer = TimerManager::CreateTimer(CALLBACK_0(PlayGame::ManagerMechant, this), 1000, 0, true);
 }
 
 void PlayGame::Collision(b2Contact* contact)
