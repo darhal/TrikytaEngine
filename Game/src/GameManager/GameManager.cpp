@@ -32,14 +32,13 @@ void GameManager::InitGame()
 		map->setRender(false);
 		cam->addObjectToCamera(map);
 		m_LoadingMenu->AddProgress(75);
-		LogTerminal("Map loaded!");
 	}, 150, 1);
 	TimerManager::CreateTimer([=]() {
 		anim = AnimationSet::Create("assets/player.png", "assets/player.txt", Vec2i(256 / 7, 217 / 7), Vec2i(ENGINE->GetScreenWidth() / 2, (ENGINE->GetScreenHeight() / 2) - 500), 0.03f, false);
 		anim->setRender(false);
 		cam->addObjectToCamera(anim);
 		m_LoadingMenu->AddProgress(20);
-	}, 1000, 1);
+	}, 2000, 1);
 	TimerManager::CreateTimer([=]() {
 		auto body = anim->Physicalize(Physics2D::BodyParams{ 1.f, 0.2f }, Physics2D::BodyType::DYNAMIC, Physics2D::BodyShape::CIRCLE, Vec2f(0.35f, 0.013f));
 		m_LoadingMenu->AddProgress(14);
@@ -47,7 +46,7 @@ void GameManager::InitGame()
 		body->SetAngularDamping(1000.f);
 		anim->setAnimation("Idle");
 		m_LoadingMenu->AddProgress(1);
-	}, 1300, 1);
+	}, 2600, 1);
 	
 }
 

@@ -37,6 +37,7 @@ void LoadingMenu::BuildLoadingMenu()
 
 void LoadingMenu::AddProgress(int p)
 {
+	if (m_ProgressBar == nullptr) { return; }
 	if (m_ProgressBar != nullptr && m_ProgressBar->getProgress() + p >= 100) {
 		GUI_Manager->m_GameManager->BeginPlay();
 		return;
