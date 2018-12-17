@@ -113,7 +113,7 @@ void PlayGame::Init(LoadingMenu* m_LoadingMenu)
 		sprintf(buffer, "Score: %d", compteurPiece);
 		pieceScore = UI::Text::createText(buffer, "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i(45, 0), { 255,255,255,255 }, 0, false);
 		auto Key = Sprite::Create("assets/key.png", Vec2i(25, 22), Vec2i(ENGINE->GetScreenWidth() / 2, 0), false);
-		sprintf(buffer, "%d", compteurKey);
+		sprintf(buffer, "%d /3", compteurKey);
 		keyScore = UI::Text::createText(buffer, "Engine_Assets/fonts/DroidSans.ttf", 18, Vec2i((ENGINE->GetScreenWidth() / 2) + 25, 0), { 255,255,255,255 }, 0, false);
 		m_LoadingMenu->AddProgress(10);
 		m_ObjectsCreated.emplace_back(Key);
@@ -247,7 +247,7 @@ void PlayGame::Collision(b2Contact* contact)
 				map->deleteTileInLayer(tileToDelete);
 				LogConsole(LogWarning, "Contact with a heart !");
 				if (compteurCoeur < 3) {
-					LogConsole(LogWarning, "Incrémentation");
+					LogConsole(LogWarning, "Incrï¿½mentation");
 					compteurCoeur++;
 					coeurs[compteurCoeur]->setRender(true);
 					//ObjectHandler::SetObjectSleeping(coeurs[compteurCoeur], true);
@@ -274,7 +274,7 @@ void PlayGame::Collision(b2Contact* contact)
 				map->deleteTileInLayer(tileToDelete);
 				compteurKey++;
 				char buffer[256];
-				sprintf(buffer, "%d", compteurKey);
+				sprintf(buffer, "%d /3", compteurKey);
 				keyScore->updateText(buffer);
 			}
 		}
@@ -284,7 +284,7 @@ void PlayGame::Collision(b2Contact* contact)
 				map->deleteTileInLayer(tileToDelete);
 				compteurKey++;
 				char buffer[256];
-				sprintf(buffer, "%d", compteurKey);
+				sprintf(buffer, "%d /3 ", compteurKey);
 				keyScore->updateText(buffer);
 			}
 		}
