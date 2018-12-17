@@ -12,11 +12,12 @@ Currently the engine features are limited to:
 * Physics
 * Tiled Maps
 * Events
-
+* UI
 ## Coming Features
 
 * Networking (using client/server)
-* UI
+
+## NB : Comment éxecuter le jeu?
 Pour pouvoir compiler et exécuter le jeu , il faut exécuter d'abord le make.
 Un nouveau fichier Application sera créée , il faut y mettre les trois dossiers présents dans le dossier Game à savoir assets , Engine_Assets et scripts.
 Le jeu est pret à etre exécuter.
