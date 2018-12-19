@@ -40,7 +40,7 @@ void GameManager::BeginPlay()
 {
 	TimerManager::CreateTimer([&]() {
 		m_GUIManager->bgManager.QueueClear();
-		//m_GUIManager->MuteMusic(true);
+		m_GUIManager->MuteMusic(true);
 		m_GUIManager->GoTo(NO_MENU);
 		for (auto itr : m_Game->m_ObjectsCreated) {
 			//ObjectHandler::SetObjectSleeping(itr, true);

@@ -13,7 +13,6 @@
 #include <sound/Music.hpp>
 #include <sound/SoundEffect.hpp>
 #include <core/Utility/TimerManager.h>
-#include "../GameManager/GameManager.hpp"
 
 InGameMenu::InGameMenu(GUIManager* m, GameManager* gm) : BaseMenu(m), m_GameManager(gm)
 {
@@ -66,7 +65,8 @@ void InGameMenu::OnRootButtonClick(bool is_click)
 	if (m_CurrentButton == "Resume") {
 		TimerManager::CreateTimer([this]() {ShowMenu(false); }, 100, 1);
 	}else if (m_CurrentButton == "Mute/Unmute Music") {
-		GUI_Manager->MuteMusic(GUI_Manager->m_MainMusic->IsPlaying());
+		LogTerminal("Mute/Unmute pressed")
+		GUI_Manager->MuteMusic(!GUI_Manager->m_MainMusic->IsPlaying());
 	}else if (m_CurrentButton == "Exsit Game") {
 		TimerManager::CreateTimer([=]() {
 			if (dynamic_cast<InGameMenu*>(GUI_Manager->m_CurrentMenu) != nullptr)
