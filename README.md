@@ -12,6 +12,7 @@ Currently the engine features are limited to:
 * Physics
 * Tiled Maps
 * Events
+* Console (Press '$' to open)[Can be used in code with AddCommandHandler macro]
 * UI
 ## Coming Features
 
